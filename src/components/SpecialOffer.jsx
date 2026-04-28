@@ -2,19 +2,20 @@
 import { Sparkles } from "lucide-react";
 
 const SpecialOffer = () => (
-<section className="bg-black py-24 lg:py-32 w-full">
 
-  <div className="max-w-5xl mx-auto px-6 text-center">
+
+<section className="bg-[hsl(var(--primary))] w-screen py-24 lg:py-32">
+
+  <div className="max-w-5xl mx-auto text-center px-6">
 
     <Sparkles className="h-8 w-8 text-[#c08a5b] mx-auto mb-6" />
 
-    <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-6">
+    <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
       Festival Special Combos
     </h2>
 
-    <p className="text-white/70 leading-relaxed mb-4">
+    <p className="text-white/70 mb-4">
       Get ready for the festive season with our exclusive combo offers.
-      Mix and match from our curated collections at unbeatable prices.
     </p>
 
     <p className="text-[#c08a5b] text-lg font-semibold mb-10">
@@ -22,11 +23,11 @@ const SpecialOffer = () => (
     </p>
 
     <div className="flex justify-center gap-6">
-      <button className="bg-[#c08a5b] text-white px-10 py-3 text-xs uppercase tracking-[0.2em] font-semibold">
+      <button className="bg-[#c08a5b] text-white px-10 py-3 text-xs">
         SHOP COMBOS
       </button>
 
-      <button className="bg-white text-black px-10 py-3 text-xs uppercase tracking-[0.2em] font-semibold">
+      <button className="bg-white text-black px-10 py-3 text-xs">
         VIEW OFFERS
       </button>
     </div>
