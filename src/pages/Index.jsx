@@ -9,13 +9,13 @@ import Footer from "../components/Footer";
 const Index = () => {
   return (
     <div>
-      <PromoBar />
-      <NavBar />
+      {/* <PromoBar />
+      <NavBar /> */}
       <HeroSection />
       <CategoryGrid />
       <FeaturedProducts />
       <SpecialOffer />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

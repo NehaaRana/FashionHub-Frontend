@@ -1,11 +1,12 @@
 import { Heart, ShoppingBag, Search, Menu, X, User } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const navLinks = ["New Arrivals", "Summer Sale", "Winter Collection", "Festival Combos", "Coupons"];
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (
 <nav className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-gray-200">    
     {/* <div className="w-full px-4 flex items-center justify-between h-16 lg:h-20"> */}
@@ -39,7 +40,7 @@ const Navbar = () => {
         </ul>
 
         {/* Icons */}
-        <div className="flex items-center gap-4">
+        {/* <div className="flex items-center gap-4">
           <button aria-label="Search" className="text-foreground hover:text-accent transition-colors">
             <Search className="h-5 w-5" />
           </button>
@@ -54,7 +55,60 @@ const Navbar = () => {
             <ShoppingBag className="h-5 w-5" />
             <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">3</span>
           </button>
-        </div>
+        </div> */}
+        <div className="flex items-center gap-4">
+
+  {!isLoggedIn ? (
+  <>
+    <Link
+      to="/login"
+      className="text-xs uppercase tracking-[0.15em] px-5 py-2 border border-[hsl(var(--primary))] text-[hsl(var(--primary))]"
+    >
+      Login
+    </Link>
+
+    <Link
+      to="/register"
+      className="text-xs uppercase tracking-[0.15em] px-5 py-2 bg-[hsl(var(--accent))] text-white"
+    >
+      Register
+    </Link>
+  </>
+) : (
+    // 🔓 AFTER LOGIN
+    <>
+      <button className="text-foreground hover:text-accent transition-colors">
+        <Search className="h-5 w-5" />
+      </button>
+
+      <button className="text-foreground hover:text-accent transition-colors">
+        <User className="h-5 w-5" />
+      </button>
+
+      <button className="text-foreground hover:text-accent transition-colors relative">
+        <Heart className="h-5 w-5" />
+        <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
+          2
+        </span>
+      </button>
+
+      <button className="text-foreground hover:text-accent transition-colors relative">
+        <ShoppingBag className="h-5 w-5" />
+        <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
+          3
+        </span>
+      </button>
+
+      <button
+        onClick={() => setIsLoggedIn(false)} // temp logout
+        className="text-xs uppercase tracking-[0.15em] px-4 py-2 border"
+      >
+        Logout
+      </button>
+    </>
+  )}
+
+</div>
       </div>
 
       {/* Mobile Menu */}
