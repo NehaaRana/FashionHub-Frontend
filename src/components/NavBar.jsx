@@ -1,12 +1,22 @@
 import { Heart, ShoppingBag, Search, Menu, X, User } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 const navLinks = ["New Arrivals", "Summer Sale", "Winter Collection", "Festival Combos", "Coupons"];
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(
+      !!localStorage.getItem("user")
+    );
+
+    useEffect(() => {
+      const user = localStorage.getItem("user");
+      setIsLoggedIn(!!user);
+    }, []);
   return (
 <nav className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-gray-200">    
     {/* <div className="w-full px-4 flex items-center justify-between h-16 lg:h-20"> */}
@@ -100,7 +110,11 @@ const Navbar = () => {
       </button>
 
       <button
-        onClick={() => setIsLoggedIn(false)} // temp logout
+        onClick={() => {
+          localStorage.removeItem("user");
+          setIsLoggedIn(false);
+          window.location.href = "/";
+        }} // temp logout
         className="text-xs uppercase tracking-[0.15em] px-4 py-2 border"
       >
         Logout
