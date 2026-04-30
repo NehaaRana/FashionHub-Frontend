@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -11,10 +12,41 @@ const Register = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Register Data:", form);
+
+    try {
+      const payload = {
+        gid: 1, // default role (example: user)
+        username: form.name,
+        email: form.email,
+        password: form.password,
+        gender: "",
+        state: "",
+        city: ""
+      };
+
+      const response = await axios.post(
+        "https://localhost:7106/api/Users",
+        payload
+      );
+
+      console.log("Success:", response.data);
+      alert("User Registered Successfully");
+
+    } catch (error) {
+      console.error("Error:", error.response?.data || error.message);
+      console.log("FULL ERROR:", error);
+      console.log("BACKEND ERROR:", error.response?.data);
+      alert(JSON.stringify(error.response?.data));
+      alert("Registration Failed");
+    }
   };
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Register Data:", form);
+  // };
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-[hsl(var(--background))] px-4">

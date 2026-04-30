@@ -63,6 +63,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/Button";
 import { Eye, EyeOff } from "lucide-react";
+import axios from "axios";
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -76,10 +77,36 @@ const Login = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Login Data:", form);
+  // };
+   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login Data:", form);
+
+    try {
+      const response = await axios.post(
+        "https://localhost:7106/api/Users/login",
+        form
+      );
+
+      console.log("Login Success:", response.data);
+
+      // 👉 store user in localStorage
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
+      alert("Login Successful");
+
+      // 👉 redirect (optional)
+      window.location.href = "/";
+
+    } catch (error) {
+      console.error(error.response?.data);
+      alert("Invalid Email or Password");
+    }
   };
+
+
 
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
