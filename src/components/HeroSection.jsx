@@ -1,4 +1,4 @@
-import { Button } from "./ui/Button";
+import { Button } from "../components/ui/Button";
 import heroImage from "../assets/hero-fashion.jpg";
 
 const HeroSection = () => (
@@ -20,18 +20,12 @@ const HeroSection = () => (
           essentials to festive celebrations. Made for the modern woman.
         </p>
         <div className="flex flex-wrap gap-4 items-center">
-          <button variant="hero" size="lg">
+          <Button variant="hero" size="lg">
             Shop Now
-          </button> 
-          {/* <Button variant="hero" size="lg">
-            Shop Now
-          </Button>  */}
-          <button variant="outline" size="lg" className="font-body uppercase tracking-[0.15em] text-xs px-8">
+          </Button> 
+          <Button variant="outline" size="lg" className="font-body uppercase tracking-[0.15em] text-xs px-8">
             View Lookbook
-          </button>
-          {/* <Button variant="outline" size="lg" className="font-body uppercase tracking-[0.15em] text-xs px-8">
-            View Lookbook
-          </Button> */}
+          </Button>
         </div>
         <div className="flex items-center gap-3 pt-2">
           <div className="bg-accent/10 border border-accent/30 rounded-sm px-4 py-2">
