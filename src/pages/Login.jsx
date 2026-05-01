@@ -20,10 +20,6 @@ const Login = () => {
 
 
   const navigate = useNavigate();
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log("Login Data:", form);
-  // };
   
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
@@ -61,43 +57,71 @@ const Login = () => {
   // };
 
 
+//   const handleSubmit = async (e) => {
+//   e.preventDefault();
+
+//   try {
+//     const response = await loginUser(form);
+
+//     const user = response.data.user; // ✅ VERY IMPORTANT
+
+//     console.log("Login Success:", response.data);
+
+//     if (!user) {
+//       alert("Something went wrong");
+//       return;
+//     }
+
+//     localStorage.setItem("user", JSON.stringify(user));
+
+//     // Save role
+//     if (user.gid === 1) {
+//       localStorage.setItem("role", "user");
+//     } else if (user.gid === 2) {
+//       localStorage.setItem("role", "admin");
+//     } else if (user.gid === 3) {
+//       localStorage.setItem("role", "vendor");
+//     }
+
+//     alert("Login Successful");
+
+//     navigate("/dashboard"); // ✅ will work now
+//     window.location.reload(); 
+
+//   } catch (error) {
+//     console.error(error.response?.data);
+//     alert("Invalid Email or Password");
+//   }
+// };
+
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const response = await loginUser(form);
+    try {
+      const response = await loginUser(form);
 
-    const user = response.data.user; // ✅ VERY IMPORTANT
+      const { user, role, token } = response.data;
 
-    console.log("Login Success:", response.data);
+      if (!user) {
+        alert("Something went wrong");
+        return;
+      }
 
-    if (!user) {
-      alert("Something went wrong");
-      return;
+      // ✅ Save data
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("role", role);
+      localStorage.setItem("token", token); // 🔥 VERY IMPORTANT
+
+      alert("Login Successful");
+
+      navigate("/dashboard");
+      window.location.reload();
+
+    } catch (error) {
+      console.error(error.response?.data);
+      alert("Invalid Email or Password");
     }
-
-    localStorage.setItem("user", JSON.stringify(user));
-
-    // Save role
-    if (user.gid === 1) {
-      localStorage.setItem("role", "user");
-    } else if (user.gid === 2) {
-      localStorage.setItem("role", "admin");
-    } else if (user.gid === 3) {
-      localStorage.setItem("role", "vendor");
-    }
-
-    alert("Login Successful");
-
-    navigate("/dashboard"); // ✅ will work now
-    window.location.reload(); 
-
-  } catch (error) {
-    console.error(error.response?.data);
-    alert("Invalid Email or Password");
-  }
-};
-
+  };
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
 
