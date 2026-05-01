@@ -101,6 +101,13 @@ const Register = () => {
             Register
           </button>
 
+          <p className="text-center text-sm mt-4">
+            Want to sell products?{" "}
+            <a href="/vendor-register" className="text-accent font-semibold">
+              Become a Vendor
+            </a>
+          </p>
+
         </form>
 
       </div>
