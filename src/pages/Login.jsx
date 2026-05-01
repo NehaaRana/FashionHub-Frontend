@@ -35,13 +35,13 @@ const Login = () => {
       }
 
       // Save data
-      // localStorage.setItem("user", JSON.stringify(user));
-      // localStorage.setItem("role", role);
-      // localStorage.setItem("token", token); 
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("role", role);
+      localStorage.setItem("token", token); 
 
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("role", response.data.user.role);
+      // localStorage.setItem("user", JSON.stringify(response.data.user));
+      // localStorage.setItem("token", response.data.token);
+      // localStorage.setItem("role", response.data.user.role);
       alert("Login Successful");
 
       navigate("/dashboard");

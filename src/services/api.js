@@ -33,9 +33,21 @@ export const loginUser = (data) => {
 };
 
 // categories
-export const getCategories = () => API.get("/categories");
+export const getCategories = () => API.get("/Categories");
 
-export const createCategory = (data) => API.post("/categories", data);
+export const createCategory = (data) => API.post("/Categories", data);
 
-export const deleteCategory = (id) => API.delete(`/categories/${id}`);
+export const deleteCategory = (id) => API.delete(`/Categories/${id}`);
+
+
+//coupons
+// coupons
+export const getCoupons = () => API.get("/Coupons");
+
+export const createCoupon = (data) =>
+  API.post("/Coupons", data);
+
+export const deleteCoupon = (id) =>
+  API.delete(`/Coupons/${id}`);
+
 export default API;

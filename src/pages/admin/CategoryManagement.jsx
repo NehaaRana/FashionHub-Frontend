@@ -94,7 +94,7 @@ const CategoryManagement = () => {
           <tbody>
             {categories.map((c) => (
               <tr key={c.id} className="border-t">
-                <td className="p-3">{c.name}</td>
+                <td className="p-3">{c.categoryName}</td>
                 <td className="p-3 text-center">
                   <button
                     onClick={() => handleDelete(c.id)}
