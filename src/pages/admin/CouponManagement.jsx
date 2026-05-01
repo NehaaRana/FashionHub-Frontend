@@ -20,6 +20,7 @@ import {
 const CouponManagement = () => {
   const [coupons, setCoupons] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [search, setSearch] = useState("");
 
   const [form, setForm] = useState({
     coupon_code: "",
@@ -96,6 +97,12 @@ const CouponManagement = () => {
     { label: "Analytics", to: "/admin/analytics", icon: BarChart3 },
     { label: "Settings", to: "/admin/settings", icon: Settings },
   ];
+
+  //filter coupons based on search
+   const filteredCoupons = coupons.filter((c) =>
+    c.couponCode?.toLowerCase().includes(search.toLowerCase())
+  );
+
 
   return (
     <DashboardLayout role="Admin" userName="Admin" items={items}>
@@ -241,6 +248,14 @@ const CouponManagement = () => {
           </section>
         )}
 
+
+        <input
+          type="text"
+          placeholder="Search by coupon code..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border px-4 py-2 mb-4 w-full"
+        />
         {/* Coupon List */}
         <table className="w-full border">
           <thead>
@@ -253,7 +268,7 @@ const CouponManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {coupons.map((c) => (
+            {filteredCoupons.map((c) => (
               <tr key={c.coupon_id} className="border-t">
                 <td className="p-3">{c.couponCode}</td>
                 <td className="p-3">{c.discountType}</td>
