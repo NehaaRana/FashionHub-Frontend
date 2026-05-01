@@ -127,6 +127,7 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Layout from "./components/Layout";
+import NewArrivals from "./pages/NewArrivals";
 
 
 function App() {
@@ -137,6 +138,7 @@ function App() {
           <Route index element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/new-arrivals" element={<NewArrivals />} />
         </Route>
 
       </Routes>
