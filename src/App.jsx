@@ -14,6 +14,7 @@ import FestivalCombos from "./pages/FestivalCombos";
 import Coupons from "./pages/Coupon";
 import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
+import CategoryManagement from "./pages/admin/CategoryManagement";
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
             )
           }
         />
+        <Route path="/admin/categories" element={<CategoryManagement />} />
    
       </Routes>
     </BrowserRouter>

@@ -20,79 +20,6 @@ const Login = () => {
 
 
   const navigate = useNavigate();
-  
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const response = await loginUser(form);
-  //        const user = response.data.user; // ✅ VERY IMPORTANT
-
-  //     console.log("Login Success:", response.data);
-
-  //     localStorage.setItem("user", JSON.stringify(response.data.user));
-
-  //     alert("Login Successful");
-
-  //     // window.location.href = "/";
-
-    
-
-  //     // Save role
-  //     if (user.gid === 1) {
-  //       localStorage.setItem("role", "user");
-  //     } else if (user.gid === 2) {
-  //       localStorage.setItem("role", "admin");
-  //     } else if (user.gid === 3) {
-  //       localStorage.setItem("role", "vendor");
-  //     }
-
-  //     // Navigate to single route
-  //     navigate("/dashboard");
-
-  //   } catch (error) {
-  //     console.error(error.response?.data);
-  //     alert("Invalid Email or Password");
-  //   }
-  // };
-
-
-//   const handleSubmit = async (e) => {
-//   e.preventDefault();
-
-//   try {
-//     const response = await loginUser(form);
-
-//     const user = response.data.user; // ✅ VERY IMPORTANT
-
-//     console.log("Login Success:", response.data);
-
-//     if (!user) {
-//       alert("Something went wrong");
-//       return;
-//     }
-
-//     localStorage.setItem("user", JSON.stringify(user));
-
-//     // Save role
-//     if (user.gid === 1) {
-//       localStorage.setItem("role", "user");
-//     } else if (user.gid === 2) {
-//       localStorage.setItem("role", "admin");
-//     } else if (user.gid === 3) {
-//       localStorage.setItem("role", "vendor");
-//     }
-
-//     alert("Login Successful");
-
-//     navigate("/dashboard"); // ✅ will work now
-//     window.location.reload(); 
-
-//   } catch (error) {
-//     console.error(error.response?.data);
-//     alert("Invalid Email or Password");
-//   }
-// };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -107,11 +34,14 @@ const Login = () => {
         return;
       }
 
-      // ✅ Save data
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("role", role);
-      localStorage.setItem("token", token); // 🔥 VERY IMPORTANT
+      // Save data
+      // localStorage.setItem("user", JSON.stringify(user));
+      // localStorage.setItem("role", role);
+      // localStorage.setItem("token", token); 
 
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("role", response.data.user.role);
       alert("Login Successful");
 
       navigate("/dashboard");
@@ -127,7 +57,7 @@ const Login = () => {
 
       {/* 🌟 Background glow (premium effect) */}
       <div className="absolute inset-0 -z-10 bg-[hsl(var(--background))]" />
-      
+
       <div
         className="absolute inset-0 -z-10 opacity-20"
         style={{
