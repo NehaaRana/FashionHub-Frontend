@@ -131,6 +131,10 @@ import NewArrivals from "./pages/NewArrivals";
 import AdminDashboard from "./pages/AdminDashboard";
 import UserDashboard from "./pages/UserDashboard";
 import VendorDashboard from "./pages/VendorDashboard";
+import SummerSale from "./pages/SummerSale";
+import WinterCollection from "./pages/WinterCollcetion";
+import FestivalCombos from "./pages/FestivalCombos";
+import Coupons from "./pages/Coupon";
 
 
 function App() {
@@ -144,6 +148,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/new-arrivals" element={<NewArrivals />} />
+          <Route path="/summer-sale" element={<SummerSale />} />
+          <Route path="/winter-collection" element={<WinterCollection />} />
+          <Route path="/festival-combos" element={<FestivalCombos />} />
+          <Route path="/coupons" element={<Coupons />} />
         </Route>
 
        
