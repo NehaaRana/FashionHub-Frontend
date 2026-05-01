@@ -19,6 +19,7 @@ import {
 
 const CouponManagement = () => {
   const [coupons, setCoupons] = useState([]);
+  const [showForm, setShowForm] = useState(false);
 
   const [form, setForm] = useState({
     coupon_code: "",
@@ -47,13 +48,22 @@ const CouponManagement = () => {
     if (!coupon_code || !discount_type) return;
 
     try {
-      await createCoupon(form);
+      const payload = {
+        couponCode: form.coupon_code,
+        discountType: form.discount_type,
+        minimumOrderAmount: Number(form.minimum_order_amount),
+        maximumOrderAmount: Number(form.maximum_order_amount),
+      };
+
+      await createCoupon(payload);
+
       setForm({
         coupon_code: "",
         discount_type: "",
         minimum_order_amount: "",
         maximum_order_amount: "",
       });
+
       fetchCoupons();
     } catch (err) {
       console.error(err);
@@ -61,6 +71,12 @@ const CouponManagement = () => {
   };
 
   const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+        "Are you sure you want to delete this coupon?"
+      );
+
+    if (!confirmDelete) return;
+
     try {
       await deleteCoupon(id);
       fetchCoupons();
@@ -136,11 +152,94 @@ const CouponManagement = () => {
         </div>
 
         <button
-          onClick={handleAdd}
+          onClick={() => setShowForm(true)}
           className="bg-primary text-white px-4 py-2 mb-6"
         >
           Add Coupon
         </button>
+
+
+        {showForm && (
+          <section className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+            <div className="w-full max-w-md bg-white p-8 shadow-sm">
+
+              <h2 className="text-2xl font-bold mb-6 text-center">
+                Add Coupon
+              </h2>
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleAdd();
+                  setShowForm(false);
+                }}
+                className="space-y-5"
+              >
+
+                <input
+                  type="text"
+                  placeholder="Coupon Code"
+                  value={form.coupon_code}
+                  onChange={(e) =>
+                    setForm({ ...form, coupon_code: e.target.value })
+                  }
+                  className="w-full border p-3 text-sm outline-none"
+                  required
+                />
+
+                <input
+                  type="text"
+                  placeholder="Discount Type (percentage / flat)"
+                  value={form.discount_type}
+                  onChange={(e) =>
+                    setForm({ ...form, discount_type: e.target.value })
+                  }
+                  className="w-full border p-3 text-sm outline-none"
+                  required
+                />
+
+                <input
+                  type="number"
+                  placeholder="Minimum Order Amount"
+                  value={form.minimum_order_amount}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      minimum_order_amount: e.target.value,
+                    })
+                  }
+                  className="w-full border p-3 text-sm outline-none"
+                />
+
+                <input
+                  type="number"
+                  placeholder="Maximum Order Amount"
+                  value={form.maximum_order_amount}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      maximum_order_amount: e.target.value,
+                    })
+                  }
+                  className="w-full border p-3 text-sm outline-none"
+                />
+
+                <button className="w-full bg-[hsl(var(--accent))] text-white py-3 text-xs uppercase tracking-widest">
+                  Create Coupon
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  className="w-full border py-3 text-xs uppercase"
+                >
+                  Cancel
+                </button>
+
+              </form>
+            </div>
+          </section>
+        )}
 
         {/* Coupon List */}
         <table className="w-full border">
@@ -162,7 +261,7 @@ const CouponManagement = () => {
                 <td className="p-3">{c.maximumOrderAmount}</td>
                 <td className="p-3 text-center">
                   <button
-                    onClick={() => handleDelete(c.coupon_id)}
+                    onClick={() => handleDelete(c.couponId)}
                     className="text-red-500"
                   >
                     Delete

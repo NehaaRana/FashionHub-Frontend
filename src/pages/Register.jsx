@@ -52,10 +52,7 @@ const Register = () => {
     }
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log("Register Data:", form);
-  // };
+  
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-[hsl(var(--background))] px-4">
