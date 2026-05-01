@@ -128,9 +128,14 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Layout from "./components/Layout";
 import NewArrivals from "./pages/NewArrivals";
+import AdminDashboard from "./pages/AdminDashboard";
+import UserDashboard from "./pages/UserDashboard";
+import VendorDashboard from "./pages/VendorDashboard";
 
 
 function App() {
+
+   const role = localStorage.getItem("role"); // define role
   return (
     <BrowserRouter>
       <Routes>
@@ -141,6 +146,21 @@ function App() {
           <Route path="/new-arrivals" element={<NewArrivals />} />
         </Route>
 
+       
+         {/* Role-Based Dashboard Route */}
+        <Route
+          path="/dashboard"
+          element={
+            role === "admin" ? (
+              <AdminDashboard />
+            ) : role === "vendor" ? (
+              <VendorDashboard />
+            ) : (
+              <UserDashboard />
+            )
+          }
+        />
+   
       </Routes>
     </BrowserRouter>
   )
