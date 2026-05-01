@@ -108,19 +108,38 @@ const Navbar = () => {
                 <User className="h-5 w-5" />
               </button>
 
-              <button className="text-foreground hover:text-accent transition-colors relative">
+              {/* <button className="text-foreground hover:text-accent transition-colors relative">
                 <Heart className="h-5 w-5" />
                 <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
                   2
                 </span>
-              </button>
+              </button> */}
+              <Link
+                to="/wishlist"
+                className="text-foreground hover:text-accent transition-colors relative"
+              >
+                <Heart className="h-5 w-5" />
+                <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
+                  2
+                </span>
+              </Link>
 
-              <button className="text-foreground hover:text-accent transition-colors relative">
+              {/* <button className="text-foreground hover:text-accent transition-colors relative">
                 <ShoppingBag className="h-5 w-5" />
                 <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
                   3
                 </span>
-              </button>
+              </button> */}
+
+              <Link
+                to="/cart"
+                className="text-foreground hover:text-accent transition-colors relative"
+              >
+                <ShoppingBag className="h-5 w-5" />
+                <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
+                  3
+                </span>
+              </Link>
 
               <button
                 onClick={() => {
@@ -142,7 +161,7 @@ const Navbar = () => {
       {mobileOpen && (
         <div className="lg:hidden border-t border-border bg-background animate-fade-in">
           <ul className="w-full px-4 py-4 space-y-3">
-            {navLinks.map((link) => (
+            {/* {navLinks.map((link) => (
               <li key={link}>
                 <a
                   href="#"
@@ -150,6 +169,16 @@ const Navbar = () => {
                 >
                   {link}
                 </a>
+              </li>
+            ))} */}
+            {navLinks.map((link) => (
+              <li key={link.to}>
+                <Link
+                  to={link.to}
+                  className="block font-body text-sm uppercase tracking-[0.1em] text-foreground py-2"
+                >
+                  {link.label}
+                </Link>
               </li>
             ))}
           </ul>

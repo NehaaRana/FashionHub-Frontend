@@ -135,6 +135,8 @@ import SummerSale from "./pages/SummerSale";
 import WinterCollection from "./pages/WinterCollcetion";
 import FestivalCombos from "./pages/FestivalCombos";
 import Coupons from "./pages/Coupon";
+import Wishlist from "./pages/Wishlist";
+import Cart from "./pages/Cart";
 
 
 function App() {
@@ -152,6 +154,8 @@ function App() {
           <Route path="/winter-collection" element={<WinterCollection />} />
           <Route path="/festival-combos" element={<FestivalCombos />} />
           <Route path="/coupons" element={<Coupons />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/cart" element={<Cart />} />
         </Route>
 
        
