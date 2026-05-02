@@ -42,7 +42,7 @@ export const deleteCategory = (id) => API.delete(`/Categories/${id}`);
 export const updateCategory = (id, data) =>
   API.put(`/Categories/${id}`, data);
 
-//coupons
+
 // coupons
 export const getCoupons = () => API.get("/Coupons");
 
@@ -51,6 +51,9 @@ export const createCoupon = (data) =>
 
 export const deleteCoupon = (id) =>
   API.delete(`/Coupons/${id}`);
+
+export const updateCoupon = (id, data) =>
+  API.put(`/Coupons/${id}`, data);
 
 //Users
 export const getUsers = () => API.get("/Users");

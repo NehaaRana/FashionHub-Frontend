@@ -1,21 +1,162 @@
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
+// import DashboardLayout from "../../components/DashboardLayout";
+// import { getUsers, deleteUser } from "../../services/api";
+
+// import {
+//   LayoutDashboard,
+//   Users,
+//   Package,
+//   ShoppingCart,
+//   Tag,
+//   Store,
+//   BarChart3,
+//   Settings,
+// } from "lucide-react";
+
+// const UserManagement = () => {
+//   const [users, setUsers] = useState([]);
+//   const [search, setSearch] = useState("");
+
+//   useEffect(() => {
+//     fetchUsers();
+//   }, []);
+
+//   const fetchUsers = async () => {
+//     try {
+//       const res = await getUsers();
+//       console.log("Users:", res.data);
+//       setUsers(res.data);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+
+//   const handleDelete = async (id) => {
+//     console.log(
+//       "Delete User ID:", id
+//     )
+//     const confirmDelete = window.confirm(
+//       "Are you sure you want to delete this user?"
+//     );
+
+//     if (!confirmDelete) return;
+
+//     try {
+//       await deleteUser(id);
+//       fetchUsers();
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+
+//   // 🔍 Search filter
+//   const filteredUsers = users.filter((u) =>
+//     u.username?.toLowerCase().includes(search.toLowerCase()) ||
+//     u.email?.toLowerCase().includes(search.toLowerCase())
+//   );
+
+//   const items = [
+//     { label: "Overview", to: "/admin", icon: LayoutDashboard },
+//     { label: "Customers", to: "/admin/customers", icon: Users },
+//     { label: "Vendors", to: "/admin/vendors", icon: Store },
+//     { label: "Products", to: "/admin/products", icon: Package },
+//     { label: "Orders", to: "/admin/orders", icon: ShoppingCart },
+//     { label: "Categories", to: "/admin/categories", icon: Tag },
+//     { label: "Coupons", to: "/admin/coupons", icon: Tag },
+//     { label: "Analytics", to: "/admin/analytics", icon: BarChart3 },
+//     { label: "Settings", to: "/admin/settings", icon: Settings },
+//   ];
+
+//   return (
+//     <DashboardLayout role="Admin" userName="Admin" items={items}>
+//       <div className="p-6">
+//         <h2 className="text-2xl font-bold mb-6">Manage Users</h2>
+
+//         {/*  Search */}
+//         <input
+//           type="text"
+//           placeholder="Search by name or email..."
+//           value={search}
+//           onChange={(e) => setSearch(e.target.value)}
+//           className="border px-4 py-2 mb-4 w-full"
+//         />
+
+//         {/* 👥 User Table */}
+//         <table className="w-full border">
+//           <thead>
+//             <tr className="bg-gray-100">
+//               <th className="p-3 text-left">Name</th>
+//               <th className="p-3 text-left">Email</th>
+//               <th className="p-3 text-left">Role</th>
+//               <th className="p-3 text-left">Mobile No</th>
+//               <th className="p-3 text-left">City</th>
+//               <th className="p-3 text-left">DOB</th>
+//               <th className="p-3 text-left">State</th>
+//               <th className="p-3 text-center">Action</th>
+//             </tr>
+//           </thead>
+
+//           <tbody>
+//             {filteredUsers.length === 0 ? (
+//               <tr>
+//                 <td colSpan="4" className="text-center p-4">
+//                   No users found
+//                 </td>
+//               </tr>
+//             ) : (
+//               filteredUsers.map((u) => (
+//                 <tr key={u.userId} className="border-t">
+//                   <td className="p-3">{u.username}</td>
+//                   <td className="p-3">{u.email}</td>
+//                   <td className="p-3">{u.roleName}</td>
+//                   <td className="p-3">{u.mobileno}</td>
+//                   <td className="p-3">{u.city}</td>
+//                   <td className="p-3">{u.dob}</td>
+//                   <td className="p-3">{u.state}</td>
+
+//                   <td className="p-3 text-center">
+//                     <button
+//                       onClick={() => handleDelete(u.uid)}
+//                       className="text-red-500"
+//                     >
+//                       Delete
+//                     </button>
+//                   </td>
+//                 </tr>
+//               ))
+//             )}
+//           </tbody>
+//         </table>
+//       </div>
+//     </DashboardLayout>
+//   );
+// };
+
+// export default UserManagement;
+
+
+import { useEffect, useMemo, useState } from "react";
 import DashboardLayout from "../../components/DashboardLayout";
-import { getUsers, deleteUser } from "../../services/api";
+import DashHeader from "../../components/dashboard/DashHeader";
+import StatCard from "../../components/dashboard/StatCard";
+import AdminToolbar from "../../components/admin/AdminToolBar";
+import Modal from "../../components/admin/Modal";
+import { Button } from "../../components/ui/button";
+import { adminItems } from "../../components/admin/adminNav";
 
 import {
-  LayoutDashboard,
   Users,
-  Package,
-  ShoppingCart,
-  Tag,
-  Store,
-  BarChart3,
-  Settings,
+  Trash2,
+  Mail,
+  Phone,
 } from "lucide-react";
 
+import { getUsers, deleteUser } from "../../services/api";
+
 const UserManagement = () => {
-  const [users, setUsers] = useState([]);
+  const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -24,110 +165,189 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     try {
       const res = await getUsers();
-      console.log("Users:", res.data);
-      setUsers(res.data);
+
+      const formatted = res.data.map((u) => ({
+        id: u.uid,
+        name: u.username,
+        email: u.email,
+        role: u.roleName,
+        mobile: u.mobileno,
+        city: u.city,
+        state: u.state,
+        dob: u.dob,
+      }));
+
+      setRows(formatted);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleDelete = async (id) => {
-    console.log(
-      "Delete User ID:", id
-    )
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this user?"
+  // 🔍 Search
+  const filtered = useMemo(() => {
+    return rows.filter(
+      (u) =>
+        u.name?.toLowerCase().includes(search.toLowerCase()) ||
+        u.email?.toLowerCase().includes(search.toLowerCase())
     );
+  }, [rows, search]);
 
-    if (!confirmDelete) return;
+  // 📊 Stats
+  const stats = useMemo(() => {
+    const total = rows.length;
+    const admins = rows.filter((u) => u.role === "Admin").length;
+    const customers = rows.filter((u) => u.role === "Customer").length;
 
+    return { total, admins, customers };
+  }, [rows]);
+
+  const handleDelete = async () => {
     try {
-      await deleteUser(id);
+      if (!confirmDelete) return;
+
+      await deleteUser(confirmDelete.id);
       fetchUsers();
+      setConfirmDelete(null);
     } catch (err) {
       console.error(err);
     }
   };
-
-  // 🔍 Search filter
-  const filteredUsers = users.filter((u) =>
-    u.username?.toLowerCase().includes(search.toLowerCase()) ||
-    u.email?.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const items = [
-    { label: "Overview", to: "/admin", icon: LayoutDashboard },
-    { label: "Customers", to: "/admin/customers", icon: Users },
-    { label: "Vendors", to: "/admin/vendors", icon: Store },
-    { label: "Products", to: "/admin/products", icon: Package },
-    { label: "Orders", to: "/admin/orders", icon: ShoppingCart },
-    { label: "Categories", to: "/admin/categories", icon: Tag },
-    { label: "Coupons", to: "/admin/coupons", icon: Tag },
-    { label: "Analytics", to: "/admin/analytics", icon: BarChart3 },
-    { label: "Settings", to: "/admin/settings", icon: Settings },
-  ];
 
   return (
-    <DashboardLayout role="Admin" userName="Admin" items={items}>
-      <div className="p-6">
-        <h2 className="text-2xl font-bold mb-6">Manage Users</h2>
+    <DashboardLayout role="Admin" userName="Admin" items={adminItems}>
+      <div className="p-6 lg:p-12">
 
-        {/*  Search */}
-        <input
-          type="text"
-          placeholder="Search by name or email..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border px-4 py-2 mb-4 w-full"
+        {/* Header */}
+        <DashHeader
+          eyebrow="Accounts"
+          title="Manage"
+          titleAccent="Users"
+          description="View and manage all registered users on the platform."
         />
 
-        {/* 👥 User Table */}
-        <table className="w-full border">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Email</th>
-              <th className="p-3 text-left">Role</th>
-              <th className="p-3 text-left">Mobile No</th>
-              <th className="p-3 text-left">City</th>
-              <th className="p-3 text-left">DOB</th>
-              <th className="p-3 text-left">State</th>
-              <th className="p-3 text-center">Action</th>
-            </tr>
-          </thead>
+        {/* Stats */}
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
+          <StatCard label="Total Users" value={String(stats.total)} icon={Users} />
+          <StatCard label="Admins" value={String(stats.admins)} icon={Mail} />
+          <StatCard label="Customers" value={String(stats.customers)} icon={Users} />
+        </div>
 
-          <tbody>
-            {filteredUsers.length === 0 ? (
-              <tr>
-                <td colSpan="4" className="text-center p-4">
-                  No users found
-                </td>
-              </tr>
-            ) : (
-              filteredUsers.map((u) => (
-                <tr key={u.userId} className="border-t">
-                  <td className="p-3">{u.username}</td>
-                  <td className="p-3">{u.email}</td>
-                  <td className="p-3">{u.roleName}</td>
-                  <td className="p-3">{u.mobileno}</td>
-                  <td className="p-3">{u.city}</td>
-                  <td className="p-3">{u.dob}</td>
-                  <td className="p-3">{u.state}</td>
+        {/* Toolbar */}
+        <AdminToolbar
+          search={search}
+          onSearch={setSearch}
+          searchPlaceholder="Search users by name or email..."
+        />
 
-                  <td className="p-3 text-center">
-                    <button
-                      onClick={() => handleDelete(u.uid)}
-                      className="text-red-500"
+        {/* Table */}
+        <div className="bg-card border border-border rounded-sm overflow-hidden animate-fade-in-up">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[1000px]">
+              <thead className="bg-secondary/40">
+                <tr>
+                  {[
+                    "User",
+                    "Email",
+                    "Role",
+                    "Mobile",
+                    "City",
+                    "State",
+                    "DOB",
+                    "Actions",
+                  ].map((h) => (
+                    <th
+                      key={h}
+                      className="text-left text-[10px] uppercase tracking-[0.2em] text-muted-foreground px-6 py-4"
                     >
-                      Delete
-                    </button>
-                  </td>
+                      {h}
+                    </th>
+                  ))}
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              </thead>
+
+              <tbody>
+                {filtered.map((u) => (
+                  <tr key={u.id} className="border-t hover:bg-secondary/30">
+
+                    {/* Name with avatar style */}
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-sm bg-accent/15 text-accent flex items-center justify-center font-semibold">
+                          {u.name?.charAt(0)}
+                        </div>
+                        <span className="font-semibold">{u.name}</span>
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-4 text-sm text-muted-foreground">
+                      {u.email}
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <span className="px-3 py-1 text-[10px] uppercase font-semibold bg-secondary rounded-sm">
+                        {u.role}
+                      </span>
+                    </td>
+
+                    <td className="px-6 py-4">{u.mobile}</td>
+                    <td className="px-6 py-4">{u.city}</td>
+                    <td className="px-6 py-4">{u.state}</td>
+
+                    <td className="px-6 py-4 text-sm text-muted-foreground">
+                      {u.dob}
+                    </td>
+
+                    {/* Actions */}
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setConfirmDelete(u)}
+                          className="p-2 hover:bg-destructive rounded"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+
+                {filtered.length === 0 && (
+                  <tr>
+                    <td colSpan={8} className="text-center py-16 text-muted-foreground">
+                      No users found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
+
+      {/* Delete Modal */}
+      <Modal
+        open={!!confirmDelete}
+        onClose={() => setConfirmDelete(null)}
+        title="Delete user?"
+        subtitle="This action cannot be undone."
+        size="sm"
+        footer={
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setConfirmDelete(null)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              Delete
+            </Button>
+          </div>
+        }
+      >
+        <p className="text-sm text-muted-foreground">
+          You're about to delete{" "}
+          <span className="font-semibold">{confirmDelete?.name}</span>.
+        </p>
+      </Modal>
+
     </DashboardLayout>
   );
 };
