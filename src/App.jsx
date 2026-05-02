@@ -16,6 +16,9 @@ import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
 import CategoryManagement from "./pages/admin/CategoryManagement";
 import CouponManagement from "./pages/admin/CouponManagement";
+import UserManagement from "./pages/admin/UserManagement";
+import VendorManagement from "./pages/admin/VendorManagement";
+import OrdersManagement from "./pages/admin/OrdersManagement";
 
 
 function App() {
@@ -37,13 +40,18 @@ function App() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
           
+          {/* <Route path="/admin/categories" element={<CategoryManagement />} />
+          <Route path="/admin/coupons" element={<CouponManagement />} /> */}
    
         </Route>
+          <Route path="/admin/customers" element={<UserManagement />} />
+          <Route path="/admin/vendors" element={<VendorManagement />} />
+          <Route path="/admin/orders" element={<OrdersManagement />} />
 
        
         <Route path="/admin/categories" element={<CategoryManagement />} />
         <Route path="/admin/coupons" element={<CouponManagement />} />
-        
+
          {/* Role-Based Dashboard Route */}
         <Route
           path="/dashboard"

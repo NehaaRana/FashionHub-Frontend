@@ -52,4 +52,22 @@ export const createCoupon = (data) =>
 export const deleteCoupon = (id) =>
   API.delete(`/Coupons/${id}`);
 
+//Users
+export const getUsers = () => API.get("/Users");
+
+export const deleteUser = (id) =>
+  API.delete(`/Users/${id}`);
+
+
+// Vendors
+
+export const getVendors = () => API.get("/Vendors");
+
+export const deleteVendor = (id) =>
+  API.delete(`/Vendors/${id}`);
+
+//Orders
+export const getOrders = () => API.get("/Orders");
+
+
 export default API;
