@@ -16,6 +16,8 @@ import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
 import CategoryManagement from "./pages/admin/CategoryManagement";
 import CouponManagement from "./pages/admin/CouponManagement";
+import UserManagement from "./pages/admin/UserManagement";
+import VendorManagement from "./pages/admin/VendorManagement";
 
 
 function App() {
@@ -38,6 +40,8 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/admin/categories" element={<CategoryManagement />} />
           <Route path="/admin/coupons" element={<CouponManagement />} />
+          <Route path="/admin/customers" element={<UserManagement />} />
+          <Route path="/admin/vendors" element={<VendorManagement />} />
    
         </Route>
 
