@@ -64,4 +64,8 @@ export const getVendors = () => API.get("/Vendors");
 export const deleteVendor = (id) =>
   API.delete(`/Vendors/${id}`);
 
+//Orders
+export const getOrders = () => API.get("/Orders");
+
+
 export default API;
