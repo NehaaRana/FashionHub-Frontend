@@ -36,12 +36,14 @@ function App() {
           <Route path="/coupons" element={<Coupons />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/admin/categories" element={<CategoryManagement />} />
-          <Route path="/admin/coupons" element={<CouponManagement />} />
+          
    
         </Route>
 
        
+        <Route path="/admin/categories" element={<CategoryManagement />} />
+        <Route path="/admin/coupons" element={<CouponManagement />} />
+        
          {/* Role-Based Dashboard Route */}
         <Route
           path="/dashboard"

@@ -39,6 +39,8 @@ export const createCategory = (data) => API.post("/Categories", data);
 
 export const deleteCategory = (id) => API.delete(`/Categories/${id}`);
 
+export const updateCategory = (id, data) =>
+  API.put(`/Categories/${id}`, data);
 
 //coupons
 // coupons
