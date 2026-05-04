@@ -247,9 +247,6 @@ const emptyForm = {
   isActive: true,
 };
 
-// const slugify = (s) =>
-//   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-
 const AdminCategories = () => {
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
@@ -304,8 +301,6 @@ const AdminCategories = () => {
     const total = rows.length;
     // const active = rows.filter((r) => r.status === "Active").length;
     const active = rows.filter((r) => r.isActive).length;
-    // const featured = rows.filter((r) => r.featured).length;
-    // const products = rows.reduce((sum, r) => sum + r.products, 0);
     return { total, active };
   }, [rows]);
 
@@ -333,9 +328,9 @@ const AdminCategories = () => {
       if (editing) {
         // await updateCategory(editing.id, form);
         await updateCategory(editing.id, {
-    cid: editing.id,   // 👈 VERY IMPORTANT
-    ...form,
-  });
+          cid: editing.id,   // 👈 VERY IMPORTANT
+          ...form,
+        });
 
       } else {
         await createCategory(form);

@@ -1,15 +1,6 @@
 import { Search, Plus, Filter, Download } from "lucide-react";
-import { Button } from "../../components/ui/button";
+import { Button } from "../../components/ui/Button"
 
-// interface Props {
-//   searchPlaceholder?: string;
-//   search: string;
-//   onSearch: (v: string) => void;
-//   onAdd?: () => void;
-//   addLabel?: string;
-//   showFilter?: boolean;
-//   showExport?: boolean;
-// }
 
 const AdminToolbar = ({
   searchPlaceholder = "Search...",

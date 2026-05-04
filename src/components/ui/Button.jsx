@@ -55,7 +55,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        outline: "border border-primary text-primary hover:bg-primary hover:text-white",
+        // outline: "border border-primary text-primary hover:bg-primary hover:text-white",
+        outline:
+  "border border-border bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground",
         hero: "bg-primary text-primary-foreground px-10 py-4 uppercase tracking-[0.2em] text-xs font-semibold",
         gold: "bg-accent text-accent-foreground px-8 py-3 uppercase tracking-[0.15em] text-xs font-semibold",
       },
