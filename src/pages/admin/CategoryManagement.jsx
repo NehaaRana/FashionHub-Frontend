@@ -173,7 +173,7 @@ const AdminCategories = () => {
           {/* <StatCard label="Featured" value={String(stats.featured)} icon={Layers} delay={0.1} /> */}
           {/* <StatCard label="Linked Products" value={stats.products.toLocaleString()} icon={ImageIcon} delay={0.15} /> */}
           {/* <StatCard label="Total Categories" value={stats.total} />
-<StatCard label="Active" value={stats.active} /> */}
+            <StatCard label="Active" value={stats.active} /> */}
         </div>
 
         <AdminToolbar
