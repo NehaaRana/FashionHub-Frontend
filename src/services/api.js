@@ -73,4 +73,29 @@ export const deleteVendor = (id) =>
 export const getOrders = () => API.get("/Orders");
 
 
+
+//Products
+// export const getVendorProducts = () => API.get("/Products");
+export const getVendorProducts = (vid) =>
+  API.get(`/Products/vendor/${vid}`);
+
+
+// export const createProduct = (data) => API.post("/Products", data);
+
+// export const updateProduct = (id, data) =>
+//   API.put(`/Products/${id}`, data);
+
+export const createProduct = (data) =>
+  API.post("/Products", data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+export const updateProduct = (id, data) =>
+  API.put(`/Products/${id}`, data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+export const deleteProduct = (id) =>
+  API.delete(`/Products/${id}`);
+
 export default API;

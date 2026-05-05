@@ -19,6 +19,7 @@ import CouponManagement from "./pages/admin/CouponManagement";
 import UserManagement from "./pages/admin/UserManagement";
 import VendorManagement from "./pages/admin/VendorManagement";
 import OrdersManagement from "./pages/admin/OrdersManagement";
+import ProductManagement from "./pages/vendor/ProductManagement";
 
 
 function App() {
@@ -51,7 +52,7 @@ function App() {
        
         <Route path="/admin/categories" element={<CategoryManagement />} />
         <Route path="/admin/coupons" element={<CouponManagement />} />
-
+        <Route path="/vendor/products" element={<ProductManagement />} />
          {/* Role-Based Dashboard Route */}
         <Route
           path="/dashboard"
