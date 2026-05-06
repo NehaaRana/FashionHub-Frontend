@@ -45,6 +45,10 @@ export const loginUser = (data) => {
   return API.post("/Auth/login", data);
 };
 
+
+//get user
+export const getCurrentUser = () => API.get("/Auth/me");
+
 // categories
 export const getCategories = () => API.get("/Categories");
 
@@ -111,4 +115,7 @@ export const updateProduct = (id, data) =>
 export const deleteProduct = (id) =>
   API.delete(`/Products/${id}`);
 
+
+//wishlist
+export const getWishlist = () => API.get("/Wishlists");
 export default API;

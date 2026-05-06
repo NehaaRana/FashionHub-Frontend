@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { LogOut, ShoppingBag } from "lucide-react";
-import { subscribeVendors } from "../lib/vendorStore";
+// import { subscribeVendors } from "../lib/vendorStore";
 import AdminNotificationBell from "../components/admin/AdminNotificationBell";
 
 const DashboardLayout = ({ role, userName, items, children }) => {

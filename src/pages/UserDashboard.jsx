@@ -1,24 +1,8 @@
-// import DashboardCard from "../components/ui/DashboardCard";
-
-// const UserDashboard = () => {
-//   return (
-//     <div style={{ padding: "20px" }}>
-//       <h1>User Dashboard</h1>
-
-//       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
-//         <DashboardCard title="My Orders" value="12" />
-//         <DashboardCard title="Wishlist Items" value="5" />
-//         <DashboardCard title="Cart Items" value="3" />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default UserDashboard;
-
 import DashboardLayout from "../components/DashboardLayout";
 import DashHeader from "../components/dashboard/DashHeader";
 import StatCard from "../components/dashboard/StatCard";
+import { useEffect, useState } from "react";
+import { getCurrentUser,getCoupons,getOrders,getWishlist } from "../services/api";
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -40,17 +24,17 @@ const items = [
   { label: "Profile", to: "/dashboard/profile", icon: User },
 ];
 
-const orders = [
-  { id: "#FH-10241", date: "Apr 28, 2026", items: 2, total: "₹4,890", status: "Delivered" },
-  { id: "#FH-10198", date: "Apr 19, 2026", items: 1, total: "₹1,750", status: "Shipped" },
-  { id: "#FH-10162", date: "Apr 11, 2026", items: 3, total: "₹6,420", status: "Processing" },
-];
+// const orders = [
+//   { id: "#FH-10241", date: "Apr 28, 2026", items: 2, total: "₹4,890", status: "Delivered" },
+//   { id: "#FH-10198", date: "Apr 19, 2026", items: 1, total: "₹1,750", status: "Shipped" },
+//   { id: "#FH-10162", date: "Apr 11, 2026", items: 3, total: "₹6,420", status: "Processing" },
+// ];
 
-const coupons = [
-  { code: "SUMMER26", off: "25% OFF", desc: "Summer collection — min. ₹1,999", expires: "Jun 30" },
-  { code: "FASHION20", off: "20% OFF", desc: "Sitewide — first order only", expires: "Dec 31" },
-  { code: "FESTIVE15", off: "15% OFF", desc: "Festival combos", expires: "May 30" },
-];
+// const coupons = [
+//   { code: "SUMMER26", off: "25% OFF", desc: "Summer collection — min. ₹1,999", expires: "Jun 30" },
+//   { code: "FASHION20", off: "20% OFF", desc: "Sitewide — first order only", expires: "Dec 31" },
+//   { code: "FESTIVE15", off: "15% OFF", desc: "Festival combos", expires: "May 30" },
+// ];
 
 const statusColor = {
   Delivered: "bg-emerald-100 text-emerald-700",
@@ -59,20 +43,84 @@ const statusColor = {
 };
 
 const UserDashboard = () => {
+
+  const [orders, setOrders] = useState([]);
+const [coupons, setCoupons] = useState([]);
+const [wishlist, setWishlist] = useState([]);
+
+  const [user, setUser] = useState(null);
+
+  // useEffect(() => {
+  //   const loadUser = async () => {
+  //     try {
+  //       const res = await getCurrentUser();
+  //       setUser(res.data);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+
+  //   loadUser();
+  // }, []);
+
+  useEffect(() => {
+  const loadUserAndData = async () => {
+    try {
+      const userRes = await getCurrentUser();
+      const currentUser = userRes.data;
+      setUser(currentUser);
+
+      // fetch all data in parallel
+      const [ordersRes, couponsRes, wishlistRes] = await Promise.all([
+        getOrders(),
+        getCoupons(),
+        getWishlist()
+      ]);
+
+      // ⚠️ FILTER BY USER (VERY IMPORTANT)
+      const userOrders = ordersRes.data.filter(
+        (o) => o.userId === currentUser.uid
+      );
+
+      const userWishlist = wishlistRes.data.filter(
+        (w) => w.userId === currentUser.uid
+      );
+
+      setOrders(userOrders);
+      setCoupons(couponsRes.data);
+      setWishlist(userWishlist);
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  loadUserAndData();
+}, []);
+
+  if (!user) {
+    return <div className="p-10">Loading dashboard...</div>;
+  }
+
   return (
-    <DashboardLayout role="User" userName="Priya Iyer" items={items}>
-      <div className="p-6 lg:p-12">
+    // <DashboardLayout role="User" userName="Priya Iyer" items={items}>
+    <DashboardLayout
+      role={user?.role || "User"}
+      userName={user?.username || user?.name || "User"}
+      items={items}
+    >      <div className="p-6 lg:p-12">
         <DashHeader
           eyebrow="My Account"
           title="Welcome back,"
-          titleAccent="Priya"
+          // titleAccent="Priya"
+          titleAccent={user.username || user.name}
           description="Track orders, manage your wishlist and unlock exclusive member coupons."
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
-          <StatCard label="Total Orders" value="14" delta="2 this month" icon={Package} delay={0} />
-          <StatCard label="Wishlist" value="08" icon={Heart} delay={0.05} />
-          <StatCard label="Coupons" value="03" icon={Tag} delay={0.1} />
+          <StatCard label="Total Orders" value={orders.length} delta="2 this month" icon={Package} delay={0} />
+          <StatCard label="Wishlist" value={wishlist.length} icon={Heart} delay={0.05} />
+          <StatCard label="Coupons" value={coupons.length} icon={Tag} delay={0.1} />
           <StatCard label="Reward Points" value="1,240" delta="180 earned" icon={Star} delay={0.15} />
         </div>
 

@@ -4,7 +4,7 @@ import { Bell } from "lucide-react";
 
 import { getPendingVendors } from "../../services/api";
 
-import { vendorStore, subscribeVendors } from "../../lib/vendorStore";
+// import { vendorStore, subscribeVendors } from "../../lib/vendorStore";
 
 const AdminNotificationBell = () => {
   const [open, setOpen] = useState(false);

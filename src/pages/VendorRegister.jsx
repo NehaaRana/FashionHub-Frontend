@@ -155,7 +155,7 @@ import PromoBar from "../components/PromoBar";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Button } from "../components/ui/button";
-import { vendorStore } from "../lib/vendorStore";
+// import { vendorStore } from "../lib/vendorStore";
 import { useEffect, useState, useMemo } from "react";
 import { getCategories, registerVendor } from "../services/api";
 const steps = [

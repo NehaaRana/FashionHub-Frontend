@@ -8,6 +8,7 @@ import {
   BarChart3,
   Settings,
   FolderTree,
+  ClipboardList,
 } from "lucide-react";
 // import type { DashSidebarItem } from "../../../components/DashboardLayout";
 
@@ -18,6 +19,12 @@ export const adminItems = [
   { label: "Orders", to: "/admin/orders", icon: ShoppingCart },
   { label: "Customers", to: "/admin/customers", icon: Users },
   { label: "Vendors", to: "/admin/vendors", icon: Store },
+  {
+    label: "Vendor Applications",
+    to: "/admin/vendor-applications",
+    icon: ClipboardList,
+    badgeKey: "vendorApplications"
+  },
   { label: "Coupons", to: "/admin/coupons", icon: Tag },
   { label: "Analytics", to: "/admin/analytics", icon: BarChart3 },
   { label: "Settings", to: "/admin/settings", icon: Settings },

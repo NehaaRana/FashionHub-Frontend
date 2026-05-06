@@ -14,7 +14,7 @@ import PromoBar from "../components/PromoBar";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Button } from "../components/ui/button";
-import { vendorStore, subscribeVendors } from "../lib/vendorStore";
+// import { vendorStore, subscribeVendors } from "../lib/vendorStore";
 import { useLocation } from "react-router-dom";
   import { getVendorByEmail } from "../services/api";
 const VendorPending = () => {
@@ -44,7 +44,7 @@ const VendorPending = () => {
     fetchVendor();
   }, [emailFromNav]);
 
-  useEffect(() => subscribeVendors(() => setApp(vendorStore.current())), []);
+  // useEffect(() => subscribeVendors(() => setApp(vendorStore.current())), []);
 
   const lookup = () => {
     const found = vendorStore.byEmail(emailLookup.trim());

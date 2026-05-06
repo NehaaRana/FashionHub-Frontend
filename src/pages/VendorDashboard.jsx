@@ -22,6 +22,7 @@ import { Link } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
 import DashHeader from "../components/dashboard/DashHeader";
 import StatCard from "../components/dashboard/StatCard";
+import { getVendorProducts, getOrders } from "../services/api";
 import {
   LayoutDashboard,
   Package,
@@ -49,30 +50,78 @@ const items = [
   { label: "Store Settings", to: "/vendor/settings", icon: Settings },
 ];
 
-const products = [
-  { name: "Ivory Silk Anarkali", sku: "FH-AN-204", stock: 12, price: "₹4,890", sold: 38, status: "Active" },
-  { name: "Onyx Velvet Saree", sku: "FH-SR-118", stock: 4, price: "₹7,250", sold: 22, status: "Low Stock" },
-  { name: "Gold Mirror Lehenga", sku: "FH-LH-091", stock: 0, price: "₹12,400", sold: 17, status: "Out of Stock" },
-  { name: "Pastel Linen Kurti", sku: "FH-KR-045", stock: 28, price: "₹1,490", sold: 64, status: "Active" },
-];
+// const products = [
+//   { name: "Ivory Silk Anarkali", sku: "FH-AN-204", stock: 12, price: "₹4,890", sold: 38, status: "Active" },
+//   { name: "Onyx Velvet Saree", sku: "FH-SR-118", stock: 4, price: "₹7,250", sold: 22, status: "Low Stock" },
+//   { name: "Gold Mirror Lehenga", sku: "FH-LH-091", stock: 0, price: "₹12,400", sold: 17, status: "Out of Stock" },
+//   { name: "Pastel Linen Kurti", sku: "FH-KR-045", stock: 28, price: "₹1,490", sold: 64, status: "Active" },
+// ];
 
-const incoming = [
-  { id: "#FH-10248", product: "Ivory Silk Anarkali", qty: 1, customer: "Aanya S.", total: "₹4,890" },
-  { id: "#FH-10247", product: "Pastel Linen Kurti", qty: 2, customer: "Priya I.", total: "₹2,980" },
-  { id: "#FH-10246", product: "Onyx Velvet Saree", qty: 1, customer: "Mehak K.", total: "₹7,250" },
-];
+// const incoming = [
+//   { id: "#FH-10248", product: "Ivory Silk Anarkali", qty: 1, customer: "Aanya S.", total: "₹4,890" },
+//   { id: "#FH-10247", product: "Pastel Linen Kurti", qty: 2, customer: "Priya I.", total: "₹2,980" },
+//   { id: "#FH-10246", product: "Onyx Velvet Saree", qty: 1, customer: "Mehak K.", total: "₹7,250" },
+// ];
 
-const statusColor = {
-  Active: "bg-emerald-100 text-emerald-700",
-  "Low Stock": "bg-accent/15 text-accent",
-  "Out of Stock": "bg-destructive/15 text-destructive",
-};
+
 
 const VendorDashboard = () => {
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [stats, setStats] = useState({
+    earnings: 0,
+    orders: 0,
+    products: 0,
+    rating: 4.8,
+  });
+  const incoming = orders.map((o) => ({
+    id: o.orderNo,
+    product: o.productName,
+    qty: o.quantity,
+    customer: o.customerName,
+    total: `₹${o.totalAmount}`,
+  }));
+  const statusColor = {
+    Active: "bg-emerald-100 text-emerald-700",
+    "Low Stock": "bg-accent/15 text-accent",
+    "Out of Stock": "bg-destructive/15 text-destructive",
+  };
+
   // const [app, setApp] = useState<VendorApplication | undefined>(() => vendorStore.current());
   const [app, setApp] = useState(() => vendorStore.current());
-  useEffect(() => subscribeVendors(() => setApp(vendorStore.current())), []);
+  // useEffect(() => subscribeVendors(() => setApp(vendorStore.current())), []);
 
+  useEffect(() => {
+    const vendorId = localStorage.getItem("vendorId");
+
+    const fetchData = async () => {
+      try {
+        // PRODUCTS
+        const prodRes = await getVendorProducts(vendorId);
+        setProducts(prodRes.data);
+
+        // ORDERS (you may need filter backend later)
+        const orderRes = await getOrders();
+        const vendorOrders = orderRes.data.filter(
+          (o) => o.vendorId === Number(vendorId)
+        );
+
+        setOrders(vendorOrders);
+
+        // STATS
+        setStats({
+          products: prodRes.data.length,
+          orders: vendorOrders.length,
+          earnings: vendorOrders.reduce((sum, o) => sum + o.totalAmount, 0),
+          rating: 4.8,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
+  }, []);
   const isApproved = !app || app.status === "Approved";
   const vendorName = app?.storeName || "Saanjh Couture";
 
@@ -107,10 +156,15 @@ const VendorDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
-          <StatCard label="Total Earnings" value="₹3,42,800" delta="14.8%" icon={DollarSign} delay={0} />
+          {/* <StatCard label="Total Earnings" value="₹3,42,800" delta="14.8%" icon={DollarSign} delay={0} />
           <StatCard label="Orders" value="312" delta="9.4%" icon={ShoppingCart} delay={0.05} />
           <StatCard label="Active Products" value="124" delta="6 added" icon={Package} delay={0.1} />
-          <StatCard label="Avg. Rating" value="4.8" delta="0.2" icon={Star} delay={0.15} />
+          <StatCard label="Avg. Rating" value="4.8" delta="0.2" icon={Star} delay={0.15} /> */}
+
+          <StatCard label="Total Earnings" value={`₹${stats.earnings}`} icon={DollarSign} />
+          <StatCard label="Orders" value={stats.orders} icon={ShoppingCart} />
+          <StatCard label="Active Products" value={stats.products} icon={Package} />
+          <StatCard label="Avg. Rating" value={stats.rating} icon={Star} />
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
