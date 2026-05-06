@@ -13,6 +13,7 @@ import {
   Trash2,
   CheckCircle2,
 } from "lucide-react";
+import { vendorItems } from "../../components/vendor/vendorNav";
 
 import {
   getVendorProducts,
@@ -35,6 +36,8 @@ const emptyForm = {
   image: null,
   isActive: true,
 };
+
+
 
 const ProductManagement = () => {
   const [rows, setRows] = useState([]);
@@ -196,13 +199,13 @@ const ProductManagement = () => {
       await createProduct(formData);
     }
 
-    alert("Product saved successfully ✅");
+    alert("Product saved successfully ");
 
     fetchProducts();
     setModalOpen(false);
   } catch (err) {
     console.error(err);
-    alert("Error while saving product ❌");
+    alert("Error while saving product ");
   }
   };
 
@@ -213,7 +216,7 @@ const ProductManagement = () => {
   };
 
   return (
-    <DashboardLayout role="Vendor" userName="Vendor" items={[]}>
+    <DashboardLayout role="Vendor" userName="Vendor" items={vendorItems}>
       <div className="p-6 lg:p-12">
         <DashHeader
           eyebrow="Catalogue"
@@ -287,298 +290,196 @@ const ProductManagement = () => {
       </div>
 
       {/* Modal */}
-      {/* <Modal
+      <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title="Product"
+        title={editing ? "Edit Product" : "New Product"}
+        subtitle={
+          editing
+            ? `Updating ${editing.productName}`
+            : "Add a new product"
+        }
+        size="md"
         footer={
-          <Button onClick={handleSave}>
-            {editing ? "Update" : "Create"}
-          </Button>
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSave}>
+              {editing ? "Update Product" : "Create Product"}
+            </Button>
+          </div>
         }
       >
-       
-        <input
-            placeholder="Product Name"
-            value={form.productName}
-            onChange={(e) =>
-              setForm({ ...form, productName: e.target.value })
-            }
-          />
+        <div className="space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-          <input
-            placeholder="Description"
-            value={form.description}
-            onChange={(e) =>
-              setForm({ ...form, description: e.target.value })
-            }
-          />
+            {/* Product Name */}
+            <div>
+              <label className="block text-xs font-semibold mb-2">
+                Product Name *
+              </label>
+              <input
+                value={form.productName}
+                onChange={(e) =>
+                  setForm({ ...form, productName: e.target.value })
+                }
+                className="w-full border rounded px-3 py-2"
+                placeholder="e.g. Kurti"
+              />
+            </div>
 
-          <input
-            type="number"
-            placeholder="Price"
-            value={form.price}
-            onChange={(e) =>
-              setForm({ ...form, price: e.target.value })
-            }
-          />
+            {/* Price */}
+            <div>
+              <label className="block text-xs font-semibold mb-2">
+                Price
+              </label>
+              <input
+                type="number"
+                value={form.price}
+                onChange={(e) =>
+                  setForm({ ...form, price: e.target.value })
+                }
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
 
-          <input
-            type="number"
-            placeholder="Discount"
-            value={form.discount}
-            onChange={(e) =>
-              setForm({ ...form, discount: e.target.value })
-            }
-          />
+            {/* Description */}
+            <div className="md:col-span-2">
+              <label className="block text-xs font-semibold mb-2">
+                Description
+              </label>
+              <input
+                value={form.description}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
 
-          <input
-            placeholder="Fabric"
-            value={form.fabric}
-            onChange={(e) =>
-              setForm({ ...form, fabric: e.target.value })
-            }
-          />
+            {/* Discount */}
+            <div>
+              <label className="block text-xs font-semibold mb-2">
+                Discount
+              </label>
+              <input
+                type="number"
+                value={form.discount}
+                onChange={(e) =>
+                  setForm({ ...form, discount: e.target.value })
+                }
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
 
-          <input
-            placeholder="Color"
-            value={form.color}
-            onChange={(e) =>
-              setForm({ ...form, color: e.target.value })
-            }
-          />
+            {/* Stock */}
+            <div>
+              <label className="block text-xs font-semibold mb-2">
+                Stock
+              </label>
+              <input
+                type="number"
+                value={form.stock}
+                onChange={(e) =>
+                  setForm({ ...form, stock: e.target.value })
+                }
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
 
-          <input
-            placeholder="Size"
-            value={form.size}
-            onChange={(e) =>
-              setForm({ ...form, size: e.target.value })
-            }
-          />
+            {/* Fabric */}
+            <div>
+              <label className="block text-xs font-semibold mb-2">
+                Fabric
+              </label>
+              <input
+                value={form.fabric}
+                onChange={(e) =>
+                  setForm({ ...form, fabric: e.target.value })
+                }
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
 
-          <input
-            type="number"
-            placeholder="Stock"
-            value={form.stock}
-            onChange={(e) =>
-              setForm({ ...form, stock: e.target.value })
-            }
-          />
+            {/* Color */}
+            <div>
+              <label className="block text-xs font-semibold mb-2">
+                Color
+              </label>
+              <input
+                value={form.color}
+                onChange={(e) =>
+                  setForm({ ...form, color: e.target.value })
+                }
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
 
-        
-          <select
-            value={form.cid || ""}
-            onChange={(e) =>
-              setForm({ ...form, cid: e.target.value })
-            }
-          >
-            <option value="">Select Category</option>
-            {categories.map((cat) => (
-              <option key={cat.cid} value={cat.cid}>
-                {cat.categoryName}
-              </option>
-            ))}
-          </select>
+            {/* Size */}
+            <div>
+              <label className="block text-xs font-semibold mb-2">
+                Size
+              </label>
+              <input
+                value={form.size}
+                onChange={(e) =>
+                  setForm({ ...form, size: e.target.value })
+                }
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
 
-          <input
-            type="file"
-            onChange={(e) =>
-              setForm({ ...form, image: e.target.files[0] })
-            }
-          />
+            {/* Category */}
+            <div>
+              <label className="block text-xs font-semibold mb-2">
+                Category
+              </label>
+              <select
+                value={form.cid || ""}
+                onChange={(e) =>
+                  setForm({ ...form, cid: e.target.value })
+                }
+                className="w-full border rounded px-3 py-2"
+              >
+                <option value="">Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat.cid} value={cat.cid}>
+                    {cat.categoryName}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-      </Modal> */}
+            {/* Image Upload */}
+            <div>
+              <label className="block text-xs font-semibold mb-2">
+                Product Image
+              </label>
+              <input
+                type="file"
+                onChange={(e) =>
+                  setForm({ ...form, image: e.target.files[0] })
+                }
+                className="w-full"
+              />
+            </div>
 
-      <Modal
-  open={modalOpen}
-  onClose={() => setModalOpen(false)}
-  title={editing ? "Edit Product" : "New Product"}
-  subtitle={
-    editing
-      ? `Updating ${editing.productName}`
-      : "Add a new product"
-  }
-  size="md"
-  footer={
-    <div className="flex justify-end gap-3">
-      <Button variant="outline" onClick={() => setModalOpen(false)}>
-        Cancel
-      </Button>
-      <Button onClick={handleSave}>
-        {editing ? "Update Product" : "Create Product"}
-      </Button>
-    </div>
-  }
->
-  <div className="space-y-5">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Active Status */}
+            <div className="flex items-center gap-3 mt-6">
+              <input
+                type="checkbox"
+                checked={form.isActive}
+                onChange={(e) =>
+                  setForm({ ...form, isActive: e.target.checked })
+                }
+              />
+              <label className="text-sm">Active</label>
+            </div>
 
-      {/* Product Name */}
-      <div>
-        <label className="block text-xs font-semibold mb-2">
-          Product Name *
-        </label>
-        <input
-          value={form.productName}
-          onChange={(e) =>
-            setForm({ ...form, productName: e.target.value })
-          }
-          className="w-full border rounded px-3 py-2"
-          placeholder="e.g. Kurti"
-        />
-      </div>
-
-      {/* Price */}
-      <div>
-        <label className="block text-xs font-semibold mb-2">
-          Price
-        </label>
-        <input
-          type="number"
-          value={form.price}
-          onChange={(e) =>
-            setForm({ ...form, price: e.target.value })
-          }
-          className="w-full border rounded px-3 py-2"
-        />
-      </div>
-
-      {/* Description */}
-      <div className="md:col-span-2">
-        <label className="block text-xs font-semibold mb-2">
-          Description
-        </label>
-        <input
-          value={form.description}
-          onChange={(e) =>
-            setForm({ ...form, description: e.target.value })
-          }
-          className="w-full border rounded px-3 py-2"
-        />
-      </div>
-
-      {/* Discount */}
-      <div>
-        <label className="block text-xs font-semibold mb-2">
-          Discount
-        </label>
-        <input
-          type="number"
-          value={form.discount}
-          onChange={(e) =>
-            setForm({ ...form, discount: e.target.value })
-          }
-          className="w-full border rounded px-3 py-2"
-        />
-      </div>
-
-      {/* Stock */}
-      <div>
-        <label className="block text-xs font-semibold mb-2">
-          Stock
-        </label>
-        <input
-          type="number"
-          value={form.stock}
-          onChange={(e) =>
-            setForm({ ...form, stock: e.target.value })
-          }
-          className="w-full border rounded px-3 py-2"
-        />
-      </div>
-
-      {/* Fabric */}
-      <div>
-        <label className="block text-xs font-semibold mb-2">
-          Fabric
-        </label>
-        <input
-          value={form.fabric}
-          onChange={(e) =>
-            setForm({ ...form, fabric: e.target.value })
-          }
-          className="w-full border rounded px-3 py-2"
-        />
-      </div>
-
-      {/* Color */}
-      <div>
-        <label className="block text-xs font-semibold mb-2">
-          Color
-        </label>
-        <input
-          value={form.color}
-          onChange={(e) =>
-            setForm({ ...form, color: e.target.value })
-          }
-          className="w-full border rounded px-3 py-2"
-        />
-      </div>
-
-      {/* Size */}
-      <div>
-        <label className="block text-xs font-semibold mb-2">
-          Size
-        </label>
-        <input
-          value={form.size}
-          onChange={(e) =>
-            setForm({ ...form, size: e.target.value })
-          }
-          className="w-full border rounded px-3 py-2"
-        />
-      </div>
-
-      {/* Category */}
-      <div>
-        <label className="block text-xs font-semibold mb-2">
-          Category
-        </label>
-        <select
-          value={form.cid || ""}
-          onChange={(e) =>
-            setForm({ ...form, cid: e.target.value })
-          }
-          className="w-full border rounded px-3 py-2"
-        >
-          <option value="">Select Category</option>
-          {categories.map((cat) => (
-            <option key={cat.cid} value={cat.cid}>
-              {cat.categoryName}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Image Upload */}
-      <div>
-        <label className="block text-xs font-semibold mb-2">
-          Product Image
-        </label>
-        <input
-          type="file"
-          onChange={(e) =>
-            setForm({ ...form, image: e.target.files[0] })
-          }
-          className="w-full"
-        />
-      </div>
-
-      {/* Active Status */}
-      <div className="flex items-center gap-3 mt-6">
-        <input
-          type="checkbox"
-          checked={form.isActive}
-          onChange={(e) =>
-            setForm({ ...form, isActive: e.target.checked })
-          }
-        />
-        <label className="text-sm">Active</label>
-      </div>
-
-    </div>
-  </div>
-</Modal>
+          </div>
+        </div>
+      </Modal>
 
       {/* Delete */}
       <Modal

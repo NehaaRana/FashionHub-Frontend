@@ -111,4 +111,26 @@ export const updateProduct = (id, data) =>
 export const deleteProduct = (id) =>
   API.delete(`/Products/${id}`);
 
+
+// ================= REVIEWS =================
+
+// Get reviews for vendor
+export const getVendorReviews = (vid) =>
+  API.get(`/Reviews/vendor/${vid}`);
+
+// Get all reviews (admin use)
+export const getReviews = () => API.get("/Reviews");
+
+// Create review (customer side)
+export const createReview = (data) =>
+  API.post("/Reviews", data);
+
+// Update review
+export const updateReview = (id, data) =>
+  API.put(`/Reviews/${id}`, data);
+
+// Delete review
+export const deleteReview = (id) =>
+  API.delete(`/Reviews/${id}`);
+
 export default API;
