@@ -111,6 +111,8 @@ export const updateProduct = (id, data) =>
 export const deleteProduct = (id) =>
   API.delete(`/Products/${id}`);
 
+// Get ALL products (Admin)
+export const getAllProducts = () => API.get("/Products");
 
 // ================= REVIEWS =================
 
