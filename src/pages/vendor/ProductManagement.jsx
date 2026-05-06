@@ -106,8 +106,11 @@ const ProductManagement = () => {
   const fetchCategories = async () => {
     try {
       const res = await getCategories();
-       console.log("CATEGORIES:", res.data)
-      setCategories(res.data);
+        //  Only ACTIVE categories
+        const activeCategories = res.data.filter(cat => cat.isActive === true);
+ 
+      console.log("CATEGORIES:", res.data)
+      setCategories(activeCategories);
     } catch (err) {
       console.error(err);
     }

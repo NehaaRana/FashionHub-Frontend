@@ -23,6 +23,7 @@ import VendorPending from "./pages/VendorPending";
 import AdminVendorApplications from "./components/admin/AdminVenorApplication";
 import ProductManagement from "./pages/vendor/ProductManagement";
 import ReviewManagement from "./pages/vendor/ReviewManagement";
+import AllProductManagement from "./pages/admin/AllProductManagement";
 
 function App() {
 
@@ -50,7 +51,7 @@ function App() {
           <Route path="/admin/customers" element={<UserManagement />} />
           <Route path="/admin/vendors" element={<VendorManagement />} />
           <Route path="/admin/orders" element={<OrdersManagement />} />
-
+          <Route path="/admin/products" element={<AllProductManagement />} />
        
         <Route path="/admin/categories" element={<CategoryManagement />} />
         <Route path="/admin/coupons" element={<CouponManagement />} />
