@@ -53,7 +53,7 @@ const Login = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
 
-      {/* 🌟 Background glow (premium effect) */}
+      {/* Background glow (premium effect) */}
       <div className="absolute inset-0 -z-10 bg-[hsl(var(--background))]" />
 
       <div

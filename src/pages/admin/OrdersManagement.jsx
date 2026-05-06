@@ -167,7 +167,7 @@ const OrdersManagement = () => {
     }
   };
 
-  // 🔍 Search
+  // Search
   const filtered = useMemo(() => {
     return rows.filter((o) =>
       o.address?.toLowerCase().includes(search.toLowerCase()) ||
@@ -175,7 +175,7 @@ const OrdersManagement = () => {
     );
   }, [rows, search]);
 
-  // 📊 Stats
+  //  Stats
   const stats = useMemo(() => {
     const total = rows.length;
     const pending = rows.filter((o) => o.orderStatus === "pending").length;

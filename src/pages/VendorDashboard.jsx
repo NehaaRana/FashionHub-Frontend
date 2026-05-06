@@ -76,6 +76,14 @@ const VendorDashboard = () => {
   const isApproved = !app || app.status === "Approved";
   const vendorName = app?.storeName || "Saanjh Couture";
 
+  const fetchProducts = async () => {
+    const vendorId = Number(localStorage.getItem("vendorId"));
+
+    const res = await getVendorProducts(vendorId);
+
+    setProducts(res.data);
+  };
+
   return (
     <DashboardLayout role="Vendor" userName={vendorName} items={items}>
       <div className="p-6 lg:p-12">

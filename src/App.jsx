@@ -21,6 +21,7 @@ import VendorManagement from "./pages/admin/VendorManagement";
 import OrdersManagement from "./pages/admin/OrdersManagement";
 import VendorPending from "./pages/VendorPending";
 import AdminVendorApplications from "./components/admin/AdminVenorApplication";
+import ProductManagement from "./pages/vendor/ProductManagement";
 
 
 function App() {
@@ -53,7 +54,7 @@ function App() {
        
         <Route path="/admin/categories" element={<CategoryManagement />} />
         <Route path="/admin/coupons" element={<CouponManagement />} />
-
+        <Route path="/vendor/products" element={<ProductManagement />} />
          {/* Role-Based Dashboard Route */}
         <Route
           path="/dashboard"
