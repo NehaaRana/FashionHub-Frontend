@@ -19,6 +19,8 @@ import CouponManagement from "./pages/admin/CouponManagement";
 import UserManagement from "./pages/admin/UserManagement";
 import VendorManagement from "./pages/admin/VendorManagement";
 import OrdersManagement from "./pages/admin/OrdersManagement";
+import VendorPending from "./pages/VendorPending";
+import AdminVendorApplications from "./components/admin/AdminVenorApplication";
 
 
 function App() {
@@ -65,7 +67,8 @@ function App() {
             )
           }
         />
-        
+        <Route path="/vendor-pending" element={<VendorPending />} />
+        <Route path="/admin/vendor-applications" element={<AdminVendorApplications />} />
       </Routes>
     </BrowserRouter>
   )

@@ -25,6 +25,19 @@ export const registerVendor = (data) => {
   return API.post("/Vendors/register", data);
 };
 
+export const getVendorByEmail = (email) => 
+  API.get(`/Vendors/by-email/${email}`);
+
+export const getPendingVendors = () =>
+  API.get("/Vendors").then(res =>
+    res.data.filter(v => v.approvedByAdmin === "Pending")
+  );
+
+export const updateVendorStatus = (id, status) =>
+  API.put(`/Vendors/${id}`, { approvedByAdmin: status });
+
+export const approveVendor = (id) => API.put(`/Vendors/approve/${id}`);
+export const rejectVendor = (id) => API.put(`/Vendors/reject/${id}`);
 // ================= AUTH =================
 
 // Login (User + Vendor + Admin)

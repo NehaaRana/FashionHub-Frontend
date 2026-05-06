@@ -90,36 +90,36 @@ const CategoryGrid = () => {
 
           {categories.map((cat) => (
             <div
-  key={cat.name}
-  className="group relative overflow-hidden aspect-[3/4] cursor-pointer"
->
-  {/* IMAGE */}
-  <img
-    src={cat.image}
-    alt={cat.name}
-    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-  />
+              key={cat.name}
+              className="group relative overflow-hidden aspect-[3/4] cursor-pointer"
+            >
+              {/* IMAGE */}
+              <img
+                src={cat.image}
+                alt={cat.name}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
 
-  {/* DARK OVERLAY (IMPORTANT FIX) */}
-  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              {/* DARK OVERLAY (IMPORTANT FIX) */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
-  {/* TAG */}
-  {cat.tag && (
-    <span className="absolute top-4 right-4 bg-[#c08a5b] text-white text-[10px] px-3 py-1 tracking-widest z-20">
-      {cat.tag}
-    </span>
-  )}
+              {/* TAG */}
+              {cat.tag && (
+                <span className="absolute top-4 right-4 bg-[#c08a5b] text-white text-[10px] px-3 py-1 tracking-widest z-20">
+                  {cat.tag}
+                </span>
+              )}
 
-  {/* TEXT */}
-  <div className="absolute bottom-6 left-6 z-20">
-    <h3 className="text-white text-xl md:text-2xl font-semibold leading-tight">
-      {cat.name}
-    </h3>
-    <p className="text-white/80 text-[11px] uppercase tracking-[0.25em] mt-1">
-      {cat.subtitle}
-    </p>
-  </div>
-</div>
+              {/* TEXT */}
+              <div className="absolute bottom-6 left-6 z-20">
+                <h3 className="text-white text-xl md:text-2xl font-semibold leading-tight">
+                  {cat.name}
+                </h3>
+                <p className="text-white/80 text-[11px] uppercase tracking-[0.25em] mt-1">
+                  {cat.subtitle}
+                </p>
+              </div>
+            </div>
           ))}
 
         </div>
