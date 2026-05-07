@@ -11,27 +11,10 @@ import {
   Calendar,
 } from "lucide-react";
 
-import { getCurrentUser } from "../../services/api";
+import { getCurrentUser,updateVendor  } from "../../services/api";
 
-const VendorSettings = () => {
 
-  const [profile, setProfile] = useState({
-    vid: "",
-    gid: "",
-    vendorname: "",
-    brandname: "",
-    ownername: "",
-    email: "",
-    mobileno: "",
-    city: "",
-    state: "",
-    gender: "",
-    specialization: "",
-    approvedByAdmin: "",
-    createdAt: "",
-  });
-
-  const Row = ({ icon: Icon, text }) => (
+ const Row = ({ icon: Icon, text }) => (
     <div className="flex items-center gap-3 font-body text-sm text-muted-foreground">
       <Icon className="h-4 w-4 text-accent shrink-0" />
       <span className="truncate">{text}</span>
@@ -52,6 +35,80 @@ const VendorSettings = () => {
       />
     </div>
   );
+const VendorSettings = () => {
+
+  const [profile, setProfile] = useState({
+    vid: "",
+    gid: "",
+    vendorname: "",
+    brandname: "",
+    ownername: "",
+    email: "",
+    mobileno: "",
+    city: "",
+    state: "",
+    gender: "",
+    specialization: "",
+    approvedByAdmin: "",
+    createdAt: "",
+  });
+
+  // vendor Save data
+  // const handleSave = async () => {
+
+  //   try {
+
+  //     await updateVendor(profile.vid, profile);
+
+  //     alert("Profile Updated Successfully");
+
+  //   } catch (err) {
+
+  //     console.log(err);
+
+  //     alert("Failed To Update Profile");
+  //   }
+  // };
+
+    const handleSave = async () => {
+
+      try {
+
+        await updateVendor(profile.vid, profile);
+
+        // fetch updated vendor
+        const res = await getCurrentUser();
+
+        const vendor = res.data;
+
+        setProfile({
+          vid: vendor.vid || "",
+          gid: vendor.gid || "",
+          vendorname: vendor.vendorname || "",
+          brandname: vendor.brandname || "",
+          ownername: vendor.ownername || "",
+          email: vendor.email || "",
+          mobileno: vendor.mobileno || "",
+          city: vendor.city || "",
+          state: vendor.state || "",
+          gender: vendor.gender || "",
+          specialization: vendor.specialization || "",
+          approvedByAdmin: vendor.approvedByAdmin || "",
+          createdAt: vendor.createdAt
+            ? vendor.createdAt.split("T")[0]
+            : "",
+        });
+
+        alert("Profile Updated Successfully");
+
+      } catch (err) {
+
+        console.log(err);
+
+        alert("Failed To Update Profile");
+      }
+    };
+    
 
   useEffect(() => {
 
@@ -279,7 +336,9 @@ const VendorSettings = () => {
 
               </div>
 
-              <button className="mt-4 bg-primary px-4 py-2 text-white rounded-sm">
+              <button
+               onClick={handleSave}
+                className="mt-4 bg-primary px-4 py-2 text-white rounded-sm">
                 Save Changes
               </button>
 

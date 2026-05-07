@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL :"http://localhost:5041/api"
+  // baseURL :"http://localhost:5041/api"
+  baseURL :"https://localhost:7106/api"
 });
 
 //  Attach JWT Token Automatically
@@ -25,8 +26,14 @@ export const registerVendor = (data) => {
   return API.post("/Vendors/register", data);
 };
 
+
 export const getVendorByEmail = (email) => 
   API.get(`/Vendors/by-email/${email}`);
+
+
+// update vendor
+export const updateVendor = (id, data) =>
+  API.put(`/Vendors/${id}`, data);
 
 export const getPendingVendors = () =>
   API.get("/Vendors").then(res =>

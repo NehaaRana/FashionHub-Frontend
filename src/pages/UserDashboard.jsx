@@ -2,7 +2,8 @@ import DashboardLayout from "../components/DashboardLayout";
 import DashHeader from "../components/dashboard/DashHeader";
 import StatCard from "../components/dashboard/StatCard";
 import { useEffect, useState } from "react";
-import { getCurrentUser,getCoupons,getOrders,getWishlist } from "../services/api";
+import { getCurrentUser,getCoupons,getOrders,getWishlist ,getUserOrders,
+getUserWishlist} from "../services/api";
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -40,41 +41,76 @@ const [wishlist, setWishlist] = useState([]);
   const [user, setUser] = useState(null);
 
 
+//   useEffect(() => {
+//   const loadUserAndData = async () => {
+//     try {
+//       const userRes = await getCurrentUser();
+//       const currentUser = userRes.data;
+//       setUser(currentUser);
+
+//       // fetch all data in parallel
+//       const [ordersRes, couponsRes, wishlistRes] = await Promise.all([
+//         getOrders(),
+//         getCoupons(),
+//         getWishlist()
+//       ]);
+
+//       // FILTER BY USER (VERY IMPORTANT)
+//       const userOrders = ordersRes.data.filter(
+//         (o) => o.userId === currentUser.uid
+//       );
+
+//       const userWishlist = wishlistRes.data.filter(
+//         (w) => w.userId === currentUser.uid
+//       );
+
+//       setOrders(userOrders);
+//       setCoupons(couponsRes.data);
+//       setWishlist(userWishlist);
+
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   };
+
+//   loadUserAndData();
+// }, []);
   useEffect(() => {
+
   const loadUserAndData = async () => {
+
     try {
+
+      // current logged-in user
       const userRes = await getCurrentUser();
+
       const currentUser = userRes.data;
+
       setUser(currentUser);
 
-      // fetch all data in parallel
-      const [ordersRes, couponsRes, wishlistRes] = await Promise.all([
-        getOrders(),
-        getCoupons(),
-        getWishlist()
-      ]);
+      // fetch user-specific data
+      const [ordersRes, couponsRes, wishlistRes] =
+        await Promise.all([
+          getUserOrders(currentUser.uid),
+          getCoupons(),
+          getUserWishlist(currentUser.uid),
+        ]);
 
-      // FILTER BY USER (VERY IMPORTANT)
-      const userOrders = ordersRes.data.filter(
-        (o) => o.userId === currentUser.uid
-      );
-
-      const userWishlist = wishlistRes.data.filter(
-        (w) => w.userId === currentUser.uid
-      );
-
-      setOrders(userOrders);
+      setOrders(ordersRes.data);
       setCoupons(couponsRes.data);
-      setWishlist(userWishlist);
+      setWishlist(wishlistRes.data);
 
     } catch (err) {
+
       console.log(err);
+
     }
+
   };
 
   loadUserAndData();
-}, []);
 
+}, []);
   if (!user) {
     return <div className="p-10">Loading dashboard...</div>;
   }
@@ -127,7 +163,7 @@ const [wishlist, setWishlist] = useState([]);
                     ))}
                   </tr>
                 </thead>
-                <tbody>
+                {/* <tbody>
                   {orders.map((o) => (
                     <tr key={o.oid} className="border-t border-border hover:bg-secondary/30 transition-colors">
                       <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">{o.oid}</td>
@@ -141,6 +177,42 @@ const [wishlist, setWishlist] = useState([]);
                           {o.status}
                         </span>
                       </td>
+                    </tr>
+                  ))}
+                </tbody> */}
+                <tbody>
+                  {orders.map((o) => (
+                    <tr
+                      key={o.oid}
+                      className="border-t border-border hover:bg-secondary/30 transition-colors"
+                    >
+
+                      <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">
+                        #{o.oid}
+                      </td>
+
+                      <td className="px-6 py-4 font-body text-xs text-muted-foreground">
+                        {o.orderDate?.split("T")[0]}
+                      </td>
+
+                      <td className="px-6 py-4 font-body text-sm text-foreground">
+                        {o.deliveryAddress}
+                      </td>
+
+                      <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">
+                        ₹{o.amount}
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-block font-body text-[10px] uppercase tracking-[0.15em] font-semibold px-3 py-1 rounded-sm ${
+                            statusColor[o.orderStatus] || "bg-gray-100 text-gray-700"
+                          }`}
+                        >
+                          {o.orderStatus}
+                        </span>
+                      </td>
+
                     </tr>
                   ))}
                 </tbody>
