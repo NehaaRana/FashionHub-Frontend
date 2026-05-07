@@ -1,9 +1,8 @@
-import { Heart, ShoppingBag, Search, Menu, X, User } from "lucide-react";
+import { Heart, ShoppingBag, Search, Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 
-// const navLinks = ["New Arrivals", "Summer Sale", "Winter Collection", "Festival Combos", "Coupons"];
 const navLinks = [
   { label: "New Arrivals", to: "/new-arrivals" },
   { label: "Summer Sale", to: "/summer-sale" },
@@ -14,15 +13,21 @@ const navLinks = [
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem("user")
   );
-
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    setIsLoggedIn(!!user);
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+
+      setUser(parsedUser);
+      setIsLoggedIn(true);
+    }
   }, []);
   return (
     <nav className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-gray-200">
@@ -52,33 +57,9 @@ const Navbar = () => {
               >
                 {link.label}
               </Link>
-              {/* <a
-                href="#"
-                className="font-body text-xs uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors duration-300"
-              > 
-                {link}
-              </a>*/}
             </li>
           ))}
         </ul>
-
-        {/* Icons */}
-        {/* <div className="flex items-center gap-4">
-          <button aria-label="Search" className="text-foreground hover:text-accent transition-colors">
-            <Search className="h-5 w-5" />
-          </button>
-          <button aria-label="Account" className="hidden sm:block text-foreground hover:text-accent transition-colors">
-            <User className="h-5 w-5" />
-          </button>
-          <button aria-label="Wishlist" className="text-foreground hover:text-accent transition-colors relative">
-            <Heart className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">2</span>
-          </button>
-          <button aria-label="Cart" className="text-foreground hover:text-accent transition-colors relative">
-            <ShoppingBag className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">3</span>
-          </button>
-        </div> */}
         <div className="flex items-center gap-4">
 
           {!isLoggedIn ? (
@@ -98,22 +79,70 @@ const Navbar = () => {
               </Link>
             </>
           ) : (
-            // 🔓 AFTER LOGIN
+            // AFTER LOGIN
             <>
               <button className="text-foreground hover:text-accent transition-colors">
                 <Search className="h-5 w-5" />
               </button>
 
-              <button className="text-foreground hover:text-accent transition-colors">
-                <User className="h-5 w-5" />
-              </button>
+              <div className="relative">
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="flex items-center gap-2 hover:text-accent transition-colors"
+                >
+                  <div className="h-9 w-9 rounded-full bg-accent text-white flex items-center justify-center text-sm font-semibold uppercase">
+                    {user?.username?.charAt(0)}
+                  </div>
 
-              {/* <button className="text-foreground hover:text-accent transition-colors relative">
-                <Heart className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
-                  2
-                </span>
-              </button> */}
+                  <div className="hidden md:block text-left">
+                    <p className="text-sm font-semibold leading-none">
+                      {user?.username}
+                    </p>
+
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+                      My Account
+                    </p>
+                  </div>
+
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+
+                {profileOpen && (
+                  <div className="absolute right-0 mt-3 w-52 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden z-50 animate-fade-in">
+
+                    <Link
+                      to="/dashboard/profile"
+                      onClick={() => setProfileOpen(false)}
+                      className="block px-4 py-3 text-sm hover:bg-gray-100 transition-colors"
+                    >
+                      My Profile
+                    </Link>
+
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setProfileOpen(false)}
+                      className="block px-4 py-3 text-sm hover:bg-gray-100 transition-colors"
+                    >
+                      Dashboard
+                    </Link>
+
+                    <button
+                      onClick={() => {
+                        localStorage.removeItem("user");
+                        localStorage.removeItem("token");
+
+                        setProfileOpen(false);
+                        setIsLoggedIn(false);
+
+                        window.location.href = "/";
+                      }}
+                      className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
               <Link
                 to="/wishlist"
                 className="text-foreground hover:text-accent transition-colors relative"
@@ -123,14 +152,6 @@ const Navbar = () => {
                   2
                 </span>
               </Link>
-
-              {/* <button className="text-foreground hover:text-accent transition-colors relative">
-                <ShoppingBag className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
-                  3
-                </span>
-              </button> */}
-
               <Link
                 to="/cart"
                 className="text-foreground hover:text-accent transition-colors relative"
@@ -141,16 +162,30 @@ const Navbar = () => {
                 </span>
               </Link>
 
+            
               <button
                 onClick={() => {
                   localStorage.removeItem("user");
+                  localStorage.removeItem("token");
+                  setIsLoggedIn(false);
+                  window.location.href = "/";
+                }}
+                className="text-xs uppercase tracking-[0.15em] px-4 py-2 border"
+              >
+                Logout
+              </button>
+              {/* <button
+                onClick={() => {
+                  // localStorage.removeItem("user");
+                  localStorage.removeItem("user");
+                  localStorage.removeItem("token");
                   setIsLoggedIn(false);
                   window.location.href = "/";
                 }} // temp logout
                 className="text-xs uppercase tracking-[0.15em] px-4 py-2 border"
               >
                 Logout
-              </button>
+              </button> */}
             </>
           )}
 
@@ -161,16 +196,6 @@ const Navbar = () => {
       {mobileOpen && (
         <div className="lg:hidden border-t border-border bg-background animate-fade-in">
           <ul className="w-full px-4 py-4 space-y-3">
-            {/* {navLinks.map((link) => (
-              <li key={link}>
-                <a
-                  href="#"
-                  className="block font-body text-sm uppercase tracking-[0.1em] text-foreground py-2"
-                >
-                  {link}
-                </a>
-              </li>
-            ))} */}
             {navLinks.map((link) => (
               <li key={link.to}>
                 <Link
