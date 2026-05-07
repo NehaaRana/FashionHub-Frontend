@@ -91,17 +91,22 @@ const Navbar = () => {
                   className="flex items-center gap-2 hover:text-accent transition-colors"
                 >
                   <div className="h-9 w-9 rounded-full bg-accent text-white flex items-center justify-center text-sm font-semibold uppercase">
-                    {user?.username?.charAt(0)}
+                    {/* {user?.username?.charAt(0)} */}
+                    {(user?.username || user?.vendorname)?.charAt(0)}
                   </div>
 
                   <div className="hidden md:block text-left">
                     <p className="text-sm font-semibold leading-none">
-                      {user?.username}
+                      {/* {user?.username} */}
+                      {user?.username || user?.vendorname}
                     </p>
 
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+                    {/* <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
                       My Account
-                    </p>
+                    </p> */}
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+  {user?.role}
+</p>
                   </div>
 
                   <ChevronDown className="h-4 w-4" />
@@ -110,7 +115,7 @@ const Navbar = () => {
                 {profileOpen && (
                   <div className="absolute right-0 mt-3 w-52 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden z-50 animate-fade-in">
 
-                    <Link
+                    {/* <Link
                       to="/dashboard/profile"
                       onClick={() => setProfileOpen(false)}
                       className="block px-4 py-3 text-sm hover:bg-gray-100 transition-colors"
@@ -124,8 +129,31 @@ const Navbar = () => {
                       className="block px-4 py-3 text-sm hover:bg-gray-100 transition-colors"
                     >
                       Dashboard
+                    </Link> */}
+
+                    <Link
+                      to={
+                        user?.role === "vendor"
+                          ? "/vendor/profile"
+                          : "/dashboard/profile"
+                      }
+                      onClick={() => setProfileOpen(false)}
+                      className="block px-4 py-3 text-sm hover:bg-gray-100 transition-colors"
+                    >
+                      My Profile
                     </Link>
 
+                    <Link
+                      to={
+                        user?.role === "vendor"
+                          ? "/vendor-dashboard"
+                          : "/dashboard"
+                      }
+                      onClick={() => setProfileOpen(false)}
+                      className="block px-4 py-3 text-sm hover:bg-gray-100 transition-colors"
+                    >
+                      Dashboard
+                    </Link>
                     <button
                       onClick={() => {
                         localStorage.removeItem("user");
@@ -162,7 +190,7 @@ const Navbar = () => {
                 </span>
               </Link>
 
-            
+
               <button
                 onClick={() => {
                   localStorage.removeItem("user");
@@ -174,18 +202,6 @@ const Navbar = () => {
               >
                 Logout
               </button>
-              {/* <button
-                onClick={() => {
-                  // localStorage.removeItem("user");
-                  localStorage.removeItem("user");
-                  localStorage.removeItem("token");
-                  setIsLoggedIn(false);
-                  window.location.href = "/";
-                }} // temp logout
-                className="text-xs uppercase tracking-[0.15em] px-4 py-2 border"
-              >
-                Logout
-              </button> */}
             </>
           )}
 
