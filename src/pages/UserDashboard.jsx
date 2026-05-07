@@ -14,6 +14,7 @@ import {
   Star,
   Gift,
 } from "lucide-react";
+import { userNav } from "./user/userNav";
 
 const items = [
   { label: "Overview", to: "/dashboard", icon: LayoutDashboard },
@@ -23,18 +24,6 @@ const items = [
   { label: "Addresses", to: "/dashboard/addresses", icon: MapPin },
   { label: "Profile", to: "/dashboard/profile", icon: User },
 ];
-
-// const orders = [
-//   { id: "#FH-10241", date: "Apr 28, 2026", items: 2, total: "₹4,890", status: "Delivered" },
-//   { id: "#FH-10198", date: "Apr 19, 2026", items: 1, total: "₹1,750", status: "Shipped" },
-//   { id: "#FH-10162", date: "Apr 11, 2026", items: 3, total: "₹6,420", status: "Processing" },
-// ];
-
-// const coupons = [
-//   { code: "SUMMER26", off: "25% OFF", desc: "Summer collection — min. ₹1,999", expires: "Jun 30" },
-//   { code: "FASHION20", off: "20% OFF", desc: "Sitewide — first order only", expires: "Dec 31" },
-//   { code: "FESTIVE15", off: "15% OFF", desc: "Festival combos", expires: "May 30" },
-// ];
 
 const statusColor = {
   Delivered: "bg-emerald-100 text-emerald-700",
@@ -50,18 +39,6 @@ const [wishlist, setWishlist] = useState([]);
 
   const [user, setUser] = useState(null);
 
-  // useEffect(() => {
-  //   const loadUser = async () => {
-  //     try {
-  //       const res = await getCurrentUser();
-  //       setUser(res.data);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-
-  //   loadUser();
-  // }, []);
 
   useEffect(() => {
   const loadUserAndData = async () => {
@@ -77,7 +54,7 @@ const [wishlist, setWishlist] = useState([]);
         getWishlist()
       ]);
 
-      // ⚠️ FILTER BY USER (VERY IMPORTANT)
+      // FILTER BY USER (VERY IMPORTANT)
       const userOrders = ordersRes.data.filter(
         (o) => o.userId === currentUser.uid
       );
@@ -107,7 +84,7 @@ const [wishlist, setWishlist] = useState([]);
     <DashboardLayout
       role={user?.role || "User"}
       userName={user?.username || user?.name || "User"}
-      items={items}
+      items={userNav}
     >      <div className="p-6 lg:p-12">
         <DashHeader
           eyebrow="My Account"
@@ -152,8 +129,8 @@ const [wishlist, setWishlist] = useState([]);
                 </thead>
                 <tbody>
                   {orders.map((o) => (
-                    <tr key={o.id} className="border-t border-border hover:bg-secondary/30 transition-colors">
-                      <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">{o.id}</td>
+                    <tr key={o.oid} className="border-t border-border hover:bg-secondary/30 transition-colors">
+                      <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">{o.oid}</td>
                       <td className="px-6 py-4 font-body text-xs text-muted-foreground">{o.date}</td>
                       <td className="px-6 py-4 font-body text-sm text-foreground">{o.items}</td>
                       <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">{o.total}</td>

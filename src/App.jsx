@@ -24,6 +24,11 @@ import AdminVendorApplications from "./components/admin/AdminVenorApplication";
 import ProductManagement from "./pages/vendor/ProductManagement";
 import ReviewManagement from "./pages/vendor/ReviewManagement";
 import AllProductManagement from "./pages/admin/AllProductManagement";
+import UserOrders from "./pages/user/UserOrder";
+import UserWishlist from "./pages/user/UserWishlist";
+import UserCoupons from "./pages/user/UserCoupon";
+import UserAddresses from "./pages/user/UserAddress";
+import UserProfile from "./pages/user/UserProfile";
 
 function App() {
 
@@ -72,6 +77,14 @@ function App() {
         />
         <Route path="/vendor-pending" element={<VendorPending />} />
         <Route path="/admin/vendor-applications" element={<AdminVendorApplications />} />
+
+
+        {/* user dashboard */}
+        <Route path="/dashboard/orders" element={<UserOrders />} />
+        <Route path="/dashboard/wishlist" element={<UserWishlist />} />
+        <Route path="/dashboard/coupons" element={<UserCoupons />} />
+        <Route path="/dashboard/addresses" element={<UserAddresses />} />
+        <Route path="/dashboard/profile" element={<UserProfile />} />
       </Routes>
     </BrowserRouter>
   )

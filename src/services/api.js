@@ -78,6 +78,10 @@ export const getUsers = () => API.get("/Users");
 export const deleteUser = (id) =>
   API.delete(`/Users/${id}`);
 
+//update user
+export const updateUser = (id, data) =>
+  API.put(`/Users/${id}`, data);
+
 
 // Vendors
 
@@ -89,6 +93,18 @@ export const deleteVendor = (id) =>
 //Orders
 export const getOrders = () => API.get("/Orders");
 
+// get order by user
+export const getUserOrders = (uid) =>
+  API.get(`/Orders/user/${uid}`);
+
+
+//get wishlist by user
+export const getUserWishlist = (uid) =>
+  API.get(`/Wishlists/user/${uid}`);
+
+//delete wishlist item
+export const deleteWishlist = (id) =>
+  API.delete(`/Wishlists/${id}`);
 
 
 //Products
