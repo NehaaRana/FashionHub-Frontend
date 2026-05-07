@@ -1,28 +1,9 @@
-// import DashboardCard from "../components/ui/DashboardCard";
-
-// const VendorDashboard = () => {
-//   return (
-//     <div style={{ padding: "20px" }}>
-//       <h1>Vendor Dashboard</h1>
-
-//       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
-//         <DashboardCard title="My Products" value="30" />
-//         <DashboardCard title="Orders Received" value="80" />
-//         <DashboardCard title="Earnings" value="₹25,000" />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default VendorDashboard;
-
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
 import DashHeader from "../components/dashboard/DashHeader";
 import StatCard from "../components/dashboard/StatCard";
-import { getVendorProducts, getOrders } from "../services/api";
+import { getVendorProducts, getOrders ,getCurrentUser,getVendorOrders} from "../services/api";
 import {
   LayoutDashboard,
   Package,
@@ -50,22 +31,12 @@ const items = [
   { label: "Store Settings", to: "/vendor/settings", icon: Settings },
 ];
 
-// const products = [
-//   { name: "Ivory Silk Anarkali", sku: "FH-AN-204", stock: 12, price: "₹4,890", sold: 38, status: "Active" },
-//   { name: "Onyx Velvet Saree", sku: "FH-SR-118", stock: 4, price: "₹7,250", sold: 22, status: "Low Stock" },
-//   { name: "Gold Mirror Lehenga", sku: "FH-LH-091", stock: 0, price: "₹12,400", sold: 17, status: "Out of Stock" },
-//   { name: "Pastel Linen Kurti", sku: "FH-KR-045", stock: 28, price: "₹1,490", sold: 64, status: "Active" },
-// ];
 
-// const incoming = [
-//   { id: "#FH-10248", product: "Ivory Silk Anarkali", qty: 1, customer: "Aanya S.", total: "₹4,890" },
-//   { id: "#FH-10247", product: "Pastel Linen Kurti", qty: 2, customer: "Priya I.", total: "₹2,980" },
-//   { id: "#FH-10246", product: "Onyx Velvet Saree", qty: 1, customer: "Mehak K.", total: "₹7,250" },
-// ];
 
 
 
 const VendorDashboard = () => {
+  const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [stats, setStats] = useState({
@@ -91,40 +62,97 @@ const VendorDashboard = () => {
   const [app, setApp] = useState(() => vendorStore.current());
   // useEffect(() => subscribeVendors(() => setApp(vendorStore.current())), []);
 
+  // useEffect(() => {
+  //   const vendorId = localStorage.getItem("vendorId");
+
+  //   const fetchData = async () => {
+  //     try {
+
+  //       // CURRENT LOGGED IN USER
+  //       const userRes = await getCurrentUser();
+  //       setUser(userRes.data);
+
+  //       // PRODUCTS
+  //       const prodRes = await getVendorProducts(vendorId);
+  //       setProducts(prodRes.data);
+
+  //       // ORDERS (you may need filter backend later)
+  //       const vendorOrders = await getVendorOrders(vendorId);
+  //       // const vendorOrders = orderRes.data.filter(
+  //       //   (o) => o.vendorId === Number(vendorId)
+  //       // );
+
+  //       setOrders(vendorOrders);
+
+  //       // STATS
+  //       setStats({
+  //         products: prodRes.data.length,
+  //         orders: vendorOrders.length,
+  //         earnings: vendorOrders.reduce((sum, o) => sum + o.totalAmount, 0),
+  //         rating: 4.8,
+  //       });
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
-    const vendorId = localStorage.getItem("vendorId");
-
-    const fetchData = async () => {
+    const loadVendorData = async () => {
       try {
-        // PRODUCTS
-        const prodRes = await getVendorProducts(vendorId);
-        setProducts(prodRes.data);
 
-        // ORDERS (you may need filter backend later)
-        const orderRes = await getOrders();
-        const vendorOrders = orderRes.data.filter(
-          (o) => o.vendorId === Number(vendorId)
+        // CURRENT LOGGED IN VENDOR
+        const userRes = await getCurrentUser();
+        const currentVendor = userRes.data;
+
+        console.log(currentVendor);
+
+        setUser(currentVendor);
+
+        // FETCH PRODUCTS + ORDERS
+        const [productsRes, ordersRes] = await Promise.all([
+          getVendorProducts(currentVendor.vid || currentVendor.Vid),
+          getOrders(),
+        ]);
+
+        // FILTER VENDOR ORDERS
+        const vendorOrders = ordersRes.data.filter(
+          (o) =>
+            o.vendorId === currentVendor.vid ||
+            o.vendorId === currentVendor.Vid
         );
 
+        setProducts(productsRes.data);
         setOrders(vendorOrders);
 
         // STATS
         setStats({
-          products: prodRes.data.length,
+          products: productsRes.data.length,
           orders: vendorOrders.length,
-          earnings: vendorOrders.reduce((sum, o) => sum + o.totalAmount, 0),
+          earnings: vendorOrders.reduce(
+            (sum, o) => sum + o.totalAmount,
+            0
+          ),
           rating: 4.8,
         });
+
       } catch (err) {
-        console.error(err);
+        console.log(err);
       }
     };
 
-    fetchData();
+    loadVendorData();
   }, []);
   const isApproved = !app || app.status === "Approved";
-  const vendorName = app?.storeName || "Saanjh Couture";
-
+  // const vendorName = user?.vendorname || user?.brandname||"Vendor";
+ const vendorName =
+  user?.vendorname ||
+  user?.Vendorname ||
+  user?.brandname ||
+  user?.Brandname ||
+  "Vendor";
   const fetchProducts = async () => {
     const vendorId = Number(localStorage.getItem("vendorId"));
 
@@ -156,10 +184,6 @@ const VendorDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
-          {/* <StatCard label="Total Earnings" value="₹3,42,800" delta="14.8%" icon={DollarSign} delay={0} />
-          <StatCard label="Orders" value="312" delta="9.4%" icon={ShoppingCart} delay={0.05} />
-          <StatCard label="Active Products" value="124" delta="6 added" icon={Package} delay={0.1} />
-          <StatCard label="Avg. Rating" value="4.8" delta="0.2" icon={Star} delay={0.15} /> */}
 
           <StatCard label="Total Earnings" value={`₹${stats.earnings}`} icon={DollarSign} />
           <StatCard label="Orders" value={stats.orders} icon={ShoppingCart} />
@@ -180,7 +204,7 @@ const VendorDashboard = () => {
               </button>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full">
+              {/* <table className="w-full">
                 <thead className="bg-secondary/40">
                   <tr>
                     {["Product", "Price", "Stock", "Sold", "Status"].map((h) => (
@@ -210,6 +234,72 @@ const VendorDashboard = () => {
                           className={`inline-block font-body text-[10px] uppercase tracking-[0.15em] font-semibold px-3 py-1 rounded-sm ${statusColor[p.status]}`}
                         >
                           {p.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table> */}
+              <table className="w-full">
+                <thead className="bg-secondary/40">
+                  <tr>
+                    {["Product", "Price", "Stock", "Image", "Status"].map((h) => (
+                      <th
+                        key={h}
+                        className="text-left font-body text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-semibold px-6 py-3"
+                      >
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {products.map((p) => (
+                    <tr
+                      key={p.pid || p.id}
+                      className="border-t border-border hover:bg-secondary/30 transition-colors"
+                    >
+                      {/* PRODUCT */}
+                      <td className="px-6 py-4">
+                        <p className="font-body text-sm font-semibold text-foreground">
+                          {p.productName || p.name}
+                        </p>
+
+                        <p className="font-body text-[10px] uppercase tracking-[0.15em] text-muted-foreground mt-0.5">
+                          {p.sku}
+                        </p>
+                      </td>
+
+                      {/* PRICE */}
+                      <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">
+                        ₹{p.price}
+                      </td>
+
+                      {/* STOCK */}
+                      <td className="px-6 py-4 font-body text-sm text-foreground">
+                        {p.stock}
+                      </td>
+
+                      {/* IMAGE */}
+                      <td className="px-6 py-4">
+                        <img
+                          src={`https://localhost:7106${p.productImage}`} // Assuming your backend can handle these query params for resizing
+                          alt={p.productName || p.name}
+                          className="w-14 h-14 object-cover rounded-md border"
+                        />
+                      </td>
+
+                      {/* STATUS */}
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-block font-body text-[10px] uppercase tracking-[0.15em] font-semibold px-3 py-1 rounded-sm ${
+                            p.isActive
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "bg-destructive/15 text-destructive"
+                          }`}
+                        >
+                          {p.isActive ? "Active" : "Hidden"}
                         </span>
                       </td>
                     </tr>

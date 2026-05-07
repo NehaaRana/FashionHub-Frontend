@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes,Navigate  } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -23,6 +23,8 @@ import VendorPending from "./pages/VendorPending";
 import AdminVendorApplications from "./components/admin/AdminVenorApplication";
 import ProductManagement from "./pages/vendor/ProductManagement";
 import ReviewManagement from "./pages/vendor/ReviewManagement";
+import VendorOrdersManagement from "./pages/vendor/VendorOrdersManagement";
+import VendorSettings from "./pages/vendor/VendorSettings";
 import AllProductManagement from "./pages/admin/AllProductManagement";
 import UserOrders from "./pages/user/UserOrder";
 import UserWishlist from "./pages/user/UserWishlist";
@@ -62,6 +64,8 @@ function App() {
         <Route path="/admin/coupons" element={<CouponManagement />} />
         <Route path="/vendor/products" element={<ProductManagement />} />
         <Route path="/vendor/reviews" element={<ReviewManagement />} />
+        <Route path="/vendor/orders" element={<VendorOrdersManagement />} />
+        <Route path="/vendor/settings" element={<VendorSettings />} />
          {/* Role-Based Dashboard Route */}
         <Route
           path="/dashboard"
@@ -75,6 +79,43 @@ function App() {
             )
           }
         />
+  
+        {/* User */}
+        {/* <Route
+          path="/dashboard"
+          element={
+            role === "user" ? (
+              <UserDashboard />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        /> */}
+
+        {/* Vendor */}
+        {/* <Route
+          path="/vendor/dashboard"
+          element={
+            role === "vendor" ? (
+              <VendorDashboard />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        /> */}
+
+        {/* Admin */}
+        {/* <Route
+          path="/admin"
+          element={
+            role === "admin" ? (
+              <AdminDashboard />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        /> */}
+
         <Route path="/vendor-pending" element={<VendorPending />} />
         <Route path="/admin/vendor-applications" element={<AdminVendorApplications />} />
 

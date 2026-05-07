@@ -93,6 +93,8 @@ export const deleteVendor = (id) =>
 //Orders
 export const getOrders = () => API.get("/Orders");
 
+export const getVendorOrders = (vid) =>
+  API.get(`/Orders/vendor/${vid}`);
 // get order by user
 export const getUserOrders = (uid) =>
   API.get(`/Orders/user/${uid}`);

@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 export const vendorItems = [
-  { label: "Overview", to: "/vendor", icon: LayoutDashboard },
+  { label: "Overview", to: "/vendor/dashboard", icon: LayoutDashboard },
   { label: "My Products", to: "/vendor/products", icon: Package },
   { label: "Orders", to: "/vendor/orders", icon: ShoppingCart },
   { label: "Earnings", to: "/vendor/earnings", icon: DollarSign },
