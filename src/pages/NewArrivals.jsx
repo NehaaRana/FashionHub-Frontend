@@ -1,63 +1,160 @@
+import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import PageHeader from "../components/PageHeader";
 import ProductCard from "../components/ProductCard";
 import { Button } from "../components/ui/button";
-import product1 from "../assets/product-1.jpg";
-import product2 from "../assets/product-2.jpg";
-import product3 from "../assets/product-3.jpg";
-import product4 from "../assets/product-4.jpg";
+import { getAllProducts , addToCart } from "../services/api";
+import Swal from "sweetalert2";
 
-const products = [
-  { name: "Embroidered Maxi Dress", price: "₹3,499", image: product1, badge: "NEW" },
-  { name: "Pearl Drop Handbag", price: "₹4,899", image: product2, badge: "NEW" },
-  { name: "Linen Wrap Blouse", price: "₹2,199", image: product3, badge: "NEW" },
-  { name: "Crystal Block Heels", price: "₹3,799", image: product4, badge: "NEW" },
-  { name: "Silk Slip Dress", price: "₹2,899", image: product1, badge: "NEW" },
-  { name: "Suede Mini Bag", price: "₹3,299", image: product2, badge: "NEW" },
-  { name: "Floral Co-ord Set", price: "₹2,599", image: product3, badge: "NEW" },
-  { name: "Pointed Toe Pumps", price: "₹2,999", image: product4, badge: "NEW" },
-];
 
 const filters = ["All", "Dresses", "Tops", "Bags", "Shoes", "Accessories"];
 
-const NewArrivals = () => (
-//   <Layout>
-<>
+const NewArrivals = () => {
+  const [products, setProducts] = useState([]);
 
-    <PageHeader
-      eyebrow="Just Dropped"
-      title="New"
-      titleAccent="Arrivals"
-      description="The latest looks straight off the runway. Refreshed weekly with pieces designed for the modern woman."
-    />
-    <section className="py-16 lg:py-20">
-      <div className="container">
-        <div className="flex flex-wrap gap-2 justify-center mb-12">
-          {filters.map((f, i) => (
-            <button
-              key={f}
-              className={`font-body text-xs uppercase tracking-[0.15em] px-5 py-2.5 rounded-sm border transition-colors ${
-                i === 0
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "border-border text-muted-foreground hover:text-foreground hover:border-foreground"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await getAllProducts();
+
+      // only active products
+      const activeProducts = res.data.filter(
+        (p) => p.isActive === true
+      );
+
+      setProducts(activeProducts);
+    } catch (error) {
+      console.log("Error fetching products:", error);
+    }
+  };
+
+   // ADD TO CART
+  const handleAddToCart = async (product) => {
+    // check login
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+      Swal.fire({
+        icon: "warning",
+        title: "Login Required",
+        text: "Please login first!",
+      });
+
+      return;
+    }
+
+    try {
+      // const cartData = {
+      //   uid: user.uid,
+      //   pid: product.pid,
+      //   quantity: 1,
+      //    sizeSelected: product.size,
+      //   colorSelected: product.color,
+      //   addedAt: new Date().toISOString(),
+      // };
+      const cartData = {
+        cartId: 0,
+        uid: Number(user.uid),
+        pid: Number(product.pid),
+        sizeSelected: product.size || "M",
+        quantity: "1",
+        addedAt: new Date().toISOString(),
+        colorSelected: product.color || "Black",
+      };
+      await addToCart(cartData);
+
+      Swal.fire({
+        icon: "success",
+        title: "Added!",
+        text: "Product added to cart successfully",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } catch (error) {
+      console.log(error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to add product to cart",
+      });
+    }
+  };
+
+  return (
+    // <Layout>
+    <>
+      <PageHeader
+        eyebrow="Just Dropped"
+        title="New"
+        titleAccent="Arrivals"
+        description="The latest looks straight off the runway. Refreshed weekly with pieces designed for the modern woman."
+      />
+
+      <section className="py-16 lg:py-20">
+        <div className="container">
+
+          {/* Filters */}
+          <div className="flex flex-wrap gap-2 justify-center mb-12">
+            {filters.map((f, i) => (
+              <button
+                key={f}
+                className={`font-body text-xs uppercase tracking-[0.15em] px-5 py-2.5 rounded-sm border transition-colors ${
+                  i === 0
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "border-border text-muted-foreground hover:text-foreground hover:border-foreground"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+
+          {/* Products */}
+          {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-8">
+            {products.map((p, i) => (
+              <ProductCard
+                key={p.pid}
+                product={{
+                  name: p.productName,
+                  price: `₹${p.price}`,
+                  image: `https://localhost:7106${p.productImage}`,
+                  badge: "NEW",
+                }}
+                delay={0.05 * i}
+              />
+            ))}
+          </div> */}
+           {/* Products */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-8">
+            {products.map((p, i) => (
+              <ProductCard
+                key={p.pid}
+                product={{
+                  ...p,
+                  name: p.productName,
+                  price: `₹${p.price}`,
+                  image: `https://localhost:7106${p.productImage}`,
+                  badge: "NEW",
+                }}
+                delay={0.05 * i}
+                onAddToCart={() => handleAddToCart(p)}
+              />
+            ))}
+          </div>
+          <div className="text-center mt-14">
+            <Button variant="hero" size="lg">
+              Load More
+            </Button>
+          </div>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-8">
-          {products.map((p, i) => (
-            <ProductCard key={p.name + i} product={p} delay={0.05 * i} />
-          ))}
-        </div>
-        <div className="text-center mt-14">
-          <Button variant="hero" size="lg">Load More</Button>
-        </div>
-      </div>
-    </section>
+      </section>
     </>
-//   </Layout>
-);
+    // </Layout>
+  );
+};
 
 export default NewArrivals;

@@ -166,4 +166,22 @@ export const updateReview = (id, data) =>
 export const deleteReview = (id) =>
   API.delete(`/Reviews/${id}`);
 
+
+
+// CARTS
+export const addToCart = (data) =>
+  API.post("/Carts", data);
+
+// Get all carts
+export const getCarts = () =>
+  API.get("/Carts");
+
+// Delete cart item
+export const deleteCartItem = (id) =>
+  API.delete(`/Carts/${id}`);
+
+// Update cart
+export const updateCart = (id, data) =>
+  API.put(`/Carts/${id}`, data);
+
 export default API;
