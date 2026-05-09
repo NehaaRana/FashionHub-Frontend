@@ -3,15 +3,23 @@ import { Button } from "../components/ui/button";
 import { Trash2, Plus, Minus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import {
   getCarts,
   getAllProducts,
   deleteCartItem,
+  getCoupons 
 } from "../services/api";
 
 const Cart = () => {
   const [items, setItems] = useState([]);
+
+  //Coupon
+  const [couponCode, setCouponCode] = useState("");
+const [discount, setDiscount] = useState(0);
+const [appliedCoupon, setAppliedCoupon] = useState(null);
+
+const navigate = useNavigate();
 
   useEffect(() => {
     fetchCartItems();
@@ -76,13 +84,130 @@ const Cart = () => {
   const remove = async (id) => {
     try {
       await deleteCartItem(id);
-
-      setItems(items.filter((i) => i.id !== id));
+      
+      setItems((prev)=>
+        prev.filter((i)=>i.id != id)
+      )
+      // setItems(items.filter((i) => i.id !== id));
     } catch (error) {
       console.log(error);
     }
   };
 
+
+  //Apply Coupon
+//   const applyCoupon = async () => {
+//   try {
+//     const res = await getCoupons();
+
+//     const foundCoupon = res.data.find(
+//       (c) =>
+//         c.couponCode.toLowerCase() ===
+//         couponCode.toLowerCase()
+//     );
+
+//     if (!foundCoupon) {
+//       alert("Invalid Coupon");
+//       return;
+//     }
+
+//     // minimum order check
+//     if (subtotal < foundCoupon.minimumOrderAmount) {
+//       alert(
+//         `Minimum order should be ₹${foundCoupon.minimumOrderAmount}`
+//       );
+//       return;
+//     }
+
+//     let discountAmount = 0;
+
+//     // percentage discount
+//     if (foundCoupon.discountType === "Percentage") {
+//       discountAmount =
+//         (subtotal * foundCoupon.discountValue) / 100;
+//     }
+
+//     // fixed discount
+//     else if (foundCoupon.discountType === "Flat") {
+//       discountAmount = foundCoupon.discountValue;
+//     }
+
+//     setDiscount(discountAmount);
+//     setAppliedCoupon(foundCoupon);
+
+//     alert("Coupon Applied Successfully");
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+    const applyCoupon = async () => {
+  try {
+    const res = await getCoupons();
+
+    const foundCoupon = res.data.find(
+      (c) =>
+        c.couponCode.toLowerCase() ===
+        couponCode.toLowerCase()
+    );
+
+    if (!foundCoupon) {
+      alert("Invalid Coupon");
+      return;
+    }
+
+    // minimum order check
+    if (subtotal < foundCoupon.minimumOrderAmount) {
+      alert(
+        `Minimum order should be ₹${foundCoupon.minimumOrderAmount}`
+      );
+      return;
+    }
+
+    // maximum order check
+    if (subtotal > foundCoupon.maximumOrderAmount) {
+      alert(
+        `Maximum order should be ₹${foundCoupon.maximumOrderAmount}`
+      );
+      return;
+    }
+
+    // convert string to number
+    const percentage = Number(foundCoupon.discountType);
+
+    // invalid percentage
+    if (isNaN(percentage)) {
+      alert("Coupon discount is invalid");
+      return;
+    }
+
+    // calculate discount
+    const discountAmount =
+      (subtotal * percentage) / 100;
+
+    setDiscount(discountAmount);
+    setAppliedCoupon(foundCoupon);
+
+    alert("Coupon Applied Successfully");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+const handleCheckout = () => {
+
+  navigate("/checkout", {
+    state: {
+      items,
+      subtotal,
+      shipping,
+      discount,
+      total,
+      appliedCoupon
+    }
+  });
+
+};
   // TOTALS
   const subtotal = items.reduce(
     (s, i) => s + i.price * i.qty,
@@ -90,8 +215,8 @@ const Cart = () => {
   );
 
   const shipping = subtotal > 999 ? 0 : 99;
-  const total = subtotal + shipping;
-
+  // const total = subtotal + shipping;
+  const total = subtotal + shipping - discount;
   return (
     <>
       <PageHeader
@@ -224,7 +349,30 @@ const Cart = () => {
                         : `₹${shipping}`}
                     </span>
                   </div>
+                  
+                  <div className="mt-5 space-y-3">
+                    <input
+                      type="text"
+                      placeholder="Enter coupon code"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      className="w-full border border-border px-3 py-2 rounded-sm"
+                    />
 
+                    <Button
+                      onClick={applyCoupon}
+                      className="w-full"
+                    >
+                      Apply Coupon
+                    </Button>
+                  </div>
+
+                  {discount > 0 && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Discount</span>
+                      <span>- ₹{discount}</span>
+                    </div>
+                  )}
                   <div className="border-t border-border pt-3 flex justify-between">
                     <span className="font-display text-lg font-bold">
                       Total
@@ -236,13 +384,19 @@ const Cart = () => {
                   </div>
                 </div>
 
-                <Button
+                {/* <Button
                   variant="hero"
                   className="w-full mt-6"
                 >
                   Proceed to Checkout
+                </Button> */}
+                <Button
+                  variant="hero"
+                  className="w-full mt-6"
+                  onClick={handleCheckout}
+                >
+                  Proceed to Checkout
                 </Button>
-
                 <Link
                   to="/coupons"
                   className="block text-center mt-4 font-body text-xs uppercase tracking-[0.15em] text-accent hover:underline"

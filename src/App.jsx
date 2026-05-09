@@ -14,6 +14,7 @@ import FestivalCombos from "./pages/FestivalCombos";
 import Coupons from "./pages/Coupon";
 import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import CategoryManagement from "./pages/admin/CategoryManagement";
 import CouponManagement from "./pages/admin/CouponManagement";
 import UserManagement from "./pages/admin/UserManagement";
@@ -50,6 +51,7 @@ function App() {
           <Route path="/coupons" element={<Coupons />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
           
           {/* <Route path="/admin/categories" element={<CategoryManagement />} />
           <Route path="/admin/coupons" element={<CouponManagement />} /> */}

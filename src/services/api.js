@@ -184,4 +184,10 @@ export const deleteCartItem = (id) =>
 export const updateCart = (id, data) =>
   API.put(`/Carts/${id}`, data);
 
+
+
+// ORDERS
+export const placeOrder = (data) =>
+  API.post("/Orders", data);
+
 export default API;
