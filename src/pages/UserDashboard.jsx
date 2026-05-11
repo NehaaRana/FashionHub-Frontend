@@ -226,10 +226,10 @@ const [wishlist, setWishlist] = useState([]);
               <Gift className="h-4 w-4 text-accent" />
               <h2 className="font-display text-xl font-semibold text-foreground">Your Coupons</h2>
             </div>
-            <ul className="p-4 space-y-3">
+            {/* <ul className="p-4 space-y-3">
               {coupons.map((c) => (
                 <li
-                  key={c.code}
+                  key={c.couponCode}
                   className="border border-dashed border-accent/50 bg-accent/5 rounded-sm p-4 hover:bg-accent/10 transition-colors"
                 >
                   <div className="flex items-center justify-between mb-2">
@@ -241,11 +241,44 @@ const [wishlist, setWishlist] = useState([]);
                   <p className="font-body text-xs text-muted-foreground mb-3">{c.desc}</p>
                   <div className="flex items-center justify-between bg-background border border-border rounded-sm px-3 py-2">
                     <code className="font-body text-sm font-semibold text-foreground tracking-wider">
-                      {c.code}
+                      {c.couponCode}
                     </code>
                     <button className="font-body text-[10px] uppercase tracking-[0.15em] text-accent font-semibold hover:underline">
                       Copy
                     </button>
+                  </div>
+                </li>
+              ))}
+            </ul> */}
+
+            <ul className="p-4 space-y-3">
+              {coupons.map((c) => (
+                <li
+                  key={c.couponId}
+                  className="border border-dashed border-accent/50 bg-accent/5 rounded-sm p-4 hover:bg-accent/10 transition-colors"
+                >
+                  <div className="flex items-center justify-between mb-2">
+
+                    <span className="font-display text-lg font-bold text-foreground">
+                      {c.discountType}
+                    </span>
+
+                    <span className="font-body text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+                      ₹{c.minimumOrderAmount} - ₹{c.maximumOrderAmount}
+                    </span>
+
+                  </div>
+
+                  <div className="flex items-center justify-between bg-background border border-border rounded-sm px-3 py-2">
+
+                    <code className="font-body text-sm font-semibold text-foreground tracking-wider">
+                      {c.couponCode}
+                    </code>
+
+                    <button className="font-body text-[10px] uppercase tracking-[0.15em] text-accent font-semibold hover:underline">
+                      Copy
+                    </button>
+
                   </div>
                 </li>
               ))}

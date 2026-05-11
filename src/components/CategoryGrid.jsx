@@ -55,8 +55,8 @@
 
 
 import summerImg from "../assets/category-summer.jpg";
-import winterImg from "../assets/category-winter.jpg";
-import festivalImg from "../assets/category-festival.jpg";
+import winterImg from "../assets/winter.jpg";
+import festivalImg from "../assets/salwar-suite.jpg";
 
 const categories = [
   { name: "Summer Essentials", subtitle: "Light & Breezy", image: summerImg, tag: "SALE" },

@@ -265,7 +265,7 @@ const Coupons = () => {
                   <Tag className="h-6 w-6 mb-3 text-accent" />
 
                   <p className="font-display text-3xl font-bold mb-1 text-foreground">
-                    {discountText}
+                    {c.discountType}
                   </p>
 
                   <p className="font-body text-sm mb-4 text-muted-foreground">

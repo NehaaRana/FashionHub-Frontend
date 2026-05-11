@@ -8,7 +8,8 @@ import {
   getCarts,
   getAllProducts,
   deleteCartItem,
-  getCoupons 
+  getCoupons ,
+  updateCart 
 } from "../services/api";
 
 const Cart = () => {
@@ -67,17 +68,38 @@ const navigate = useNavigate();
   };
 
   // UPDATE QTY
-  const updateQty = (id, delta) => {
-    setItems(
-      items.map((i) =>
-        i.id === id
-          ? {
-              ...i,
-              qty: Math.max(1, i.qty + delta),
-            }
-          : i
-      )
+  // const updateQty = (id, delta) => {
+  //   setItems(
+  //     items.map((i) =>
+  //       i.id === id
+  //         ? {
+  //             ...i,
+  //             qty: Math.max(1, i.qty + delta),
+  //           }
+  //         : i
+  //     )
+  //   );
+  // };
+
+
+  const updateQty = async (id, delta) => {
+    const updatedItems = items.map((i) =>
+      i.id === id
+        ? { ...i, qty: Math.max(1, i.qty + delta) }
+        : i
     );
+
+    setItems(updatedItems);
+
+    const updatedItem = updatedItems.find((i) => i.id === id);
+
+    try {
+      await updateCart(id, {
+        quantity: updatedItem.qty
+      });
+    } catch (error) {
+      console.log("Failed to update cart:", error);
+    }
   };
 
   // REMOVE ITEM

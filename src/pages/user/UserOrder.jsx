@@ -21,8 +21,8 @@ const statusColor = {
     Cancelled: "bg-red-100 text-red-700",
 };
 
-const tabs = ["All", "Processing", "Shipped", "Delivered", "Cancelled"];
-
+// const tabs = ["All", "Processing", "Shipped", "Delivered", "Cancelled"];
+const tabs = ["All", "Pending", "Processing", "Shipped", "Delivered", "Cancelled"];
 const UserOrders = () => {
     const [orders, setOrders] = useState([]);
     const [user, setUser] = useState(null);
@@ -53,13 +53,24 @@ const UserOrders = () => {
     //     (o) => (tab === "All" || o.status === tab) && o.id.toLowerCase().includes(q.toLowerCase()),
     //   );
 
+    // const filtered = Array.isArray(orders)
+    //     ? orders.filter(
+    //         (o) =>
+    //             (tab === "All" || o.status === tab) &&
+    //             (o.id || "").toLowerCase().includes(q.toLowerCase())
+    //     )
+    //     : [];
+
+
     const filtered = Array.isArray(orders)
         ? orders.filter(
             (o) =>
-                (tab === "All" || o.status === tab) &&
-                (o.id || "").toLowerCase().includes(q.toLowerCase())
+                (tab === "All" || o.orderStatus === tab) &&
+                String(o.oid).toLowerCase().includes(q.toLowerCase())
         )
         : [];
+
+
     return (
         <DashboardLayout role="User" userName="Priya Iyer" items={userNav}>
             <div className="p-6 lg:p-12">
@@ -121,7 +132,7 @@ const UserOrders = () => {
                                             {new Date(o.orderDate).toLocaleDateString()}
                                         </td>
 
-                                        <td>1</td> {/* You don’t have items count yet */}
+                                        <td>{o.items}</td> {/* You don’t have items count yet */}
 
                                         <td>₹{o.amount}</td>
 
@@ -142,77 +153,11 @@ const UserOrders = () => {
                                     </tr>
                                 ))}
                             </tbody>
-
-
-
-                            {/* <tbody>
-                {filtered.map((o) => (
-                  <tr key={o.id} className="border-t border-border hover:bg-secondary/30 transition-colors">
-                    <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">{o.id}</td>
-                    <td className="px-6 py-4 font-body text-xs text-muted-foreground">{o.date}</td>
-                    <td className="px-6 py-4 font-body text-sm text-foreground">{o.items}</td>
-                    <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">{o.total}</td>
-                    <td className="px-6 py-4 font-body text-xs text-muted-foreground">{o.payment}</td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`inline-block font-body text-[10px] uppercase tracking-[0.15em] font-semibold px-3 py-1 rounded-sm ${statusColor[o.status]}`}
-                      >
-                        {o.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => setOpen(o)}
-                          className="p-2 rounded-sm hover:bg-secondary text-muted-foreground hover:text-accent transition-colors"
-                          title="View"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
-                        <button
-                          className="p-2 rounded-sm hover:bg-secondary text-muted-foreground hover:text-accent transition-colors"
-                          title="Invoice"
-                        >
-                          <Download className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-                {filtered.length === 0 && (
-                  <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center font-body text-sm text-muted-foreground">
-                      No orders found.
-                    </td>
-                  </tr>
-                )}
-              </tbody> */}
                         </table>
                     </div>
                 </div>
             </div>
 
-            {/* <Modal open={!!open} onClose={() => setOpen(null)} title={`Order ${open?.id ?? ""}`}>
-        {open && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <Info label="Date" value={open.date} />
-              <Info label="Status" value={open.status} />
-              <Info label="Items" value={String(open.items)} />
-              <Info label="Payment" value={open.payment} />
-              <Info label="Total" value={open.total} />
-            </div>
-            <div className="pt-3 border-t border-border flex gap-3">
-              <button className="flex-1 bg-primary text-primary-foreground font-body text-xs uppercase tracking-[0.15em] font-semibold py-3 rounded-sm">
-                Track Shipment
-              </button>
-              <button className="flex-1 border border-border font-body text-xs uppercase tracking-[0.15em] font-semibold py-3 rounded-sm hover:bg-secondary">
-                Download Invoice
-              </button>
-            </div>
-          </div>
-        )}
-      </Modal> */}
             <Modal open={!!open} onClose={() => setOpen(null)} title={`Order #${open?.oid}`}>
                 {open && (
                     <>

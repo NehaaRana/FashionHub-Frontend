@@ -1,8 +1,8 @@
 import { Heart, ShoppingBag } from "lucide-react";
-import product1 from "../assets/product-1.jpg";
-import product2 from "../assets/product-2.jpg";
-import product3 from "../assets/product-3.jpg";
-import product4 from "../assets/product-4.jpg";
+import product1 from "../assets/muhammad-nadir-HVHIVKAd0R0-unsplash.jpg";
+import product2 from "../assets/graca-assane-mJmxnpJTr8w-unsplash.jpg";
+import product3 from "../assets/young-woman-beautiful-yellow-dress.jpg";
+import product4 from "../assets/beautiful-autumn-girl-portrait-young-woman-posing-yellow-leaves-autumn-park-outdoor.jpg";
 
 const products = [
   { name: "Floral Midi Dress", price: "₹2,499", originalPrice: "₹3,999", image: product1, sale: true },

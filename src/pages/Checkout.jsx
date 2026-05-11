@@ -1,11 +1,12 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState,useEffect  } from "react";
 
 import { Button } from "../components/ui/button";
 
 import {
   placeOrder,
-  deleteCartItem
+  deleteCartItem,
+   getCurrentUser
 } from "../services/api";
 
 const Checkout = () => {
@@ -25,6 +26,22 @@ const Checkout = () => {
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] =
     useState("COD");
+
+  const [user, setUser] = useState(null);
+
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const res = await getCurrentUser();
+        setUser(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+  loadUser();
+}, []);
 
   // PLACE ORDER
   const handlePlaceOrder = async () => {
@@ -59,12 +76,48 @@ const Checkout = () => {
       //   await deleteCartItem(item.id);
       // }
 
-     for (const item of items) {
+    //  for (const item of items) {  
+    //      console.log(item);
+    //     const orderData = {
+    //       oid: 0,
+    //       // cartId: Number(item.id),
+    //       cartId: Number(item.cartId),
+    //       orderDate: new Date().toISOString(),
+
+    //       amount: Number(total),
+
+    //       orderStatus: "Pending",
+
+    //       paymentStatus:
+    //         paymentMethod === "COD"
+    //           ? "Pending"
+    //           : "Paid",
+
+    //       deliveryAddress: address,
+
+    //       estimatedDelivery: new Date(
+    //         Date.now() + 5 * 24 * 60 * 60 * 1000
+    //       ).toISOString()
+    //     };
+
+    //     console.log(orderData);
+
+    //     await placeOrder(orderData);
+
+    //     // await deleteCartItem(item.id);
+    //     await deleteCartItem(item.id);
+    //   }
+
+    for (const item of items) {
+
+        console.log(item);
 
         const orderData = {
           oid: 0,
-          // cartId: Number(item.id),
-          cartId: Number(item.cartId),
+
+          cartId: Number(item.id),
+          //  uid: currentUser.uid,
+          uid: user?.uid,
           orderDate: new Date().toISOString(),
 
           amount: Number(total),
@@ -87,7 +140,7 @@ const Checkout = () => {
 
         await placeOrder(orderData);
 
-        // await deleteCartItem(item.id);
+        // REMOVE THIS
         await deleteCartItem(item.id);
       }
       alert("Order Placed Successfully");
