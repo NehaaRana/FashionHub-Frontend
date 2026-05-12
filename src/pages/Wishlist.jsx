@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import PageHeader from "../components/PageHeader";
 import ProductCard from "../components/ProductCard";
-import { getCurrentUser, getUserWishlist } from "../services/api";
+import { getCurrentUser, getUserWishlist,deleteWishlist } from "../services/api";
+import Swal from "sweetalert2";
 
 const Wishlist = () => {
   const [items, setItems] = useState([]);
@@ -25,6 +26,7 @@ const Wishlist = () => {
       // format data for ProductCard
       const formattedData = wishlistRes.data.map((item) => ({
         wid: item.wid,
+        pid: item.pid,
         name: item.productName,
         price: `₹${item.price}`,
         image: `https://localhost:7106${item.photo}`,
@@ -36,6 +38,32 @@ const Wishlist = () => {
       console.log("Wishlist Fetch Error:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+
+  const removeWishlist = async (wid) => {
+    try {
+      await deleteWishlist(wid);
+
+      setItems((prev) =>
+        prev.filter((item) => item.wid !== wid)
+      );
+
+       Swal.fire({
+        icon: "success",
+        title: "Removed!",
+        text: "Item removed from wishlist",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } catch (error) {
+      console.log("Remove Wishlist Error:", error);
+         Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Failed to remove item",
+    });
     }
   };
 
@@ -66,6 +94,8 @@ const Wishlist = () => {
                   key={p.wid}
                   product={p}
                   delay={0.05 * i}
+                  isWishlisted={true}
+                   onWishlist={() => removeWishlist(p.wid)}
                 />
               ))}
             </div>

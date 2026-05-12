@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 import PageHeader from "../components/PageHeader";
 import ProductCard from "../components/ProductCard";
 import { Button } from "../components/ui/button";
-import { getAllProducts , addToCart } from "../services/api";
+import { getAllProducts , addToCart ,addToWishlist,deleteWishlist ,getUserWishlist} from "../services/api";
 import Swal from "sweetalert2";
 
 
@@ -11,9 +11,11 @@ const filters = ["All", "Dresses", "Tops", "Bags", "Shoes", "Accessories"];
 
 const NewArrivals = () => {
   const [products, setProducts] = useState([]);
-
+  const [wishlist, setWishlist] = useState([]);
   useEffect(() => {
     fetchProducts();
+    fetchWishlist();
+
   }, []);
 
   const fetchProducts = async () => {
@@ -30,6 +32,19 @@ const NewArrivals = () => {
       console.log("Error fetching products:", error);
     }
   };
+
+  const fetchWishlist = async () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if (!user) return;
+
+  try {
+    const res = await getUserWishlist(user.uid);
+    setWishlist(res.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
    // ADD TO CART
   const handleAddToCart = async (product) => {
@@ -79,10 +94,80 @@ const NewArrivals = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Failed to add product to cart",
+         text:
+          error.response?.data || "Wishlist action failed",
       });
     }
   };
+
+
+  // ADD TO WISHLIST
+  const handleWishlist = async (product) => {
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if (!user) {
+    Swal.fire({
+      icon: "warning",
+      title: "Login Required",
+      text: "Please login first!",
+    });
+
+    return;
+  }
+
+  try {
+    // check already exists
+    const existingItem = wishlist.find(
+      (item) => item.pid === product.pid
+    );
+
+    // REMOVE
+    if (existingItem) {
+      await deleteWishlist(existingItem.wid);
+
+      setWishlist((prev) =>
+        prev.filter((item) => item.wid !== existingItem.wid)
+      );
+
+      Swal.fire({
+        icon: "success",
+        title: "Removed",
+        text: "Removed from wishlist",
+        timer: 1200,
+        showConfirmButton: false,
+      });
+    }
+
+    // ADD
+    else {
+      const wishlistData = {
+        wid: 0,
+        uid: Number(user.uid),
+        pid: Number(product.pid),
+      };
+
+      await addToWishlist(wishlistData);
+
+      fetchWishlist();
+
+      Swal.fire({
+        icon: "success",
+        title: "Added",
+        text: "Added to wishlist",
+        timer: 1200,
+        showConfirmButton: false,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Wishlist action failed",
+    });
+  }
+};
 
   return (
     // <Layout>
@@ -131,6 +216,18 @@ const NewArrivals = () => {
            {/* Products */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-8">
             {products.map((p, i) => (
+              // <ProductCard
+              //   key={p.pid}
+              //   product={{
+              //     ...p,
+              //     name: p.productName,
+              //     price: `₹${p.price}`,
+              //     image: `https://localhost:7106${p.productImage}`,
+              //     badge: "NEW",
+              //   }}
+              //   delay={0.05 * i}
+              //   onAddToCart={() => handleAddToCart(p)}
+              // />
               <ProductCard
                 key={p.pid}
                 product={{
@@ -140,10 +237,12 @@ const NewArrivals = () => {
                   image: `https://localhost:7106${p.productImage}`,
                   badge: "NEW",
                 }}
+                isWishlisted={wishlist.some((item) => item.pid === p.pid)}
                 delay={0.05 * i}
                 onAddToCart={() => handleAddToCart(p)}
+                onWishlist={() => handleWishlist(p)}
               />
-            ))}
+              ))}
           </div>
           <div className="text-center mt-14">
             <Button variant="hero" size="lg">

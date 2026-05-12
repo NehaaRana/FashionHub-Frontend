@@ -107,6 +107,8 @@ export const getUserOrders = (uid) =>
   API.get(`/Orders/user/${uid}`);
 
 
+export const getWishlist = () => API.get("/Wishlists");
+
 //get wishlist by user
 export const getUserWishlist = (uid) =>
   API.get(`/Wishlists/user/${uid}`);
@@ -115,6 +117,9 @@ export const getUserWishlist = (uid) =>
 export const deleteWishlist = (id) =>
   API.delete(`/Wishlists/${id}`);
 
+// add wishlist
+export const addToWishlist = (data) =>
+  API.post("/Wishlists", data);
 
 //Products
 // export const getVendorProducts = () => API.get("/Products");
@@ -144,7 +149,6 @@ export const deleteProduct = (id) =>
 export const getAllProducts = () => API.get("/Products");
 
 //wishlist
-export const getWishlist = () => API.get("/Wishlists");
 // ================= REVIEWS =================
 
 // Get reviews for vendor
