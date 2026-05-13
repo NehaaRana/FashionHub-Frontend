@@ -188,10 +188,16 @@ export const deleteCartItem = (id) =>
 export const updateCart = (id, data) =>
   API.put(`/Carts/${id}`, data);
 
-
-
 // ORDERS
 export const placeOrder = (data) =>
   API.post("/Orders", data);
+
+
+// PAYMENTS
+export const createPayment = (data) =>
+  API.post("/Payments", data);
+
+export const getPayments = () =>
+  API.get("/Payments");
 
 export default API;

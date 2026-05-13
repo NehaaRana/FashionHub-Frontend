@@ -32,6 +32,8 @@ import UserWishlist from "./pages/user/UserWishlist";
 import UserCoupons from "./pages/user/UserCoupon";
 import UserAddresses from "./pages/user/UserAddress";
 import UserProfile from "./pages/user/UserProfile";
+import Payment from "./pages/Payment";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 function App() {
 
@@ -52,6 +54,8 @@ function App() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
           
           {/* <Route path="/admin/categories" element={<CategoryManagement />} />
           <Route path="/admin/coupons" element={<CouponManagement />} /> */}

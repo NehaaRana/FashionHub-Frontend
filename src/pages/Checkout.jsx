@@ -1,11 +1,11 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState,useEffect  } from "react";
+import { useState, useEffect } from "react";
 
 import { Button } from "../components/ui/button";
 
 import {
   placeOrder,
-   getCurrentUser
+  getCurrentUser
 } from "../services/api";
 
 const Checkout = () => {
@@ -39,8 +39,8 @@ const Checkout = () => {
       }
     };
 
-  loadUser();
-}, []);
+    loadUser();
+  }, []);
 
   // PLACE ORDER
   // const handlePlaceOrder = async () => {
@@ -183,11 +183,25 @@ const Checkout = () => {
       console.log(orderData);
 
       // ONLY ONE API CALL
-      await placeOrder(orderData);
+      const orderRes = await placeOrder(orderData);
 
       alert("Order Placed Successfully");
+      console.log(orderRes.data);
 
-      navigate("/dashboard/orders");
+      // created order from backend
+      const createdOrder = orderRes.data;
+      // navigate("/dashboard/orders");
+      navigate("/payment", {
+        state: {
+          createdOrder,
+          items,
+          subtotal,
+          shipping,
+          discount,
+          total,
+          paymentMethod,
+        },
+      });
 
     } catch (error) {
 
