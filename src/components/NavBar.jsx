@@ -105,8 +105,8 @@ const Navbar = () => {
                       My Account
                     </p> */}
                     <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
-  {user?.role}
-</p>
+                      {user?.role}
+                    </p>
                   </div>
 
                   <ChevronDown className="h-4 w-4" />
