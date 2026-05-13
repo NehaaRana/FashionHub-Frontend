@@ -5,7 +5,6 @@ import { Button } from "../components/ui/button";
 
 import {
   placeOrder,
-  deleteCartItem,
    getCurrentUser
 } from "../services/api";
 
@@ -44,6 +43,116 @@ const Checkout = () => {
 }, []);
 
   // PLACE ORDER
+  // const handlePlaceOrder = async () => {
+
+  //   try {
+
+  //     if (!address) {
+  //       alert("Please enter address");
+  //       return;
+  //     }
+
+  //     // create order for every cart item
+  //     // for (const item of items) {
+
+  //     //   const orderData = {
+  //     //     cartId: item.id,
+  //     //     amount: total,
+  //     //     orderDate: new Date(),
+  //     //     orderStatus: "Pending",
+  //     //     paymentStatus:
+  //     //       paymentMethod === "COD"
+  //     //         ? "Pending"
+  //     //         : "Paid",
+  //     //     deliveryAddress: address,
+  //     //     estimatedDelivery: "3-5 Days"
+  //     //   };
+
+  //     //   // save order
+  //     //   await placeOrder(orderData);
+
+  //     //   // remove cart item
+  //     //   await deleteCartItem(item.id);
+  //     // }
+
+  //   //  for (const item of items) {  
+  //   //      console.log(item);
+  //   //     const orderData = {
+  //   //       oid: 0,
+  //   //       // cartId: Number(item.id),
+  //   //       cartId: Number(item.cartId),
+  //   //       orderDate: new Date().toISOString(),
+
+  //   //       amount: Number(total),
+
+  //   //       orderStatus: "Pending",
+
+  //   //       paymentStatus:
+  //   //         paymentMethod === "COD"
+  //   //           ? "Pending"
+  //   //           : "Paid",
+
+  //   //       deliveryAddress: address,
+
+  //   //       estimatedDelivery: new Date(
+  //   //         Date.now() + 5 * 24 * 60 * 60 * 1000
+  //   //       ).toISOString()
+  //   //     };
+
+  //   //     console.log(orderData);
+
+  //   //     await placeOrder(orderData);
+
+  //   //     // await deleteCartItem(item.id);
+  //   //     await deleteCartItem(item.id);
+  //   //   }
+
+  //   for (const item of items) {
+
+  //       console.log(item);
+
+  //       const orderData = {
+  //         oid: 0,
+
+  //         cartId: Number(item.id),
+  //         //  uid: currentUser.uid,
+  //         uid: user?.uid,
+  //         orderDate: new Date().toISOString(),
+
+  //         amount: Number(total),
+
+  //         orderStatus: "Pending",
+
+  //         paymentStatus:
+  //           paymentMethod === "COD"
+  //             ? "Pending"
+  //             : "Paid",
+
+  //         deliveryAddress: address,
+
+  //         estimatedDelivery: new Date(
+  //           Date.now() + 5 * 24 * 60 * 60 * 1000
+  //         ).toISOString()
+  //       };
+
+  //       console.log(orderData);
+
+  //       await placeOrder(orderData);
+
+  //       // REMOVE THIS
+  //       await deleteCartItem(item.id);
+  //     }
+  //     alert("Order Placed Successfully");
+
+  //     navigate("/dashboard/orders");
+
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert("Failed to place order");
+  //   }
+  // };
+
+
   const handlePlaceOrder = async () => {
 
     try {
@@ -53,102 +162,37 @@ const Checkout = () => {
         return;
       }
 
-      // create order for every cart item
-      // for (const item of items) {
+      const orderData = {
 
-      //   const orderData = {
-      //     cartId: item.id,
-      //     amount: total,
-      //     orderDate: new Date(),
-      //     orderStatus: "Pending",
-      //     paymentStatus:
-      //       paymentMethod === "COD"
-      //         ? "Pending"
-      //         : "Paid",
-      //     deliveryAddress: address,
-      //     estimatedDelivery: "3-5 Days"
-      //   };
+        uid: user?.uid,
 
-      //   // save order
-      //   await placeOrder(orderData);
+        amount: Number(total),
 
-      //   // remove cart item
-      //   await deleteCartItem(item.id);
-      // }
+        orderStatus: "Pending",
 
-    //  for (const item of items) {  
-    //      console.log(item);
-    //     const orderData = {
-    //       oid: 0,
-    //       // cartId: Number(item.id),
-    //       cartId: Number(item.cartId),
-    //       orderDate: new Date().toISOString(),
+        paymentStatus:
+          paymentMethod === "COD"
+            ? "Pending"
+            : "Paid",
 
-    //       amount: Number(total),
+        deliveryAddress: address,
 
-    //       orderStatus: "Pending",
+        estimatedDelivery: "3-5 Days"
+      };
 
-    //       paymentStatus:
-    //         paymentMethod === "COD"
-    //           ? "Pending"
-    //           : "Paid",
+      console.log(orderData);
 
-    //       deliveryAddress: address,
+      // ONLY ONE API CALL
+      await placeOrder(orderData);
 
-    //       estimatedDelivery: new Date(
-    //         Date.now() + 5 * 24 * 60 * 60 * 1000
-    //       ).toISOString()
-    //     };
-
-    //     console.log(orderData);
-
-    //     await placeOrder(orderData);
-
-    //     // await deleteCartItem(item.id);
-    //     await deleteCartItem(item.id);
-    //   }
-
-    for (const item of items) {
-
-        console.log(item);
-
-        const orderData = {
-          oid: 0,
-
-          cartId: Number(item.id),
-          //  uid: currentUser.uid,
-          uid: user?.uid,
-          orderDate: new Date().toISOString(),
-
-          amount: Number(total),
-
-          orderStatus: "Pending",
-
-          paymentStatus:
-            paymentMethod === "COD"
-              ? "Pending"
-              : "Paid",
-
-          deliveryAddress: address,
-
-          estimatedDelivery: new Date(
-            Date.now() + 5 * 24 * 60 * 60 * 1000
-          ).toISOString()
-        };
-
-        console.log(orderData);
-
-        await placeOrder(orderData);
-
-        // REMOVE THIS
-        await deleteCartItem(item.id);
-      }
       alert("Order Placed Successfully");
 
       navigate("/dashboard/orders");
 
     } catch (error) {
+
       console.log(error);
+
       alert("Failed to place order");
     }
   };

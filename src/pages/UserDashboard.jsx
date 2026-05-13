@@ -192,11 +192,16 @@ const [wishlist, setWishlist] = useState([]);
                       </td>
 
                       <td className="px-6 py-4 font-body text-xs text-muted-foreground">
-                        {o.orderDate?.split("T")[0]}
+                        {/* {o.orderDate?.split("T")[0]} */}
+                        {new Date(o.orderDate).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
                       </td>
 
                       <td className="px-6 py-4 font-body text-sm text-foreground">
-                        {o.deliveryAddress}
+                        {o.items}
                       </td>
 
                       <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">

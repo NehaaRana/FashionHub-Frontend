@@ -53,7 +53,7 @@ const Wishlist = () => {
        Swal.fire({
         icon: "success",
         title: "Removed!",
-        text: "Item removed from wishlist",
+        text: "It em removed from wishlist",
         timer: 1500,
         showConfirmButton: false,
       });

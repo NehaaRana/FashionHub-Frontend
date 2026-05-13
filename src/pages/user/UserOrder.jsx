@@ -122,17 +122,22 @@ const UserOrders = () => {
                                     ))}
                                 </tr>
                             </thead>
-                            <tbody>
+                            {/* <tbody>
                                 {filtered.map((o) => (
                                     <tr key={o.oid}>
 
                                         <td>#{o.oid}</td>
 
                                         <td>
-                                            {new Date(o.orderDate).toLocaleDateString()}
+                                           
+                                             {new Date(o.orderDate).toLocaleDateString("en-GB", {
+                                                day: "2-digit",
+                                                month: "short",
+                                                year: "numeric",
+                                            })}
                                         </td>
 
-                                        <td>{o.items}</td> {/* You don’t have items count yet */}
+                                        <td>{o.items}</td> 
 
                                         <td>₹{o.amount}</td>
 
@@ -152,13 +157,68 @@ const UserOrders = () => {
 
                                     </tr>
                                 ))}
+                            </tbody> */}
+
+                            <tbody>
+                                {filtered.map((o) => (
+                                    <tr
+                                        key={o.oid}
+                                        className="border-t border-border hover:bg-secondary/30 transition-colors"
+                                    >
+
+                                        <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">
+                                            #{o.oid}
+                                        </td>
+
+                                        <td className="px-6 py-4 font-body text-xs text-muted-foreground">
+                                            {new Date(o.orderDate).toLocaleDateString("en-GB", {
+                                                day: "2-digit",
+                                                month: "short",
+                                                year: "numeric",
+                                            })}
+                                        </td>
+
+                                        <td className="px-6 py-4 font-body text-sm text-foreground">
+                                            {o.items}
+                                        </td>
+
+                                        <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">
+                                            ₹{o.amount}
+                                        </td>
+
+                                        <td className="px-6 py-4 font-body text-sm text-foreground">
+                                            {o.paymentStatus || "N/A"}
+                                        </td>
+
+                                        <td className="px-6 py-4">
+                                            <span
+                                                className={`inline-block font-body text-[10px] uppercase tracking-[0.15em] font-semibold px-3 py-1 rounded-sm ${
+                                                    statusColor[o.orderStatus] ||
+                                                    "bg-gray-100 text-gray-700"
+                                                }`}
+                                            >
+                                                {o.orderStatus}
+                                            </span>
+                                        </td>
+
+                                        <td className="px-6 py-4">
+                                            <button
+                                                onClick={() => setOpen(o)}
+                                                className="p-2 rounded-lg hover:bg-secondary transition"
+                                            >
+                                                <Eye className="w-5 h-5 text-foreground" />
+                                            </button>
+                                        </td>
+
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <Modal open={!!open} onClose={() => setOpen(null)} title={`Order #${open?.oid}`}>
+            {/* <Modal open={!!open} onClose={() => setOpen(null)} title={`Order #${open?.oid}`}>
                 {open && (
                     <>
                         <Info label="Date" value={new Date(open.orderDate).toLocaleDateString()} />
@@ -167,7 +227,228 @@ const UserOrders = () => {
                         <Info label="Payment" value={open.paymentStatus || "N/A"} />
                     </>
                 )}
-            </Modal>    </DashboardLayout>
+            </Modal>    */}
+            {/* <Modal
+    open={!!open}
+    onClose={() => setOpen(null)}
+    title={`Order #${open?.oid}`}
+>
+    {open && (
+        <>
+            <Info
+                label="Date"
+                value={new Date(open.orderDate).toLocaleDateString()}
+            />
+
+            <Info
+                label="Status"
+                value={open.orderStatus}
+            />
+
+            <Info
+                label="Total"
+                value={`₹${open.amount}`}
+            />
+
+            <Info
+                label="Payment"
+                value={open.paymentStatus || "N/A"}
+            />
+
+            <div className="mt-4">
+                <h3 className="font-semibold mb-3">
+                    Ordered Products
+                </h3>
+
+                {open.products?.map((item, index) => (
+                    <div
+                        key={index}
+                        className="border rounded p-3 mb-3"
+                    >
+                        <img
+                            src={`https://localhost:7106${item.productImage}`}                            
+                            alt={item.productName}
+                            className="w-20 h-20 object-cover rounded mb-2"
+                        />
+
+                        <p>{item.productName}</p>
+
+                        <p>Qty: {item.quantity}</p>
+
+                        <p>Size: {item.sizeSelected}</p>
+
+                        <p>Color: {item.colorSelected}</p>
+
+                        <p>Price: ₹{item.price}</p>
+                    </div>
+                ))}
+            </div>
+        </>
+    )}
+</Modal> */}
+
+                {open && (
+    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+
+        <div className="bg-white w-full max-w-5xl rounded-2xl shadow-2xl relative max-h-[90vh] overflow-y-auto">
+
+            {/* HEADER */}
+            <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between z-10">
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-800">
+                        Order #{open.oid}
+                    </h2>
+
+                    <p className="text-sm text-gray-500 mt-1">
+                        {new Date(open.orderDate).toLocaleDateString()}
+                    </p>
+                </div>
+
+                <button
+                    onClick={() => setOpen(null)}
+                    className="text-3xl text-gray-500 hover:text-black"
+                >
+                    ×
+                </button>
+            </div>
+
+            {/* BODY */}
+            <div className="p-6">
+
+                {/* ORDER INFO */}
+                {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+
+                    <div className="bg-gray-50 rounded-xl p-4 border">
+                        <p className="text-xs uppercase text-gray-500 mb-1">
+                            Status
+                        </p>
+
+                        <p className="font-bold text-lg">
+                            {open.orderStatus}
+                        </p>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-xl p-4 border">
+                        <p className="text-xs uppercase text-gray-500 mb-1">
+                            Payment
+                        </p>
+
+                        <p className="font-bold text-lg">
+                            {open.paymentStatus}
+                        </p>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-xl p-4 border">
+                        <p className="text-xs uppercase text-gray-500 mb-1">
+                            Total
+                        </p>
+
+                        <p className="font-bold text-lg text-green-600">
+                            ₹{open.amount}
+                        </p>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-xl p-4 border">
+                        <p className="text-xs uppercase text-gray-500 mb-1">
+                            Items
+                        </p>
+
+                        <p className="font-bold text-lg">
+                            {open.items}
+                        </p>
+                    </div>
+
+                </div> */}
+
+                {/* PRODUCTS */}
+                <div>
+                    <h3 className="text-xl font-bold mb-5">
+                        Ordered Products
+                    </h3>
+
+                    <div className="space-y-4">
+
+                        {open.products?.map((item, index) => (
+                            <div
+                                key={index}
+                                className="border rounded-2xl p-4 flex flex-col md:flex-row gap-5 bg-gray-50"
+                            >
+
+                                {/* IMAGE */}
+                                <img
+                                    src={`https://localhost:7106${item.productImage}`}
+                                    alt={item.productName}
+                                    className="w-32 h-32 object-cover rounded-xl border"
+                                />
+
+                                {/* DETAILS */}
+                                <div className="flex-1">
+
+                                    <h4 className="text-xl font-semibold text-gray-800 mb-3">
+                                        {item.productName}
+                                    </h4>
+
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+                                        <div>
+                                            <p className="text-xs text-gray-500 uppercase">
+                                                Quantity
+                                            </p>
+
+                                            <p className="font-semibold">
+                                                {item.quantity}
+                                            </p>
+                                        </div>
+
+                                        <div>
+                                            <p className="text-xs text-gray-500 uppercase">
+                                                Size
+                                            </p>
+
+                                            <p className="font-semibold">
+                                                {item.sizeSelected}
+                                            </p>
+                                        </div>
+
+                                        <div>
+                                            <p className="text-xs text-gray-500 uppercase">
+                                                Color
+                                            </p>
+
+                                            <p className="font-semibold">
+                                                {item.colorSelected}
+                                            </p>
+                                        </div>
+
+                                        <div>
+                                            <p className="text-xs text-gray-500 uppercase">
+                                                Price
+                                            </p>
+
+                                            <p className="font-semibold text-green-600">
+                                                ₹{item.price}
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        ))}
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+)}
+
+
+             </DashboardLayout>
     );
 };
 
