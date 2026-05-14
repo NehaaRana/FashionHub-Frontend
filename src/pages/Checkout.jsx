@@ -193,7 +193,7 @@ const Checkout = () => {
       const orderRes = await placeOrder(orderData);
 
       // alert("Order Placed Successfully");
-      await Swal.fire({
+      Swal.fire({
         icon: "success",
         title: "Order Placed",
         text: "Order placed successfully",
