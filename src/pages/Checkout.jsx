@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import { Button } from "../components/ui/button";
-
+import Swal from "sweetalert2";
 import {
   placeOrder,
   getCurrentUser
@@ -158,7 +158,14 @@ const Checkout = () => {
     try {
 
       if (!address) {
-        alert("Please enter address");
+        // alert("Please enter address");
+       
+        Swal.fire({
+          icon: "error",
+          title: "Address Required",
+          text: "Please enter your delivery address",
+          confirmButtonColor: "#000",
+        });
         return;
       }
 
@@ -185,7 +192,16 @@ const Checkout = () => {
       // ONLY ONE API CALL
       const orderRes = await placeOrder(orderData);
 
-      alert("Order Placed Successfully");
+      // alert("Order Placed Successfully");
+      await Swal.fire({
+        icon: "success",
+        title: "Order Placed",
+        text: "Order placed successfully",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+      
+      
       console.log(orderRes.data);
 
       // created order from backend
@@ -206,8 +222,13 @@ const Checkout = () => {
     } catch (error) {
 
       console.log(error);
-
-      alert("Failed to place order");
+        Swal.fire({
+          icon: "error",
+          title: "Order Failed",
+          text: "Failed to place order",
+          confirmButtonColor: "#c08a5b",
+        });
+      // alert("Failed to place order");
     }
   };
 

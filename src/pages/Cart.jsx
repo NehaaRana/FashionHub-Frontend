@@ -11,6 +11,7 @@ import {
   getCoupons ,
   updateCart 
 } from "../services/api";
+import Swal from "sweetalert2";
 
 const Cart = () => {
   const [items, setItems] = useState([]);
@@ -173,23 +174,44 @@ const navigate = useNavigate();
     );
 
     if (!foundCoupon) {
-      alert("Invalid Coupon");
+      // alert("Invalid Coupon");
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Coupon",
+        text: "Please enter a valid coupon code",
+        confirmButtonColor: "#000",
+      });
       return;
     }
 
     // minimum order check
     if (subtotal < foundCoupon.minimumOrderAmount) {
-      alert(
-        `Minimum order should be ₹${foundCoupon.minimumOrderAmount}`
-      );
+      // alert(
+      //   `Minimum order should be ₹${foundCoupon.minimumOrderAmount}`
+      // );
+
+      Swal.fire({
+        icon: "warning",
+        title: "Minimum Order Required",
+        text: `Minimum order should be ₹${foundCoupon.minimumOrderAmount}`,
+        confirmButtonColor: "#000",
+      });
+
       return;
     }
 
     // maximum order check
     if (subtotal > foundCoupon.maximumOrderAmount) {
-      alert(
-        `Maximum order should be ₹${foundCoupon.maximumOrderAmount}`
-      );
+      // alert(
+      //   `Maximum order should be ₹${foundCoupon.maximumOrderAmount}`
+      // );
+      Swal.fire({
+        icon: "warning",
+        title: "Maximum Order Limit",
+        text: `Maximum order should be ₹${foundCoupon.maximumOrderAmount}`,
+        confirmButtonColor: "#000",
+      });
+
       return;
     }
 
@@ -198,7 +220,14 @@ const navigate = useNavigate();
 
     // invalid percentage
     if (isNaN(percentage)) {
-      alert("Coupon discount is invalid");
+      // alert("Coupon discount is invalid");
+
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Discount",
+        text: "Coupon discount is invalid",
+        confirmButtonColor: "#000",
+      });
       return;
     }
 
@@ -209,7 +238,14 @@ const navigate = useNavigate();
     setDiscount(discountAmount);
     setAppliedCoupon(foundCoupon);
 
-    alert("Coupon Applied Successfully");
+    // alert("Coupon Applied Successfully");
+    Swal.fire({
+      icon: "success",
+      title: "Coupon Applied",
+      text: "Coupon Applied Successfully",
+      timer: 1500,
+      showConfirmButton: false,
+    });
   } catch (error) {
     console.log(error);
   }

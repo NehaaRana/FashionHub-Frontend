@@ -22,7 +22,7 @@ import {
   deleteProduct,
   getCategories 
 } from "../../services/api";
-
+import Swal from "sweetalert2";
 const emptyForm = {
    productName: "",
   description: "",
@@ -171,7 +171,13 @@ const ProductManagement = () => {
   const handleSave = async () => {
      try {
     if (!form.productName.trim()) {
-      alert("Product name required");
+      // alert("Product name required");
+       Swal.fire({
+        icon: "warning",
+        title: "Product Name Required",
+        text: "Please enter product name",
+        confirmButtonColor: "#c08a5b",
+      });
       return;
     }
 
@@ -198,24 +204,89 @@ const ProductManagement = () => {
 
     if (editing) {
       await updateProduct(editing.id, formData);
+       Swal.fire({
+        icon: "success",
+        title: "Product Updated",
+        text: "Product updated successfully",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
     } else {
       await createProduct(formData);
+       Swal.fire({
+        icon: "success",
+        title: "Product Added",
+        text: "Product created successfully",
+        timer: 1500,
+        showConfirmButton: false,
+      });
     }
 
-    alert("Product saved successfully ");
+    // alert("Product saved successfully ");
 
     fetchProducts();
     setModalOpen(false);
   } catch (err) {
     console.error(err);
-    alert("Error while saving product ");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error while saving product",
+        confirmButtonColor: "#c08a5b",
+      });
+    // alert("Error while saving product ");
   }
   };
 
+  // const handleDelete = async () => {
+  //   await deleteProduct(confirmDelete.id);
+  //   fetchProducts();
+  //   setConfirmDelete(null);
+  // };
+
   const handleDelete = async () => {
-    await deleteProduct(confirmDelete.id);
-    fetchProducts();
-    setConfirmDelete(null);
+
+    const result = await Swal.fire({
+      title: "Delete Product?",
+      text: "This product will be permanently deleted",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, Delete",
+    });
+
+    if (result.isConfirmed) {
+
+      try {
+
+        await deleteProduct(confirmDelete.id);
+
+        fetchProducts();
+
+        setConfirmDelete(null);
+
+        Swal.fire({
+          icon: "success",
+          title: "Deleted",
+          text: "Product deleted successfully",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
+      } catch (error) {
+
+        console.log(error);
+
+        Swal.fire({
+          icon: "error",
+          title: "Delete Failed",
+          text: "Unable to delete product",
+          confirmButtonColor: "#c08a5b",
+        });
+      }
+    }
   };
 
   return (
@@ -485,7 +556,7 @@ const ProductManagement = () => {
       </Modal>
 
       {/* Delete */}
-      <Modal
+      {/* <Modal
         open={!!confirmDelete}
         onClose={() => setConfirmDelete(null)}
         title="Delete?"
@@ -496,7 +567,7 @@ const ProductManagement = () => {
         }
       >
         Are you sure?
-      </Modal>
+      </Modal> */}
     </DashboardLayout>
   );
 };

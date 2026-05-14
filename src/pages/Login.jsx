@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { loginUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -21,6 +22,42 @@ const Login = () => {
 
   const navigate = useNavigate();
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const response = await loginUser(form);
+
+  //     const { user, role, token } = response.data;
+
+  //     if (!user) {
+  //       // alert("Something went wrong");
+  //          Swal.fire({
+  //         icon: "error",
+  //         title: "Oops...",
+  //         text: "Something went wrong",
+  //         confirmButtonColor: "#000",
+  //       });
+  //       return;
+  //     }
+
+  //     // Save data
+  //     localStorage.setItem("user", JSON.stringify(user));
+  //     localStorage.setItem("role", role);
+  //     localStorage.setItem("token", token); 
+
+     
+  //     alert("Login Successful");
+
+  //     navigate("/dashboard");
+  //     window.location.reload();
+
+  //   } catch (error) {
+  //     console.error(error.response?.data);
+  //     alert("Invalid Email or Password");
+  //   }
+  // };
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -30,26 +67,47 @@ const Login = () => {
       const { user, role, token } = response.data;
 
       if (!user) {
-        alert("Something went wrong");
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong",
+          confirmButtonColor: "#000",
+        });
         return;
       }
 
       // Save data
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("role", role);
-      localStorage.setItem("token", token); 
+      localStorage.setItem("token", token);
 
-     
-      alert("Login Successful");
+      // Success Alert
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: "Welcome Back!",
+        confirmButtonColor: "#000",
+        timer: 1500,
+        showConfirmButton: false,
+      });
 
-      navigate("/dashboard");
-      window.location.reload();
+      setTimeout(() => {
+        navigate("/dashboard");
+        window.location.reload();
+      }, 1500);
 
     } catch (error) {
       console.error(error.response?.data);
-      alert("Invalid Email or Password");
+
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: "Invalid Email or Password",
+        confirmButtonColor: "#000",
+      });
     }
   };
+ 
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
 

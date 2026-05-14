@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 import { getCurrentUser,updateVendor  } from "../../services/api";
-
+import Swal from "sweetalert2";
 
  const Row = ({ icon: Icon, text }) => (
     <div className="flex items-center gap-3 font-body text-sm text-muted-foreground">
@@ -98,14 +98,26 @@ const VendorSettings = () => {
             ? vendor.createdAt.split("T")[0]
             : "",
         });
+            Swal.fire({
+            icon: "success",
+            title: "Profile Updated",
+            text: "Vendor profile updated successfully",
+            timer: 1500,
+            showConfirmButton: false,
+          });
 
-        alert("Profile Updated Successfully");
+        // alert("Profile Updated Successfully");
 
       } catch (err) {
 
         console.log(err);
-
-        alert("Failed To Update Profile");
+          Swal.fire({
+            icon: "error",
+            title: "Update Failed",
+            text: "Failed to update vendor profile",
+            confirmButtonColor: "#c08a5b",
+          });
+        // alert("Failed To Update Profile");
       }
     };
     

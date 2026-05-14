@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { registerUser } from "../services/api";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -29,8 +30,13 @@ const Register = () => {
       const response = await registerUser(payload);
 
       console.log("Success:", response.data);
-      alert("User Registered Successfully");
-
+      // alert("User Registered Successfully");
+          Swal.fire({
+            icon: "success",
+            title: "Registration Successful",
+            text: "User Registered Successfully",
+            confirmButtonColor: "#000",
+          });
 
       //  Optional: clear form
       setForm({
@@ -45,10 +51,18 @@ const Register = () => {
 
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
-      console.log("FULL ERROR:", error);
-      console.log("BACKEND ERROR:", error.response?.data);
-      alert(JSON.stringify(error.response?.data));
-      alert("Registration Failed");
+       Swal.fire({
+          icon: "error",
+          title: "Registration Failed",
+          text:
+            error.response?.data?.message ||
+            "Something went wrong!",
+          confirmButtonColor: "#000",
+        });
+      // console.log("FULL ERROR:", error);
+      // console.log("BACKEND ERROR:", error.response?.data);
+      // alert(JSON.stringify(error.response?.data));
+      // alert("Registration Failed");
     }
   };
 
