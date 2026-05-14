@@ -200,4 +200,9 @@ export const createPayment = (data) =>
 export const getPayments = () =>
   API.get("/Payments");
 
+
+//Review
+export const addReview = (data) =>
+    API.post("/Reviews", data);
+
 export default API;
