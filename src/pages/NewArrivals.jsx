@@ -80,6 +80,7 @@ const NewArrivals = () => {
         colorSelected: product.color || "Black",
       };
       await addToCart(cartData);
+      window.dispatchEvent(new CustomEvent("cartUpdated"));
 
       Swal.fire({
         icon: "success",
@@ -102,7 +103,75 @@ const NewArrivals = () => {
 
 
   // ADD TO WISHLIST
-  const handleWishlist = async (product) => {
+//   const handleWishlist = async (product) => {
+//   const user = JSON.parse(localStorage.getItem("user"));
+
+//   if (!user) {
+//     Swal.fire({
+//       icon: "warning",
+//       title: "Login Required",
+//       text: "Please login first!",
+//     });
+
+//     return;
+//   }
+
+//   try {
+//     // check already exists
+//     const existingItem = wishlist.find(
+//       (item) => item.pid === product.pid
+//     );
+
+//     // REMOVE
+//     if (existingItem) {
+//       await deleteWishlist(existingItem.wid);
+
+//       setWishlist((prev) =>
+//         prev.filter((item) => item.wid !== existingItem.wid)
+//       );
+
+//       Swal.fire({
+//         icon: "success",
+//         title: "Removed",
+//         text: "Removed from wishlist",
+//         timer: 1200,
+//         showConfirmButton: false,
+//       });
+//     }
+
+//     // ADD
+//     else {
+//       const wishlistData = {
+//         wid: 0,
+//         uid: Number(user.uid),
+//         pid: Number(product.pid),
+//       };
+
+//       await addToWishlist(wishlistData);
+//       window.dispatchEvent(new Event("wishlistUpdated"));
+//       fetchWishlist();
+
+//       Swal.fire({
+//         icon: "success",
+//         title: "Added",
+//         text: "Added to wishlist",
+//         timer: 1200,
+//         showConfirmButton: false,
+//       });
+//     }
+//   } catch (error) {
+//     console.log(error);
+
+//     Swal.fire({
+//       icon: "error",
+//       title: "Error",
+//       text: "Wishlist action failed",
+//     });
+//   }
+// };
+
+const handleWishlist = async (product) => {
+
   const user = JSON.parse(localStorage.getItem("user"));
 
   if (!user) {
@@ -116,17 +185,23 @@ const NewArrivals = () => {
   }
 
   try {
-    // check already exists
+
     const existingItem = wishlist.find(
       (item) => item.pid === product.pid
     );
 
     // REMOVE
     if (existingItem) {
+
       await deleteWishlist(existingItem.wid);
 
       setWishlist((prev) =>
         prev.filter((item) => item.wid !== existingItem.wid)
+      );
+
+      // UPDATE NAVBAR
+      window.dispatchEvent(
+        new CustomEvent("wishlistUpdated")
       );
 
       Swal.fire({
@@ -136,10 +211,12 @@ const NewArrivals = () => {
         timer: 1200,
         showConfirmButton: false,
       });
+
     }
 
     // ADD
     else {
+
       const wishlistData = {
         wid: 0,
         uid: Number(user.uid),
@@ -150,6 +227,11 @@ const NewArrivals = () => {
 
       fetchWishlist();
 
+      // UPDATE NAVBAR
+      window.dispatchEvent(
+        new CustomEvent("wishlistUpdated")
+      );
+
       Swal.fire({
         icon: "success",
         title: "Added",
@@ -158,7 +240,9 @@ const NewArrivals = () => {
         showConfirmButton: false,
       });
     }
+
   } catch (error) {
+
     console.log(error);
 
     Swal.fire({
@@ -168,7 +252,6 @@ const NewArrivals = () => {
     });
   }
 };
-
   return (
     // <Layout>
     <>

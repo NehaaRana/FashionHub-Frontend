@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createPayment, placeOrder } from "../services/api";
+import CheckoutStepper from "../components/CheckoutStepper";
 
 import {
     CreditCard,
@@ -52,58 +53,6 @@ const Payment = () => {
 
     const [method, setMethod] = useState("card");
     const [processing, setProcessing] = useState(false);
-
-
-    //   const handlePay = async () => {
-
-    //   try {
-
-    //     setProcessing(true);
-
-    //     // 1. PLACE ORDER
-    //     const orderRes = await placeOrder(orderData);
-
-    //     console.log(orderRes.data);
-
-    //     // GET CREATED ORDER ID
-    //     const createdOrder = orderRes.data;
-
-    //     // 2. CREATE PAYMENT
-    //     const paymentData = {
-
-    //       oid: createdOrder.oid,
-
-    //       method: method.toUpperCase(),
-
-    //       amount: Number(total),
-
-    //       payDate: new Date().toISOString(),
-
-    //       payStatus:
-    //         method === "cod"
-    //           ? "Pending"
-    //           : "Paid"
-    //     };
-
-    //     console.log(paymentData);
-
-    //     await createPayment(paymentData);
-
-    //     alert("Payment Successful");
-
-    //     navigate("/dashboard/orders");
-
-    //   } catch (error) {
-
-    //     console.log(error);
-
-    //     alert("Payment Failed");
-
-    //   } finally {
-
-    //     setProcessing(false);
-    //   }
-    // };
 
 
     const handlePay = async () => {
@@ -168,11 +117,7 @@ const Payment = () => {
             {/* HEADER */}
             <div className="max-w-7xl mx-auto mb-12">
 
-                <p className="text-sm uppercase tracking-[4px] text-gray-500 mb-2">
-                    Step 2 of 2
-                </p>
-
-                <h1 className="text-5xl font-bold">
+                <h1 className="text-5xl font-bold text-center">
                     Choose{" "}
                     <span className="text-pink-600">
                         Payment
@@ -183,7 +128,7 @@ const Payment = () => {
             <div className="max-w-7xl mx-auto">
 
                 {/* STEPPER */}
-                <div className="flex items-center justify-center gap-4 mb-12 flex-wrap">
+                {/* <div className="flex items-center justify-center gap-4 mb-12 flex-wrap">
 
                     {["Address", "Payment", "Confirmation"].map(
                         (step, index) => (
@@ -216,7 +161,8 @@ const Payment = () => {
                             </div>
                         )
                     )}
-                </div>
+                </div> */}
+                <CheckoutStepper currentStep={2} />
 
                 <div className="grid lg:grid-cols-3 gap-8">
 

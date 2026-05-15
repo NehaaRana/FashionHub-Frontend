@@ -1,7 +1,11 @@
 import { Heart, ShoppingBag, Search, Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
+import {
+  getUserWishlist,
+  getCarts,
+} from "../services/api";
 
 const navLinks = [
   { label: "New Arrivals", to: "/new-arrivals" },
@@ -19,6 +23,9 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem("user")
   );
+  const [wishlistCount, setWishlistCount] = useState(0);
+
+  const [cartCount, setCartCount] = useState(0);
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
@@ -29,6 +36,134 @@ const Navbar = () => {
       setIsLoggedIn(true);
     }
   }, []);
+
+  // useEffect(() => {
+
+  //   const fetchCounts = async () => {
+
+  //     try {
+
+  //       const storedUser = JSON.parse(localStorage.getItem("user"));
+
+  //       if (!storedUser) return;
+
+  //       const uid = storedUser.uid;
+
+  //       // ================= WISHLIST COUNT =================
+  //       const wishlistRes = await getUserWishlist(uid);
+
+  //       setWishlistCount(wishlistRes.data.length);
+
+  //       // ================= CART COUNT =================
+  //       const cartRes = await getCarts();
+
+  //       // filter current user cart items
+  //       const userCartItems = cartRes.data.filter(
+  //         (item) => item.uid === uid
+  //       );
+
+  //       setCartCount(userCartItems.length);
+
+  //     } catch (error) {
+
+  //       console.log(error);
+
+  //     }
+  //   };
+
+  //   fetchCounts();
+
+  // }, []);
+
+  // const fetchCounts = async () => {
+
+  //   try {
+
+  //     const storedUser = JSON.parse(localStorage.getItem("user"));
+
+  //     if (!storedUser) return;
+
+  //     const uid = storedUser.uid;
+
+  //     // wishlist
+  //     const wishlistRes = await getUserWishlist(uid);
+
+  //     setWishlistCount(wishlistRes.data.length);
+
+  //     // cart
+  //     const cartRes = await getCarts();
+
+  //     const userCartItems = cartRes.data.filter(
+  //       (item) => item.uid === uid
+  //     );
+
+  //     setCartCount(userCartItems.length);
+
+  //   } catch (error) {
+
+  //     console.log(error);
+
+  //   }
+  // };
+
+  const fetchCounts = useCallback(async () => {
+
+    try {
+
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+
+      if (!storedUser) return;
+
+      const uid = storedUser.uid;
+
+      // wishlist
+      const wishlistRes = await getUserWishlist(uid);
+
+      setWishlistCount(wishlistRes.data.length);
+
+      // cart
+      const cartRes = await getCarts();
+
+      const userCartItems = cartRes.data.filter(
+        (item) => item.uid === uid
+      );
+
+      setCartCount(userCartItems.length);
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  }, []);
+  useEffect(() => {
+
+    fetchCounts();
+
+  }, [fetchCounts]);
+
+  useEffect(() => {
+
+    const handleUpdate = () => {
+
+      fetchCounts();
+
+    };
+
+    window.addEventListener("cartUpdated", handleUpdate);
+
+    window.addEventListener("wishlistUpdated", handleUpdate);
+
+    return () => {
+
+      window.removeEventListener("cartUpdated", handleUpdate);
+
+      window.removeEventListener("wishlistUpdated", handleUpdate);
+
+    };
+
+  }, [fetchCounts]);
   return (
     <nav className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-gray-200">
       {/* <div className="w-full px-4 flex items-center justify-between h-16 lg:h-20"> */}
@@ -176,8 +311,12 @@ const Navbar = () => {
                 className="text-foreground hover:text-accent transition-colors relative"
               >
                 <Heart className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
+                {/* <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
                   2
+                </span> */}
+
+                <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
+                  {wishlistCount}
                 </span>
               </Link>
               <Link
@@ -185,8 +324,11 @@ const Navbar = () => {
                 className="text-foreground hover:text-accent transition-colors relative"
               >
                 <ShoppingBag className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
+                {/* <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
                   3
+                </span> */}
+                <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] h-4 w-4 flex items-center justify-center rounded-full">
+                  {cartCount}
                 </span>
               </Link>
 

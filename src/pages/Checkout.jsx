@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import CheckoutStepper from "../components/CheckoutStepper";
 
 import { Button } from "../components/ui/button";
 import Swal from "sweetalert2";
@@ -43,123 +44,13 @@ const Checkout = () => {
   }, []);
 
   // PLACE ORDER
-  // const handlePlaceOrder = async () => {
-
-  //   try {
-
-  //     if (!address) {
-  //       alert("Please enter address");
-  //       return;
-  //     }
-
-  //     // create order for every cart item
-  //     // for (const item of items) {
-
-  //     //   const orderData = {
-  //     //     cartId: item.id,
-  //     //     amount: total,
-  //     //     orderDate: new Date(),
-  //     //     orderStatus: "Pending",
-  //     //     paymentStatus:
-  //     //       paymentMethod === "COD"
-  //     //         ? "Pending"
-  //     //         : "Paid",
-  //     //     deliveryAddress: address,
-  //     //     estimatedDelivery: "3-5 Days"
-  //     //   };
-
-  //     //   // save order
-  //     //   await placeOrder(orderData);
-
-  //     //   // remove cart item
-  //     //   await deleteCartItem(item.id);
-  //     // }
-
-  //   //  for (const item of items) {  
-  //   //      console.log(item);
-  //   //     const orderData = {
-  //   //       oid: 0,
-  //   //       // cartId: Number(item.id),
-  //   //       cartId: Number(item.cartId),
-  //   //       orderDate: new Date().toISOString(),
-
-  //   //       amount: Number(total),
-
-  //   //       orderStatus: "Pending",
-
-  //   //       paymentStatus:
-  //   //         paymentMethod === "COD"
-  //   //           ? "Pending"
-  //   //           : "Paid",
-
-  //   //       deliveryAddress: address,
-
-  //   //       estimatedDelivery: new Date(
-  //   //         Date.now() + 5 * 24 * 60 * 60 * 1000
-  //   //       ).toISOString()
-  //   //     };
-
-  //   //     console.log(orderData);
-
-  //   //     await placeOrder(orderData);
-
-  //   //     // await deleteCartItem(item.id);
-  //   //     await deleteCartItem(item.id);
-  //   //   }
-
-  //   for (const item of items) {
-
-  //       console.log(item);
-
-  //       const orderData = {
-  //         oid: 0,
-
-  //         cartId: Number(item.id),
-  //         //  uid: currentUser.uid,
-  //         uid: user?.uid,
-  //         orderDate: new Date().toISOString(),
-
-  //         amount: Number(total),
-
-  //         orderStatus: "Pending",
-
-  //         paymentStatus:
-  //           paymentMethod === "COD"
-  //             ? "Pending"
-  //             : "Paid",
-
-  //         deliveryAddress: address,
-
-  //         estimatedDelivery: new Date(
-  //           Date.now() + 5 * 24 * 60 * 60 * 1000
-  //         ).toISOString()
-  //       };
-
-  //       console.log(orderData);
-
-  //       await placeOrder(orderData);
-
-  //       // REMOVE THIS
-  //       await deleteCartItem(item.id);
-  //     }
-  //     alert("Order Placed Successfully");
-
-  //     navigate("/dashboard/orders");
-
-  //   } catch (error) {
-  //     console.log(error);
-  //     alert("Failed to place order");
-  //   }
-  // };
-
-
   const handlePlaceOrder = async () => {
 
     try {
 
       if (!address) {
         // alert("Please enter address");
-       
+
         Swal.fire({
           icon: "error",
           title: "Address Required",
@@ -200,8 +91,8 @@ const Checkout = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-      
-      
+
+
       console.log(orderRes.data);
 
       // created order from backend
@@ -222,12 +113,12 @@ const Checkout = () => {
     } catch (error) {
 
       console.log(error);
-        Swal.fire({
-          icon: "error",
-          title: "Order Failed",
-          text: "Failed to place order",
-          confirmButtonColor: "#c08a5b",
-        });
+      Swal.fire({
+        icon: "error",
+        title: "Order Failed",
+        text: "Failed to place order",
+        confirmButtonColor: "#c08a5b",
+      });
       // alert("Failed to place order");
     }
   };
@@ -239,6 +130,7 @@ const Checkout = () => {
         Checkout Page
       </h1>
 
+      <CheckoutStepper currentStep={1} />
       {/* ADDRESS */}
       <div className="mb-6">
         <label className="block mb-2 font-semibold">
@@ -257,7 +149,7 @@ const Checkout = () => {
       </div>
 
       {/* PAYMENT */}
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <label className="block mb-2 font-semibold">
           Payment Method
         </label>
@@ -281,7 +173,7 @@ const Checkout = () => {
             Card
           </option>
         </select>
-      </div>
+      </div> */}
 
       {/* SUMMARY */}
       <div className="border rounded p-5 space-y-3">
@@ -317,38 +209,3 @@ const Checkout = () => {
 };
 
 export default Checkout;
-
-// import { useLocation } from "react-router-dom";
-
-// const Checkout = () => {
-
-//   const location = useLocation();
-
-//   const {
-//     items,
-//     subtotal,
-//     shipping,
-//     discount,
-//     total
-//   } = location.state || {};
-
-//   return (
-//     <div className="p-10">
-//       <h1 className="text-3xl font-bold mb-5">
-//         Checkout Page
-//       </h1>
-
-//       <div>
-//         <p>Subtotal: ₹{subtotal}</p>
-//         <p>Shipping: ₹{shipping}</p>
-//         <p>Discount: ₹{discount}</p>
-
-//         <h2 className="text-2xl font-bold mt-4">
-//           Total: ₹{total}
-//         </h2>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Checkout;

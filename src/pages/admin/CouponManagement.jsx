@@ -491,7 +491,7 @@ const CouponManagement = () => {
             <table className="w-full min-w-[820px]">
               <thead className="bg-secondary/40">
                 <tr>
-                  {["Code", "Type", "Min", "Max", "Updated", "Actions"].map((h) => (
+                  {["Code", "Percentage", "Min", "Max", "Updated", "Actions"].map((h) => (
                     <th key={h} className="px-6 py-4 text-left text-xs uppercase text-muted-foreground">
                       {h}
                     </th>
@@ -503,7 +503,7 @@ const CouponManagement = () => {
                 {filtered.map((c) => (
                   <tr key={c.id} className="border-t hover:bg-secondary/30">
                     <td className="px-6 py-4 font-semibold">{c.couponCode}</td>
-                    <td className="px-6 py-4">{c.discountType}</td>
+                    <td className="px-6 py-4">{c.discountType}%</td>
                     <td className="px-6 py-4">{c.min}</td>
                     <td className="px-6 py-4">{c.max}</td>
                     <td className="px-6 py-4 text-sm text-muted-foreground">
