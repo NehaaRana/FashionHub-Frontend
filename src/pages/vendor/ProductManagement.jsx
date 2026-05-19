@@ -194,9 +194,13 @@ const ProductManagement = () => {
     setForm({
       ...p,
       image: null,
+      images: [], // IMPORTANT
     });
 
     setMainPreview(p.image);
+
+    setExtraPreviews([]);
+
 
     setModalOpen(true);
   };
@@ -1041,8 +1045,12 @@ const ProductManagement = () => {
 
                   setForm((prev) => ({
                     ...prev,
+                    // images: [
+                    //   ...prev.images,
+                    //   ...newFiles,
+                    // ],
                     images: [
-                      ...prev.images,
+                      ...(prev.images || []),
                       ...newFiles,
                     ],
                   }));
