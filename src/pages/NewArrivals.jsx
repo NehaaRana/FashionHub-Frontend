@@ -65,14 +65,6 @@ const NewArrivals = () => {
     }
 
     try {
-      // const cartData = {
-      //   uid: user.uid,
-      //   pid: product.pid,
-      //   quantity: 1,
-      //    sizeSelected: product.size,
-      //   colorSelected: product.color,
-      //   addedAt: new Date().toISOString(),
-      // };
       const cartData = {
         cartId: 0,
         uid: Number(user.uid),
@@ -103,75 +95,6 @@ const NewArrivals = () => {
       });
     }
   };
-
-
-  // ADD TO WISHLIST
-//   const handleWishlist = async (product) => {
-//   const user = JSON.parse(localStorage.getItem("user"));
-
-//   if (!user) {
-//     Swal.fire({
-//       icon: "warning",
-//       title: "Login Required",
-//       text: "Please login first!",
-//     });
-
-//     return;
-//   }
-
-//   try {
-//     // check already exists
-//     const existingItem = wishlist.find(
-//       (item) => item.pid === product.pid
-//     );
-
-//     // REMOVE
-//     if (existingItem) {
-//       await deleteWishlist(existingItem.wid);
-
-//       setWishlist((prev) =>
-//         prev.filter((item) => item.wid !== existingItem.wid)
-//       );
-
-//       Swal.fire({
-//         icon: "success",
-//         title: "Removed",
-//         text: "Removed from wishlist",
-//         timer: 1200,
-//         showConfirmButton: false,
-//       });
-//     }
-
-//     // ADD
-//     else {
-//       const wishlistData = {
-//         wid: 0,
-//         uid: Number(user.uid),
-//         pid: Number(product.pid),
-//       };
-
-//       await addToWishlist(wishlistData);
-//       window.dispatchEvent(new Event("wishlistUpdated"));
-//       fetchWishlist();
-
-//       Swal.fire({
-//         icon: "success",
-//         title: "Added",
-//         text: "Added to wishlist",
-//         timer: 1200,
-//         showConfirmButton: false,
-//       });
-//     }
-//   } catch (error) {
-//     console.log(error);
-
-//     Swal.fire({
-//       icon: "error",
-//       title: "Error",
-//       text: "Wishlist action failed",
-//     });
-//   }
-// };
 
 const handleWishlist = async (product) => {
 
@@ -284,36 +207,9 @@ const handleWishlist = async (product) => {
             ))}
           </div>
 
-          {/* Products */}
-          {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-8">
-            {products.map((p, i) => (
-              <ProductCard
-                key={p.pid}
-                product={{
-                  name: p.productName,
-                  price: `₹${p.price}`,
-                  image: `https://localhost:7106${p.productImage}`,
-                  badge: "NEW",
-                }}
-                delay={0.05 * i}
-              />
-            ))}
-          </div> */}
            {/* Products */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-8">
             {products.map((p, i) => (
-              // <ProductCard
-              //   key={p.pid}
-              //   product={{
-              //     ...p,
-              //     name: p.productName,
-              //     price: `₹${p.price}`,
-              //     image: `https://localhost:7106${p.productImage}`,
-              //     badge: "NEW",
-              //   }}
-              //   delay={0.05 * i}
-              //   onAddToCart={() => handleAddToCart(p)}
-              // />
               <ProductCard
                 key={p.pid}
                 product={{

@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
+import {
+  ChevronLeft,
+  ChevronRight,
+  X,
+} from "lucide-react";
 import {
   Heart,
   ShoppingBag,
@@ -27,7 +31,12 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
 
   const [wishlist, setWishlist] = useState([]);
+  const [selectedImage, setSelectedImage] = useState("");
+  const [zoomStyle, setZoomStyle] = useState({});
+  const [isZooming, setIsZooming] = useState(false);
 
+  const [showViewer, setShowViewer] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
   useEffect(() => {
     fetchProduct();
     fetchWishlist();
@@ -44,7 +53,20 @@ const ProductDetails = () => {
         (p) => p.pid === Number(id)
       );
 
-      setProduct(foundProduct);
+      // setProduct(foundProduct);
+      const extraImages = foundProduct.productImages
+        ? JSON.parse(foundProduct.productImages)
+        : [];
+
+      setProduct({
+        ...foundProduct,
+        extraImages,
+      });
+
+      // default selected image
+      setSelectedImage(
+        `https://localhost:7106${foundProduct.productImage}`
+      );
 
     } catch (error) {
       console.log(error);
@@ -222,12 +244,60 @@ const ProductDetails = () => {
   const finalPrice =
     product.discount > 0
       ? product.price -
-        (product.price * product.discount) / 100
+      (product.price * product.discount) / 100
       : product.price;
 
   const isWishlisted = wishlist.some(
     (item) => item.pid === product.pid
   );
+
+  const allImages = [
+    product.productImage,
+    ...(product.extraImages || []),
+  ];
+  const handleMouseMove = (e) => {
+
+    const { left, top, width, height } =
+      e.currentTarget.getBoundingClientRect();
+
+    // const x = ((e.pageX - left) / width) * 100;
+    // const y = ((e.pageY - top) / height) * 100;
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+
+    setZoomStyle({
+      transformOrigin: `${x}% ${y}%`,
+      transform: "scale(2)",
+    });
+  };
+
+  const handleMouseLeave = () => {
+
+    setZoomStyle({
+      transformOrigin: "center center",
+      transform: "scale(1)",
+    });
+
+    setIsZooming(false);
+  };
+
+  const nextImage = () => {
+
+    if (currentIndex < allImages.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      setCurrentIndex(0);
+    }
+  };
+
+  const prevImage = () => {
+
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    } else {
+      setCurrentIndex(allImages.length - 1);
+    }
+  };
 
   return (
     <section className="bg-white min-h-screen py-14">
@@ -246,12 +316,99 @@ const ProductDetails = () => {
           {/* IMAGE */}
           <div className="space-y-5">
 
-            <div className="overflow-hidden rounded-3xl bg-secondary">
+            {/* <div className="overflow-hidden rounded-3xl bg-secondary">
               <img
                 src={`https://localhost:7106${product.productImage}`}
                 alt={product.productName}
                 className="w-full h-[700px] object-cover hover:scale-105 transition-transform duration-700"
               />
+            </div> */}
+            <div className="flex gap-4">
+
+              {/* THUMBNAILS */}
+              <div className="flex flex-col gap-3">
+
+                {/* MAIN IMAGE THUMB */}
+                <img
+                  src={`https://localhost:7106${product.productImage}`}
+                  alt=""
+                  onClick={() =>
+                    setSelectedImage(
+                      `https://localhost:7106${product.productImage}`
+                    )
+                  }
+                  className={`w-20 h-20 object-cover rounded-xl cursor-pointer border-2 ${selectedImage ===
+                    `https://localhost:7106${product.productImage}`
+                    ? "border-black"
+                    : "border-gray-200"
+                    }`}
+                />
+
+                {/* EXTRA IMAGES */}
+                {product.extraImages?.map((img, index) => (
+                  <img
+                    key={index}
+                    src={`https://localhost:7106${img}`}
+                    alt=""
+                    onClick={() =>
+                      setSelectedImage(
+                        `https://localhost:7106${img}`
+                      )
+                    }
+                    className={`w-20 h-20 object-cover rounded-xl cursor-pointer border-2 ${selectedImage ===
+                      `https://localhost:7106${img}`
+                      ? "border-black"
+                      : "border-gray-200"
+                      }`}
+                  />
+                ))}
+
+              </div>
+
+              {/* MAIN BIG IMAGE */}
+              {/* <div className="flex-1 overflow-hidden rounded-3xl bg-secondary">
+
+                <img
+                  src={selectedImage}
+                  alt={product.productName}
+                  className="w-full h-[700px] object-cover hover:scale-105 transition-transform duration-700"
+                />
+
+              </div> */}
+              <div
+                className="flex-1 overflow-hidden rounded-3xl bg-secondary relative cursor-zoom-in border"
+                onMouseMove={handleMouseMove}
+                onMouseEnter={() => setIsZooming(true)}
+                onMouseLeave={handleMouseLeave}
+              >
+
+                <img
+                  src={selectedImage}
+                  onClick={() => {
+                    setShowViewer(true);
+
+                    const index = allImages.findIndex(
+                      (img) =>
+                        `https://localhost:7106${img}` ===
+                        selectedImage
+                    );
+
+                    setCurrentIndex(index);
+                  }}
+                  alt={product.productName}
+                  style={zoomStyle}
+                  className="w-full h-[700px] object-cover transition-transform duration-200 ease-out"
+                />
+
+                {/* ZOOM TEXT */}
+                {!isZooming && (
+                  <div className="absolute bottom-4 right-4 bg-black/70 text-white text-xs px-3 py-2 rounded-full">
+                    Hover to Zoom
+                  </div>
+                )}
+
+              </div>
+
             </div>
 
             <div className="grid grid-cols-3 gap-4">
@@ -379,11 +536,10 @@ const ProductDetails = () => {
                 className="w-16 border rounded-2xl flex items-center justify-center hover:bg-secondary transition-all"
               >
                 <Heart
-                  className={`h-5 w-5 ${
-                    isWishlisted
-                      ? "fill-red-500 text-red-500"
-                      : ""
-                  }`}
+                  className={`h-5 w-5 ${isWishlisted
+                    ? "fill-red-500 text-red-500"
+                    : ""
+                    }`}
                 />
               </button>
 
@@ -392,6 +548,70 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* FULLSCREEN IMAGE VIEWER */}
+      {showViewer && (
+
+        <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center">
+
+          {/* CLOSE */}
+          <button
+            onClick={() => setShowViewer(false)}
+            className="absolute top-5 right-5 text-white z-50"
+          >
+            <X className="w-8 h-8" />
+          </button>
+
+          {/* PREVIOUS */}
+          <button
+            onClick={prevImage}
+            className="absolute left-5 text-white z-50"
+          >
+            <ChevronLeft className="w-12 h-12" />
+          </button>
+
+          {/* IMAGE */}
+          <div className="w-[85%] h-[85%] overflow-hidden rounded-2xl">
+
+            <img
+              src={`https://localhost:7106${allImages[currentIndex]}`}
+              alt=""
+              className="w-full h-full object-contain hover:scale-150 transition-transform duration-300 cursor-zoom-in"
+            />
+
+          </div>
+
+          {/* NEXT */}
+          <button
+            onClick={nextImage}
+            className="absolute right-5 text-white z-50"
+          >
+            <ChevronRight className="w-12 h-12" />
+          </button>
+
+          {/* THUMBNAILS */}
+          <div className="absolute bottom-5 flex gap-3">
+
+            {allImages.map((img, index) => (
+
+              <img
+                key={index}
+                src={`https://localhost:7106${img}`}
+                alt=""
+                onClick={() => setCurrentIndex(index)}
+                className={`w-20 h-20 rounded-xl object-cover cursor-pointer border-2 ${currentIndex === index
+                    ? "border-white"
+                    : "border-transparent"
+                  }`}
+              />
+
+            ))}
+
+          </div>
+
+        </div>
+
+      )}
     </section>
   );
 };
