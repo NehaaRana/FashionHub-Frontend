@@ -6,9 +6,12 @@ const ProductCard = ({
   onAddToCart,
   onWishlist,
   isWishlisted,
+  onClick,
+
 }) => (
   <div
-    className="group animate-fade-in-up"
+    onClick={onClick}
+    className="group animate-fade-in-up  cursor-pointer"
     style={{ animationDelay: `${delay}s` }}
   >
     <div className="relative overflow-hidden rounded-sm aspect-[4/5] mb-4 bg-secondary">
@@ -20,7 +23,11 @@ const ProductCard = ({
 
       {/* Wishlist */}
       <button
-        onClick={onWishlist}
+        // onClick={onWishlist}
+         onClick={(e) => {
+          e.stopPropagation();
+          onWishlist();
+        }}
         aria-label="Add to wishlist"
         className="absolute top-3 right-3 bg-background/80 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-background"
       >
@@ -42,7 +49,11 @@ const ProductCard = ({
 
       {/* ADD TO CART BUTTON */}
       <button
-        onClick={onAddToCart}
+        // onClick={onAddToCart}
+        onClick={(e) => {
+          e.stopPropagation();
+          onAddToCart();
+        }}
         className="absolute bottom-3 left-3 right-3 bg-primary text-primary-foreground font-body text-xs uppercase tracking-[0.15em] font-semibold py-3 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 flex items-center justify-center gap-2 hover:bg-primary/90"
       >
         <ShoppingBag className="h-3.5 w-3.5" />
