@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { createPayment, placeOrder } from "../services/api";
+import { createPayment, placeOrder, markCouponUsed } from "../services/api";
 import CheckoutStepper from "../components/CheckoutStepper";
 
 import {
@@ -46,7 +46,10 @@ const Payment = () => {
     const {
         createdOrder,
         //   total,
-        paymentMethod
+        paymentMethod,
+        appliedCoupon,
+    user,
+    items
     } = location.state || {};
 
     const total = location.state?.total || 0;
@@ -85,6 +88,28 @@ const Payment = () => {
             // SAVE PAYMENT
             await createPayment(paymentData);
 
+            if (appliedCoupon) {
+
+                console.log("Coupon Data:", {
+    couponId: appliedCoupon.couponId,
+    uid: user?.uid,
+    oid: createdOrder?.orderId,
+    pid: items[0]?.pid
+});
+    await markCouponUsed(
+        appliedCoupon.couponId,
+        {
+            couponId: appliedCoupon.couponId,
+
+            uid: user.uid,
+
+            oid: createdOrder.orderId,
+
+            // first product id
+            pid: items[0]?.pid
+        }
+    );
+}
             alert("Payment Successful");
 
             // navigate("/dashboard/orders");

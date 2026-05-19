@@ -19,7 +19,8 @@ const Checkout = () => {
     subtotal,
     shipping,
     discount,
-    total
+    total,
+    appliedCoupon
   } = location.state || {};
 
   // form states
@@ -107,6 +108,8 @@ const Checkout = () => {
           discount,
           total,
           paymentMethod,
+          appliedCoupon,
+    user,
         },
       });
 

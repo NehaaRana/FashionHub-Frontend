@@ -205,4 +205,16 @@ export const getPayments = () =>
 export const addReview = (data) =>
     API.post("/Reviews", data);
 
+
+//coupon used by user
+export const getUserCoupons = (uid) =>
+  API.get(`/Coupons/user/${uid}`);
+
+export const useCoupon = (couponId, data) =>
+  API.put(`/Coupons/use/${couponId}`, data);
+
+export const markCouponUsed = (couponId, data) =>
+  API.put(`/Coupons/use/${couponId}`, data);
+
 export default API;
+

@@ -387,44 +387,41 @@ const CouponManagement = () => {
     setModalOpen(true);
   };
 
-  // const handleSave = async () => {
-  //   try {
-  //     if (!form.couponCode || !form.discountType) return;
 
-  //     const payload = {
-  //       couponCode: form.couponCode,
-  //       discountType: form.discountType,
-  //       minimumOrderAmount: Number(form.minimumOrderAmount),
-  //       maximumOrderAmount: Number(form.maximumOrderAmount),
-  //     };
-      
-  //       if (editing) {
-  //         // ✅ EDIT MODE
-  //         await updateCoupon(editing.id, payload);
-  //       } else {
-  //         // ✅ CREATE MODE
-  //         await createCoupon(payload);
-  //       }
+//   const handleSave = async () => {
+//   try {
+//     if (!form.couponCode || !form.discountType) return;
 
-  //       fetchCoupons();
-  //       setModalOpen(false);
-  //     // await createCoupon(payload);
+//     const payload = {
+//       couponId: editing.id,
+//       couponCode: form.couponCode,
+//       discountType: form.discountType,
+//       minimumOrderAmount: Number(form.minimumOrderAmount),
+//       maximumOrderAmount: Number(form.maximumOrderAmount),
+//     };
 
-  //     // fetchCoupons();
-  //     // setModalOpen(false);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+//     if (editing) {
+//       // ✅ EDIT MODE
+//       await updateCoupon(editing.id, payload);
+//     } else {
+//       // ✅ CREATE MODE
+//       await createCoupon(payload);
+//     }
+
+//     fetchCoupons();
+//     setModalOpen(false);
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
 
 
-
-  const handleSave = async () => {
+const handleSave = async () => {
   try {
+
     if (!form.couponCode || !form.discountType) return;
 
     const payload = {
-      couponId: editing.id,
       couponCode: form.couponCode,
       discountType: form.discountType,
       minimumOrderAmount: Number(form.minimumOrderAmount),
@@ -432,20 +429,27 @@ const CouponManagement = () => {
     };
 
     if (editing) {
-      // ✅ EDIT MODE
+
+      payload.couponId = editing.id;
+
       await updateCoupon(editing.id, payload);
+
     } else {
-      // ✅ CREATE MODE
+
       await createCoupon(payload);
+
     }
 
     fetchCoupons();
+
     setModalOpen(false);
+
   } catch (err) {
+
     console.error(err);
+
   }
 };
-
   const handleDelete = async () => {
     try {
       if (!confirmDelete) return;
