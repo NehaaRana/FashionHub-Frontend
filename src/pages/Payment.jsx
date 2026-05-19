@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createPayment, placeOrder, markCouponUsed } from "../services/api";
 import CheckoutStepper from "../components/CheckoutStepper";
-
+import Swal from "sweetalert2";
 import {
     CreditCard,
     Smartphone,
@@ -111,6 +111,14 @@ const Payment = () => {
     );
 }
             alert("Payment Successful");
+            // alert("Payment Successful");
+
+            Swal.fire({
+                icon: "success",
+                title: "Payment Successful",
+                text: "Your payment has been processed successfully.",
+                confirmButtonColor: "#000",
+            });
 
             // navigate("/dashboard/orders");
             navigate("/payment-success", {
@@ -129,7 +137,13 @@ const Payment = () => {
 
             console.log(error);
 
-            alert("Payment Failed");
+            // alert("Payment Failed");
+            Swal.fire({
+                icon: "error",
+                title: "Payment Failed",
+                text: "Something went wrong while processing your payment.",
+                confirmButtonColor: "#000",
+            });
 
         } finally {
 
@@ -152,41 +166,6 @@ const Payment = () => {
 
             <div className="max-w-7xl mx-auto">
 
-                {/* STEPPER */}
-                {/* <div className="flex items-center justify-center gap-4 mb-12 flex-wrap">
-
-                    {["Address", "Payment", "Confirmation"].map(
-                        (step, index) => (
-                            <div
-                                key={step}
-                                className="flex items-center gap-3"
-                            >
-                                <div
-                                    className={`w-10 h-10 rounded-full border flex items-center justify-center text-sm font-semibold
-                  ${index <= 1
-                                            ? "bg-black text-white border-black"
-                                            : "bg-white text-gray-500 border-gray-300"
-                                        }`}
-                                >
-                                    {index + 1}
-                                </div>
-
-                                <span
-                                    className={`text-sm ${index <= 1
-                                        ? "text-black"
-                                        : "text-gray-500"
-                                        }`}
-                                >
-                                    {step}
-                                </span>
-
-                                {index < 2 && (
-                                    <div className="w-14 h-[1px] bg-gray-300 ml-2" />
-                                )}
-                            </div>
-                        )
-                    )}
-                </div> */}
                 <CheckoutStepper currentStep={2} />
 
                 <div className="grid lg:grid-cols-3 gap-8">

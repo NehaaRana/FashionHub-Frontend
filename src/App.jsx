@@ -34,6 +34,8 @@ import UserAddresses from "./pages/user/UserAddress";
 import UserProfile from "./pages/user/UserProfile";
 import Payment from "./pages/Payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import ProductDetails from "./pages/ProductDetails";
+
 
 function App() {
 
@@ -56,6 +58,10 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
+
+             {/* PRODUCT DETAILS PAGE */}
+          <Route path="/product/:id" element={<ProductDetails />} />
+
           
           {/* <Route path="/admin/categories" element={<CategoryManagement />} />
           <Route path="/admin/coupons" element={<CouponManagement />} /> */}

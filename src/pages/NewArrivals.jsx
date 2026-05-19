@@ -5,6 +5,7 @@ import ProductCard from "../components/ProductCard";
 import { Button } from "../components/ui/button";
 import { getAllProducts , addToCart ,addToWishlist,deleteWishlist ,getUserWishlist} from "../services/api";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 
 const filters = ["All", "Dresses", "Tops", "Bags", "Shoes", "Accessories"];
@@ -18,7 +19,9 @@ const NewArrivals = () => {
 
   }, []);
 
-  const fetchProducts = async () => {
+  const navigate = useNavigate();
+
+  const fetchProducts =   async () => {
     try {
       const res = await getAllProducts();
 
@@ -324,6 +327,8 @@ const handleWishlist = async (product) => {
                 delay={0.05 * i}
                 onAddToCart={() => handleAddToCart(p)}
                 onWishlist={() => handleWishlist(p)}
+                // PRODUCT CLICK
+                onClick={() => navigate(`/product/${p.pid}`)}
               />
               ))}
           </div>
