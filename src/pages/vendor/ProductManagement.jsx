@@ -123,27 +123,27 @@ const ProductManagement = () => {
       // GET CURRENT LOGGED IN VENDOR
       const userRes = await getCurrentUser();
 
-    const formatted = res.data.map((p) => ({
-      id: p.pid,
-      productName: p.productName,
-      description: p.description,
-      price: p.price,
-      discount: p.discount,
-      fabric: p.fabric,
-      color: p.color,
-      size: p.size,
-      stock: p.stock,
-      cid: p.cid,
-      isActive: p.isActive,
-      // image: `https://localhost:7106${p.productImage}`,
-      image: `https://localhost:7106${p.productImage}`,
-      productImages: p.productImages,
-    }));
+      const formatted = res.data.map((p) => ({
+        id: p.pid,
+        productName: p.productName,
+        description: p.description,
+        price: p.price,
+        discount: p.discount,
+        fabric: p.fabric,
+        color: p.color,
+        size: p.size,
+        stock: p.stock,
+        cid: p.cid,
+        isActive: p.isActive,
+        // image: `https://localhost:7106${p.productImage}`,
+        image: `https://localhost:7106${p.productImage}`,
+        productImages: p.productImages,
+      }));
       const currentVendor = userRes.data;
 
       setVendorName(
-            currentVendor.ownername        
-          );
+        currentVendor.ownername
+      );
 
       console.log("CURRENT VENDOR:", currentVendor);
 
@@ -290,55 +290,29 @@ const ProductManagement = () => {
     //       confirmButtonColor: "#c08a5b",
     //     });
     //     return;
-     try {
-    if (!form.productName.trim()) {
-      // alert("Product name required");
-       Swal.fire({
-        icon: "warning",
-        title: "Product Name Required",
-        text: "Please enter product name",
-        confirmButtonColor: "#c08a5b",
-      });
-      return;
-    }
-
-    // const user = JSON.parse(localStorage.getItem("user"));
-    // const vendorId = user?.vid;
-
-
-    const userRes = await getCurrentUser();
-
-    const currentVendor = userRes.data;
-
-    const vendorId =
-      currentVendor.vid ||
-      currentVendor.Vid;
-
-    const formData = new FormData();
-
-    formData.append("Vid", vendorId);
-    formData.append("Cid",Number(form.cid)); // ⚠️ must not be empty
-    formData.append("ProductName", form.productName);
-    formData.append("Description", form.description);
-    formData.append("Price", form.price);
-    formData.append("Discount", form.discount);
-    formData.append("Fabric", form.fabric);
-    formData.append("Color", form.color);
-    formData.append("Size", form.size); 
-    formData.append("Stock", form.stock);
-    formData.append("IsActive", form.isActive);
-
-    if (form.image) {
-      formData.append("Image", form.image);
-    }
-
-    if (form.images && form.images.length > 0) {
-      for (let i = 0; i < form.images.length; i++) {
-        formData.append("Images", form.images[i]);
+    try {
+      if (!form.productName.trim()) {
+        // alert("Product name required");
+        Swal.fire({
+          icon: "warning",
+          title: "Product Name Required",
+          text: "Please enter product name",
+          confirmButtonColor: "#c08a5b",
+        });
+        return;
       }
 
-      const user = JSON.parse(localStorage.getItem("user"));
-      const vendorId = user?.vid;
+      // const user = JSON.parse(localStorage.getItem("user"));
+      // const vendorId = user?.vid;
+
+
+      const userRes = await getCurrentUser();
+
+      const currentVendor = userRes.data;
+
+      const vendorId =
+        currentVendor.vid ||
+        currentVendor.Vid;
 
       const formData = new FormData();
 
@@ -362,200 +336,228 @@ const ProductManagement = () => {
         for (let i = 0; i < form.images.length; i++) {
           formData.append("Images", form.images[i]);
         }
-      }
 
-      // const colorMap = {};
+        const user = JSON.parse(localStorage.getItem("user"));
+        const vendorId = user?.vid;
 
-      // for (const color in form.colorImages) {
-      //   const files = form.colorImages[color];
+        const formData = new FormData();
 
-      //   colorMap[color] = [];
+        formData.append("Vid", vendorId);
+        formData.append("Cid", Number(form.cid)); // ⚠️ must not be empty
+        formData.append("ProductName", form.productName);
+        formData.append("Description", form.description);
+        formData.append("Price", form.price);
+        formData.append("Discount", form.discount);
+        formData.append("Fabric", form.fabric);
+        formData.append("Color", form.color);
+        formData.append("Size", form.size);
+        formData.append("Stock", form.stock);
+        formData.append("IsActive", form.isActive);
 
-      //   files.forEach((file) => {
-      //     colorMap[color].push(file.name);
-      //   });
-      // }
+        if (form.image) {
+          formData.append("Image", form.image);
+        }
 
-      // formData.append(
-      //   "ColorImagesJson",
-      //   JSON.stringify(colorMap)
-      // );
+        if (form.images && form.images.length > 0) {
+          for (let i = 0; i < form.images.length; i++) {
+            formData.append("Images", form.images[i]);
+          }
+        }
 
-      const colorMap = {};
+        // const colorMap = {};
 
-      for (const color in form.colorImages) {
+        // for (const color in form.colorImages) {
+        //   const files = form.colorImages[color];
 
-        const files = form.colorImages[color];
+        //   colorMap[color] = [];
 
-        colorMap[color] = [];
+        //   files.forEach((file) => {
+        //     colorMap[color].push(file.name);
+        //   });
+        // }
 
-        files.forEach((file) => {
+        // formData.append(
+        //   "ColorImagesJson",
+        //   JSON.stringify(colorMap)
+        // );
 
-          formData.append("Images", file);
+        const colorMap = {};
 
-          colorMap[color].push(file.name);
-        });
-      }
+        for (const color in form.colorImages) {
 
-      formData.append(
-        "ColorImagesJson",
-        JSON.stringify(colorMap)
-      );
-      if (editing) {
-        await updateProduct(editing.id, formData);
-        Swal.fire({
-          icon: "success",
-          title: "Product Updated",
-          text: "Product updated successfully",
-          timer: 1500,
-          showConfirmButton: false,
-        });
+          const files = form.colorImages[color];
 
-      } else {
-        await createProduct(formData);
-        Swal.fire({
-          icon: "success",
-          title: "Product Added",
-          text: "Product created successfully",
-          timer: 1500,
-          showConfirmButton: false,
-        });
-      }
+          colorMap[color] = [];
 
-      // alert("Product saved successfully ");
+          files.forEach((file) => {
 
-      fetchProducts();
-      setModalOpen(false);
-    } catch (err) {
-      console.error(err);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Error while saving product",
-        confirmButtonColor: "#c08a5b",
-      });
-      // alert("Error while saving product ");
-    }
-  };
+            formData.append("Images", file);
 
-  // const handleDelete = async () => {
-  //   await deleteProduct(confirmDelete.id);
-  //   fetchProducts();
-  //   setConfirmDelete(null);
-  // };
+            colorMap[color].push(file.name);
+          });
+        }
 
-  const handleDelete = async () => {
+        formData.append(
+          "ColorImagesJson",
+          JSON.stringify(colorMap)
+        );
+        if (editing) {
+          await updateProduct(editing.id, formData);
+          Swal.fire({
+            icon: "success",
+            title: "Product Updated",
+            text: "Product updated successfully",
+            timer: 1500,
+            showConfirmButton: false,
+          });
 
-    const result = await Swal.fire({
-      title: "Delete Product?",
-      text: "This product will be permanently deleted",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#6b7280",
-      confirmButtonText: "Yes, Delete",
-    });
+        } else {
+          await createProduct(formData);
+          Swal.fire({
+            icon: "success",
+            title: "Product Added",
+            text: "Product created successfully",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        }
 
-    if (result.isConfirmed) {
-
-      try {
-
-        await deleteProduct(confirmDelete.id);
+        // alert("Product saved successfully ");
 
         fetchProducts();
-
-        setConfirmDelete(null);
-
-        Swal.fire({
-          icon: "success",
-          title: "Deleted",
-          text: "Product deleted successfully",
-          timer: 1500,
-          showConfirmButton: false,
-        });
-
-      } catch (error) {
-
-        console.log(error);
-
+        setModalOpen(false);
+      } 
+    }
+    catch (err) {
+        console.error(err);
         Swal.fire({
           icon: "error",
-          title: "Delete Failed",
-          text: "Unable to delete product",
+          title: "Error",
+          text: "Error while saving product",
           confirmButtonColor: "#c08a5b",
         });
+        // alert("Error while saving product ");
       }
-    }
-  };
+    };
+
+    // const handleDelete = async () => {
+    //   await deleteProduct(confirmDelete.id);
+    //   fetchProducts();
+    //   setConfirmDelete(null);
+    // };
+
+    const handleDelete = async () => {
+
+      const result = await Swal.fire({
+        title: "Delete Product?",
+        text: "This product will be permanently deleted",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Yes, Delete",
+      });
+
+      if (result.isConfirmed) {
+
+        try {
+
+          await deleteProduct(confirmDelete.id);
+
+          fetchProducts();
+
+          setConfirmDelete(null);
+
+          Swal.fire({
+            icon: "success",
+            title: "Deleted",
+            text: "Product deleted successfully",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+
+        } catch (error) {
+
+          console.log(error);
+
+          Swal.fire({
+            icon: "error",
+            title: "Delete Failed",
+            text: "Unable to delete product",
+            confirmButtonColor: "#c08a5b",
+          });
+        }
+      }
+    };
 
 
-  const colorOptions = [
-    "Red",
-    "Black",
-    "White",
-    "Blue",
-    "Green",
-    "Pink",
-    "Yellow",
-    "Purple",
-    "Grey",
-    "Orange",
-    "Brown",
-  ];
+    const colorOptions = [
+      "Red",
+      "Black",
+      "White",
+      "Blue",
+      "Green",
+      "Pink",
+      "Yellow",
+      "Purple",
+      "Grey",
+      "Orange",
+      "Brown",
+    ];
 
-  const sizeOptions = [
-    "XS",
-    "S",
-    "M",
-    "L",
-    "XL",
-    "XXL",
-  ];
+    const sizeOptions = [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+    ];
 
-  return (
-    // <DashboardLayout role="Vendor" userName="Vendor" items={vendorItems}>
-    <DashboardLayout
+    return (
+      // <DashboardLayout role="Vendor" userName="Vendor" items={vendorItems}>
+      <DashboardLayout
         role="Vendor"
         userName={vendorName}
         items={vendorItems}
       >
-      <div className="p-6 lg:p-12">
-        <DashHeader
-          eyebrow="Catalogue"
-          title="Manage"
-          titleAccent="Products"
-          description="Add, edit and manage your store products."
-        />
+        <div className="p-6 lg:p-12">
+          <DashHeader
+            eyebrow="Catalogue"
+            title="Manage"
+            titleAccent="Products"
+            description="Add, edit and manage your store products."
+          />
 
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
-          <StatCard label="Total Products" value={stats.total} icon={Package} />
-          <StatCard label="Active" value={stats.active} icon={CheckCircle2} />
-        </div>
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
+            <StatCard label="Total Products" value={stats.total} icon={Package} />
+            <StatCard label="Active" value={stats.active} icon={CheckCircle2} />
+          </div>
 
-        <AdminToolbar
-          search={search}
-          onSearch={setSearch}
-          onAdd={openAdd}
-          addLabel="Add Product"
-        />
+          <AdminToolbar
+            search={search}
+            onSearch={setSearch}
+            onAdd={openAdd}
+            addLabel="Add Product"
+          />
 
-        <div className="bg-card border rounded-sm overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr>
-                {["Product", "Price", "Stock", "Image", "Status", "Actions"].map((h) => (
-                  <th key={h} className="px-6 py-3 text-left text-xs">
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
+          <div className="bg-card border rounded-sm overflow-hidden">
+            <table className="w-full">
+              <thead>
+                <tr>
+                  {["Product", "Price", "Stock", "Image", "Status", "Actions"].map((h) => (
+                    <th key={h} className="px-6 py-3 text-left text-xs">
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
 
-            <tbody>
-              {filtered.map((p) => (
-                <tr key={p.id}>
-                  <td className="px-6 py-4">{p.productName}</td>
-                  {/* <td className="px-6 py-4 flex items-center gap-3">
+              <tbody>
+                {filtered.map((p) => (
+                  <tr key={p.id}>
+                    <td className="px-6 py-4">{p.productName}</td>
+                    {/* <td className="px-6 py-4 flex items-center gap-3">
                     <img
                       src={p.image}
                       alt={p.productName}
@@ -563,36 +565,36 @@ const ProductManagement = () => {
                     />
                     {p.productName}
                   </td> */}
-                  <td className="px-6 py-4">₹{p.price}</td>
-                  <td className="px-6 py-4">{p.stock}</td>
-                  <td className="px-6 py-4">
-                    <img
-                      src={p.image}
-                      alt={p.productName}
-                      className="w-12 h-12 object-cover rounded"
-                    />
-                  </td>
-                  <td className="px-6 py-4">
-                    {p.isActive ? "Active" : "Hidden"}
-                  </td>
+                    <td className="px-6 py-4">₹{p.price}</td>
+                    <td className="px-6 py-4">{p.stock}</td>
+                    <td className="px-6 py-4">
+                      <img
+                        src={p.image}
+                        alt={p.productName}
+                        className="w-12 h-12 object-cover rounded"
+                      />
+                    </td>
+                    <td className="px-6 py-4">
+                      {p.isActive ? "Active" : "Hidden"}
+                    </td>
 
-                  <td className="px-6 py-4 flex gap-2">
-                    <button onClick={() => openEdit(p)}>
-                      <Pencil size={16} />
-                    </button>
-                    <button onClick={() => setConfirmDelete(p)}>
-                      <Trash2 size={16} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    <td className="px-6 py-4 flex gap-2">
+                      <button onClick={() => openEdit(p)}>
+                        <Pencil size={16} />
+                      </button>
+                      <button onClick={() => setConfirmDelete(p)}>
+                        <Trash2 size={16} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
 
-      {/* Modal */}
-      {/* <Modal
+        {/* Modal */}
+        {/* <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         title={editing ? "Edit Product" : "New Product"}
@@ -830,536 +832,536 @@ const ProductManagement = () => {
       </Modal> */}
 
 
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 overflow-y-auto">
+        {modalOpen && (
+          <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 overflow-y-auto">
 
-          <div className="bg-white w-full max-w-6xl rounded-3xl shadow-2xl relative max-h-[95vh] overflow-y-auto">
+            <div className="bg-white w-full max-w-6xl rounded-3xl shadow-2xl relative max-h-[95vh] overflow-y-auto">
 
-            {/* HEADER */}
-            <div className="sticky top-0 bg-white z-20 border-b px-8 py-5 flex items-center justify-between rounded-t-3xl">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800">
-                  {editing ? "Update Product" : "Add New Product"}
-                </h2>
+              {/* HEADER */}
+              <div className="sticky top-0 bg-white z-20 border-b px-8 py-5 flex items-center justify-between rounded-t-3xl">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    {editing ? "Update Product" : "Add New Product"}
+                  </h2>
 
-                <p className="text-sm text-gray-500 mt-1">
-                  Manage your fashion product details
-                </p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Manage your fashion product details
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => setModalOpen(false)}
+                  className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-xl"
+                >
+                  ×
+                </button>
               </div>
 
-              <button
-                onClick={() => setModalOpen(false)}
-                className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-xl"
-              >
-                ×
-              </button>
-            </div>
+              {/* BODY */}
+              <div className="p-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-            {/* BODY */}
-            <div className="p-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* LEFT SIDE */}
+                <div className="space-y-6">
 
-              {/* LEFT SIDE */}
-              <div className="space-y-6">
-
-                {/* Product Name */}
-                <div>
-                  <label className="block text-sm font-semibold mb-2">
-                    Product Name
-                  </label>
-
-                  <input
-                    type="text"
-                    value={form.productName}
-                    onChange={(e) =>
-                      setForm({ ...form, productName: e.target.value })
-                    }
-                    placeholder="Enter product name"
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-black"
-                  />
-                </div>
-
-                {/* Description */}
-                <div>
-                  <label className="block text-sm font-semibold mb-2">
-                    Description
-                  </label>
-
-                  <textarea
-                    rows={5}
-                    value={form.description}
-                    onChange={(e) =>
-                      setForm({ ...form, description: e.target.value })
-                    }
-                    placeholder="Enter description"
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-black resize-none"
-                  />
-                </div>
-
-                {/* Price + Discount */}
-                <div className="grid grid-cols-2 gap-4">
+                  {/* Product Name */}
                   <div>
                     <label className="block text-sm font-semibold mb-2">
-                      Price
-                    </label>
-
-                    <input
-                      type="number"
-                      value={form.price}
-                      onChange={(e) =>
-                        setForm({ ...form, price: e.target.value })
-                      }
-                      className="w-full border border-gray-300 rounded-xl px-4 py-3"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold mb-2">
-                      Discount %
-                    </label>
-
-                    <input
-                      type="number"
-                      value={form.discount}
-                      onChange={(e) =>
-                        setForm({ ...form, discount: e.target.value })
-                      }
-                      className="w-full border border-gray-300 rounded-xl px-4 py-3"
-                    />
-                  </div>
-                </div>
-
-                {/* Fabric + Stock */}
-                <div className="grid grid-cols-2 gap-4">
-
-                  <div>
-                    <label className="block text-sm font-semibold mb-2">
-                      Fabric
+                      Product Name
                     </label>
 
                     <input
                       type="text"
-                      value={form.fabric}
+                      value={form.productName}
                       onChange={(e) =>
-                        setForm({ ...form, fabric: e.target.value })
+                        setForm({ ...form, productName: e.target.value })
                       }
-                      className="w-full border border-gray-300 rounded-xl px-4 py-3"
+                      placeholder="Enter product name"
+                      className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-black"
                     />
                   </div>
 
+                  {/* Description */}
                   <div>
                     <label className="block text-sm font-semibold mb-2">
-                      Stock
+                      Description
                     </label>
 
-                    <input
-                      type="number"
-                      value={form.stock}
+                    <textarea
+                      rows={5}
+                      value={form.description}
                       onChange={(e) =>
-                        setForm({ ...form, stock: e.target.value })
+                        setForm({ ...form, description: e.target.value })
+                      }
+                      placeholder="Enter description"
+                      className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-black resize-none"
+                    />
+                  </div>
+
+                  {/* Price + Discount */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold mb-2">
+                        Price
+                      </label>
+
+                      <input
+                        type="number"
+                        value={form.price}
+                        onChange={(e) =>
+                          setForm({ ...form, price: e.target.value })
+                        }
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold mb-2">
+                        Discount %
+                      </label>
+
+                      <input
+                        type="number"
+                        value={form.discount}
+                        onChange={(e) =>
+                          setForm({ ...form, discount: e.target.value })
+                        }
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Fabric + Stock */}
+                  <div className="grid grid-cols-2 gap-4">
+
+                    <div>
+                      <label className="block text-sm font-semibold mb-2">
+                        Fabric
+                      </label>
+
+                      <input
+                        type="text"
+                        value={form.fabric}
+                        onChange={(e) =>
+                          setForm({ ...form, fabric: e.target.value })
+                        }
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold mb-2">
+                        Stock
+                      </label>
+
+                      <input
+                        type="number"
+                        value={form.stock}
+                        onChange={(e) =>
+                          setForm({ ...form, stock: e.target.value })
+                        }
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3"
+                      />
+                    </div>
+
+                  </div>
+
+                  {/* CATEGORY */}
+                  <div>
+                    <label className="block text-sm font-semibold mb-2">
+                      Category
+                    </label>
+
+                    <select
+                      value={form.cid || ""}
+                      onChange={(e) =>
+                        setForm({ ...form, cid: e.target.value })
                       }
                       className="w-full border border-gray-300 rounded-xl px-4 py-3"
-                    />
-                  </div>
+                    >
+                      <option value="">Select Category</option>
 
-                </div>
-
-                {/* CATEGORY */}
-                <div>
-                  <label className="block text-sm font-semibold mb-2">
-                    Category
-                  </label>
-
-                  <select
-                    value={form.cid || ""}
-                    onChange={(e) =>
-                      setForm({ ...form, cid: e.target.value })
-                    }
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3"
-                  >
-                    <option value="">Select Category</option>
-
-                    {categories.map((cat) => (
-                      <option key={cat.cid} value={cat.cid}>
-                        {cat.categoryName}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* COLORS */}
-                <div className="relative">
-
-                  <label className="block text-sm font-semibold mb-2">
-                    Colors
-                  </label>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowColors(!showColors)}
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 text-left bg-white"
-                  >
-                    {form.color || "Select Colors"}
-                  </button>
-
-                  {showColors && (
-                    <div className="absolute z-50 mt-2 w-full bg-white border rounded-2xl shadow-xl p-4 max-h-64 overflow-y-auto">
-
-                      <div className="grid grid-cols-2 gap-3">
-
-                        {colorOptions.map((color) => {
-                          const selectedColors = form.color
-                            ? form.color.split(",")
-                            : [];
-
-                          return (
-                            <label
-                              key={color}
-                              className="flex items-center gap-2 text-sm"
-                            >
-                              <input
-                                type="checkbox"
-                                checked={selectedColors.includes(color)}
-                                onChange={(e) => {
-
-                                  let updated = [...selectedColors];
-
-                                  if (e.target.checked) {
-                                    updated.push(color);
-                                  } else {
-                                    updated = updated.filter(
-                                      (c) => c !== color
-                                    );
-                                  }
-
-                                  // setForm({
-                                  //   ...form,
-                                  //   color: updated.join(","),
-                                  // });
-                                  const updatedColorImages = { ...form.colorImages };
-
-                                  if (!e.target.checked) {
-                                    delete updatedColorImages[color];
-                                  }
-
-                                  setForm({
-                                    ...form,
-                                    color: updated.join(","),
-                                    colorImages: updatedColorImages,
-                                  });
-                                }}
-                              />
-
-                              {color}
-                            </label>
-                          );
-                        })}
-
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Selected Colors */}
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {form.color &&
-                      form.color.split(",").map((c) => (
-                        <span
-                          key={c}
-                          className="px-3 py-1 rounded-full bg-pink-100 text-pink-700 text-xs"
-                        >
-                          {c}
-                        </span>
+                      {categories.map((cat) => (
+                        <option key={cat.cid} value={cat.cid}>
+                          {cat.categoryName}
+                        </option>
                       ))}
+                    </select>
                   </div>
 
-                </div>
+                  {/* COLORS */}
+                  <div className="relative">
 
-                {/* SIZES */}
-                <div className="relative">
+                    <label className="block text-sm font-semibold mb-2">
+                      Colors
+                    </label>
 
-                  <label className="block text-sm font-semibold mb-2">
-                    Sizes
-                  </label>
+                    <button
+                      type="button"
+                      onClick={() => setShowColors(!showColors)}
+                      className="w-full border border-gray-300 rounded-xl px-4 py-3 text-left bg-white"
+                    >
+                      {form.color || "Select Colors"}
+                    </button>
 
-                  <button
-                    type="button"
-                    onClick={() => setShowSizes(!showSizes)}
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 text-left bg-white"
-                  >
-                    {form.size || "Select Sizes"}
-                  </button>
+                    {showColors && (
+                      <div className="absolute z-50 mt-2 w-full bg-white border rounded-2xl shadow-xl p-4 max-h-64 overflow-y-auto">
 
-                  {showSizes && (
-                    <div className="absolute z-50 mt-2 w-full bg-white border rounded-2xl shadow-xl p-4 max-h-64 overflow-y-auto">
+                        <div className="grid grid-cols-2 gap-3">
 
-                      <div className="grid grid-cols-2 gap-3">
+                          {colorOptions.map((color) => {
+                            const selectedColors = form.color
+                              ? form.color.split(",")
+                              : [];
 
-                        {sizeOptions.map((size) => {
+                            return (
+                              <label
+                                key={color}
+                                className="flex items-center gap-2 text-sm"
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={selectedColors.includes(color)}
+                                  onChange={(e) => {
 
-                          const selectedSizes = form.size
-                            ? form.size.split(",")
-                            : [];
+                                    let updated = [...selectedColors];
 
-                          return (
-                            <label
-                              key={size}
-                              className="flex items-center gap-2 text-sm"
-                            >
-                              <input
-                                type="checkbox"
-                                checked={selectedSizes.includes(size)}
-                                onChange={(e) => {
+                                    if (e.target.checked) {
+                                      updated.push(color);
+                                    } else {
+                                      updated = updated.filter(
+                                        (c) => c !== color
+                                      );
+                                    }
 
-                                  let updated = [...selectedSizes];
+                                    // setForm({
+                                    //   ...form,
+                                    //   color: updated.join(","),
+                                    // });
+                                    const updatedColorImages = { ...form.colorImages };
 
-                                  if (e.target.checked) {
-                                    updated.push(size);
-                                  } else {
-                                    updated = updated.filter(
-                                      (s) => s !== size
-                                    );
-                                  }
+                                    if (!e.target.checked) {
+                                      delete updatedColorImages[color];
+                                    }
 
-                                  setForm({
-                                    ...form,
-                                    size: updated.join(","),
-                                  });
-                                }}
-                              />
+                                    setForm({
+                                      ...form,
+                                      color: updated.join(","),
+                                      colorImages: updatedColorImages,
+                                    });
+                                  }}
+                                />
 
-                              {size}
-                            </label>
-                          );
-                        })}
-
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Selected Sizes */}
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {form.size &&
-                      form.size.split(",").map((s) => (
-                        <span
-                          key={s}
-                          className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs"
-                        >
-                          {s}
-                        </span>
-                      ))}
-                  </div>
-
-                </div>
-
-              </div>
-
-              {/* RIGHT SIDE */}
-              <div className="space-y-6">
-
-                {/* MAIN IMAGE */}
-                <div>
-
-                  <label className="block text-sm font-semibold mb-2">
-                    Main Product Image
-                  </label>
-
-                  <div className="border-2 border-dashed rounded-2xl p-6 bg-gray-50">
-
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-
-                        const file = e.target.files[0];
-
-                        setForm({
-                          ...form,
-                          image: file,
-                        });
-
-                        if (file) {
-                          setMainPreview(
-                            URL.createObjectURL(file)
-                          );
-                        }
-                      }}
-                    />
-
-                    {mainPreview && (
-                      <img
-                        src={mainPreview}
-                        alt=""
-                        className="w-full h-72 object-cover rounded-2xl mt-5"
-                      />
-                    )}
-
-                  </div>
-
-                </div>
-
-                {/* MULTIPLE IMAGES */}
-                <div>
-
-                  <label className="block text-sm font-semibold mb-2">
-                    Additional Product Images
-                  </label>
-
-                  <div className="border-2 border-dashed rounded-2xl p-6 bg-gray-50">
-
-                    <input
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={(e) => {
-
-                        const newFiles = Array.from(
-                          e.target.files
-                        );
-
-                        setForm((prev) => ({
-                          ...prev,
-                          // images: [
-                          //   ...prev.images,
-                          //   ...newFiles,
-                          // ],
-                          images: [
-                            ...(prev.images || []),
-                            ...newFiles,
-                          ],
-                        }));
-
-                        const previews = newFiles.map((file) =>
-                          URL.createObjectURL(file)
-                        );
-
-                        setExtraPreviews((prev) => [
-                          ...prev,
-                          ...previews,
-                        ]);
-                      }}
-                    />
-
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
-
-                      {extraPreviews.map((img, index) => (
-                        <div
-                          key={index}
-                          className="relative"
-                        >
-
-                          <img
-                            src={img}
-                            alt=""
-                            className="w-full h-32 object-cover rounded-xl"
-                          />
-
-                          <button
-                            type="button"
-                            onClick={() => {
-
-                              const updatedImages = [
-                                ...form.images,
-                              ];
-
-                              updatedImages.splice(index, 1);
-
-                              const updatedPreview = [
-                                ...extraPreviews,
-                              ];
-
-                              updatedPreview.splice(index, 1);
-
-                              setForm({
-                                ...form,
-                                images: updatedImages,
-                              });
-
-                              setExtraPreviews(
-                                updatedPreview
-                              );
-                            }}
-                            className="absolute top-2 right-2 bg-red-500 text-white w-7 h-7 rounded-full"
-                          >
-                            ×
-                          </button>
+                                {color}
+                              </label>
+                            );
+                          })}
 
                         </div>
-                      ))}
+                      </div>
+                    )}
 
+                    {/* Selected Colors */}
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {form.color &&
+                        form.color.split(",").map((c) => (
+                          <span
+                            key={c}
+                            className="px-3 py-1 rounded-full bg-pink-100 text-pink-700 text-xs"
+                          >
+                            {c}
+                          </span>
+                        ))}
+                    </div>
+
+                  </div>
+
+                  {/* SIZES */}
+                  <div className="relative">
+
+                    <label className="block text-sm font-semibold mb-2">
+                      Sizes
+                    </label>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowSizes(!showSizes)}
+                      className="w-full border border-gray-300 rounded-xl px-4 py-3 text-left bg-white"
+                    >
+                      {form.size || "Select Sizes"}
+                    </button>
+
+                    {showSizes && (
+                      <div className="absolute z-50 mt-2 w-full bg-white border rounded-2xl shadow-xl p-4 max-h-64 overflow-y-auto">
+
+                        <div className="grid grid-cols-2 gap-3">
+
+                          {sizeOptions.map((size) => {
+
+                            const selectedSizes = form.size
+                              ? form.size.split(",")
+                              : [];
+
+                            return (
+                              <label
+                                key={size}
+                                className="flex items-center gap-2 text-sm"
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={selectedSizes.includes(size)}
+                                  onChange={(e) => {
+
+                                    let updated = [...selectedSizes];
+
+                                    if (e.target.checked) {
+                                      updated.push(size);
+                                    } else {
+                                      updated = updated.filter(
+                                        (s) => s !== size
+                                      );
+                                    }
+
+                                    setForm({
+                                      ...form,
+                                      size: updated.join(","),
+                                    });
+                                  }}
+                                />
+
+                                {size}
+                              </label>
+                            );
+                          })}
+
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Selected Sizes */}
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {form.size &&
+                        form.size.split(",").map((s) => (
+                          <span
+                            key={s}
+                            className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs"
+                          >
+                            {s}
+                          </span>
+                        ))}
                     </div>
 
                   </div>
 
                 </div>
 
-                {/* COLOR WISE IMAGES */}
-                <div>
+                {/* RIGHT SIDE */}
+                <div className="space-y-6">
 
-                  <label className="block text-sm font-semibold mb-4">
-                    Color Wise Images
-                  </label>
+                  {/* MAIN IMAGE */}
+                  <div>
 
-                  <div className="space-y-6">
+                    <label className="block text-sm font-semibold mb-2">
+                      Main Product Image
+                    </label>
 
-                    {form.color &&
-                      form.color.split(",").map((color) => (
+                    <div className="border-2 border-dashed rounded-2xl p-6 bg-gray-50">
 
-                        <div
-                          key={color}
-                          className="border rounded-2xl p-4"
-                        >
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
 
-                          <h3 className="font-semibold mb-4">
-                            {color} Images
-                          </h3>
+                          const file = e.target.files[0];
 
-                          <input
-                            type="file"
-                            multiple
-                            accept="image/*"
-                            onChange={(e) => {
+                          setForm({
+                            ...form,
+                            image: file,
+                          });
 
-                              const files = Array.from(e.target.files);
+                          if (file) {
+                            setMainPreview(
+                              URL.createObjectURL(file)
+                            );
+                          }
+                        }}
+                      />
 
-                              // setForm((prev) => ({
-                              //   ...prev,
-                              //   colorImages: {
-                              //     ...prev.colorImages,
-                              //     [color]: files,
-                              //   },
-                              // }));
+                      {mainPreview && (
+                        <img
+                          src={mainPreview}
+                          alt=""
+                          className="w-full h-72 object-cover rounded-2xl mt-5"
+                        />
+                      )}
 
-                              setForm((prev) => ({
-                                ...prev,
-                                colorImages: {
-                                  ...prev.colorImages,
+                    </div>
+
+                  </div>
+
+                  {/* MULTIPLE IMAGES */}
+                  <div>
+
+                    <label className="block text-sm font-semibold mb-2">
+                      Additional Product Images
+                    </label>
+
+                    <div className="border-2 border-dashed rounded-2xl p-6 bg-gray-50">
+
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={(e) => {
+
+                          const newFiles = Array.from(
+                            e.target.files
+                          );
+
+                          setForm((prev) => ({
+                            ...prev,
+                            // images: [
+                            //   ...prev.images,
+                            //   ...newFiles,
+                            // ],
+                            images: [
+                              ...(prev.images || []),
+                              ...newFiles,
+                            ],
+                          }));
+
+                          const previews = newFiles.map((file) =>
+                            URL.createObjectURL(file)
+                          );
+
+                          setExtraPreviews((prev) => [
+                            ...prev,
+                            ...previews,
+                          ]);
+                        }}
+                      />
+
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+
+                        {extraPreviews.map((img, index) => (
+                          <div
+                            key={index}
+                            className="relative"
+                          >
+
+                            <img
+                              src={img}
+                              alt=""
+                              className="w-full h-32 object-cover rounded-xl"
+                            />
+
+                            <button
+                              type="button"
+                              onClick={() => {
+
+                                const updatedImages = [
+                                  ...form.images,
+                                ];
+
+                                updatedImages.splice(index, 1);
+
+                                const updatedPreview = [
+                                  ...extraPreviews,
+                                ];
+
+                                updatedPreview.splice(index, 1);
+
+                                setForm({
+                                  ...form,
+                                  images: updatedImages,
+                                });
+
+                                setExtraPreviews(
+                                  updatedPreview
+                                );
+                              }}
+                              className="absolute top-2 right-2 bg-red-500 text-white w-7 h-7 rounded-full"
+                            >
+                              ×
+                            </button>
+
+                          </div>
+                        ))}
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                  {/* COLOR WISE IMAGES */}
+                  <div>
+
+                    <label className="block text-sm font-semibold mb-4">
+                      Color Wise Images
+                    </label>
+
+                    <div className="space-y-6">
+
+                      {form.color &&
+                        form.color.split(",").map((color) => (
+
+                          <div
+                            key={color}
+                            className="border rounded-2xl p-4"
+                          >
+
+                            <h3 className="font-semibold mb-4">
+                              {color} Images
+                            </h3>
+
+                            <input
+                              type="file"
+                              multiple
+                              accept="image/*"
+                              onChange={(e) => {
+
+                                const files = Array.from(e.target.files);
+
+                                // setForm((prev) => ({
+                                //   ...prev,
+                                //   colorImages: {
+                                //     ...prev.colorImages,
+                                //     [color]: files,
+                                //   },
+                                // }));
+
+                                setForm((prev) => ({
+                                  ...prev,
+                                  colorImages: {
+                                    ...prev.colorImages,
+                                    [color]: [
+                                      ...(prev.colorImages[color] || []),
+                                      ...files,
+                                    ],
+                                  },
+                                }));
+
+                                const previews = files.map((file) =>
+                                  URL.createObjectURL(file)
+                                );
+
+                                // setColorPreviews((prev) => ({
+                                //   ...prev,
+                                //   [color]: previews,
+                                // }));
+                                setColorPreviews((prev) => ({
+                                  ...prev,
                                   [color]: [
-                                    ...(prev.colorImages[color] || []),
-                                    ...files,
+                                    ...(prev[color] || []),
+                                    ...previews,
                                   ],
-                                },
-                              }));
+                                }));
+                              }}
+                            />
 
-                              const previews = files.map((file) =>
-                                URL.createObjectURL(file)
-                              );
+                            <div className="grid grid-cols-3 gap-3 mt-4">
 
-                              // setColorPreviews((prev) => ({
-                              //   ...prev,
-                              //   [color]: previews,
-                              // }));
-                              setColorPreviews((prev) => ({
-                                ...prev,
-                                [color]: [
-                                  ...(prev[color] || []),
-                                  ...previews,
-                                ],
-                              }));
-                            }}
-                          />
-
-                          <div className="grid grid-cols-3 gap-3 mt-4">
-
-                            {/* {colorPreviews[color]?.map((img, index) => (
+                              {/* {colorPreviews[color]?.map((img, index) => (
                               <img
                                 key={index}
                                 // src={img}
@@ -1373,116 +1375,116 @@ const ProductManagement = () => {
                               />
                             ))} */}
 
-                            {colorPreviews[color]?.map((img, index) => (
+                              {colorPreviews[color]?.map((img, index) => (
 
-  <div key={index} className="relative">
+                                <div key={index} className="relative">
 
-    <img
-      src={
-        img.startsWith("/images")
-          ? `https://localhost:7106${img}`
-          : img
-      }
-      alt=""
-      className="w-full h-28 object-cover rounded-xl"
-    />
+                                  <img
+                                    src={
+                                      img.startsWith("/images")
+                                        ? `https://localhost:7106${img}`
+                                        : img
+                                    }
+                                    alt=""
+                                    className="w-full h-28 object-cover rounded-xl"
+                                  />
 
-    <button
-      type="button"
-      onClick={() => {
+                                  <button
+                                    type="button"
+                                    onClick={() => {
 
-        // REMOVE PREVIEW
-        const updatedPreviews =
-          [...colorPreviews[color]];
+                                      // REMOVE PREVIEW
+                                      const updatedPreviews =
+                                        [...colorPreviews[color]];
 
-        updatedPreviews.splice(index, 1);
+                                      updatedPreviews.splice(index, 1);
 
-        setColorPreviews((prev) => ({
-          ...prev,
-          [color]: updatedPreviews,
-        }));
+                                      setColorPreviews((prev) => ({
+                                        ...prev,
+                                        [color]: updatedPreviews,
+                                      }));
 
-        // REMOVE FILE
-        const updatedFiles =
-          [...(form.colorImages[color] || [])];
+                                      // REMOVE FILE
+                                      const updatedFiles =
+                                        [...(form.colorImages[color] || [])];
 
-        updatedFiles.splice(index, 1);
+                                      updatedFiles.splice(index, 1);
 
-        setForm((prev) => ({
-          ...prev,
-          colorImages: {
-            ...prev.colorImages,
-            [color]: updatedFiles,
-          },
-        }));
-      }}
-      className="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full text-sm"
-    >
-      ×
-    </button>
+                                      setForm((prev) => ({
+                                        ...prev,
+                                        colorImages: {
+                                          ...prev.colorImages,
+                                          [color]: updatedFiles,
+                                        },
+                                      }));
+                                    }}
+                                    className="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full text-sm"
+                                  >
+                                    ×
+                                  </button>
 
-  </div>
-))}
+                                </div>
+                              ))}
+
+                            </div>
 
                           </div>
-
-                        </div>
-                      ))}
+                        ))}
+                    </div>
                   </div>
-                </div>
 
-                {/* ACTIVE */}
-                <div className="flex items-center gap-3">
+                  {/* ACTIVE */}
+                  <div className="flex items-center gap-3">
 
-                  <input
-                    type="checkbox"
-                    checked={form.isActive}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        isActive: e.target.checked,
-                      })
-                    }
-                    className="w-5 h-5"
-                  />
+                    <input
+                      type="checkbox"
+                      checked={form.isActive}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          isActive: e.target.checked,
+                        })
+                      }
+                      className="w-5 h-5"
+                    />
 
-                  <label className="text-sm font-medium">
-                    Active Product
-                  </label>
+                    <label className="text-sm font-medium">
+                      Active Product
+                    </label>
+
+                  </div>
 
                 </div>
 
               </div>
 
+              {/* FOOTER */}
+              <div className="sticky bottom-0 bg-white border-t px-8 py-5 flex justify-end gap-4 rounded-b-3xl">
+
+                <button
+                  onClick={() => setModalOpen(false)}
+                  className="px-6 py-3 rounded-xl border border-gray-300 font-medium"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={handleSave}
+                  className="px-8 py-3 rounded-xl bg-black text-white font-medium"
+                >
+                  {editing
+                    ? "Update Product"
+                    : "Create Product"}
+                </button>
+
+              </div>
+
             </div>
-
-            {/* FOOTER */}
-            <div className="sticky bottom-0 bg-white border-t px-8 py-5 flex justify-end gap-4 rounded-b-3xl">
-
-              <button
-                onClick={() => setModalOpen(false)}
-                className="px-6 py-3 rounded-xl border border-gray-300 font-medium"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={handleSave}
-                className="px-8 py-3 rounded-xl bg-black text-white font-medium"
-              >
-                {editing
-                  ? "Update Product"
-                  : "Create Product"}
-              </button>
-
-            </div>
-
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Delete */}
-      {/* <Modal
+        {/* Delete */}
+        {/* <Modal
         open={!!confirmDelete}
         onClose={() => setConfirmDelete(null)}
         title="Delete?"
@@ -1495,81 +1497,81 @@ const ProductManagement = () => {
         Are you sure?
       </Modal> */}
 
-      {/* DELETE MODAL */}
-      {confirmDelete && (
-        <div className="fixed inset-0 z-[999] bg-black/50 flex items-center justify-center px-4">
+        {/* DELETE MODAL */}
+        {confirmDelete && (
+          <div className="fixed inset-0 z-[999] bg-black/50 flex items-center justify-center px-4">
 
-          <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
 
-            {/* HEADER */}
-            <div className="px-6 py-5 border-b">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Delete Product
-              </h2>
+              {/* HEADER */}
+              <div className="px-6 py-5 border-b">
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Delete Product
+                </h2>
 
-              <p className="text-sm text-gray-500 mt-1">
-                This action cannot be undone.
-              </p>
-            </div>
+                <p className="text-sm text-gray-500 mt-1">
+                  This action cannot be undone.
+                </p>
+              </div>
 
-            {/* BODY */}
-            <div className="p-6">
+              {/* BODY */}
+              <div className="p-6">
 
-              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4">
 
-                <img
-                  src={confirmDelete.image}
-                  alt={confirmDelete.productName}
-                  className="w-20 h-20 rounded-xl object-cover border"
-                />
+                  <img
+                    src={confirmDelete.image}
+                    alt={confirmDelete.productName}
+                    className="w-20 h-20 rounded-xl object-cover border"
+                  />
 
-                <div>
-                  <h3 className="font-semibold text-lg text-gray-900">
-                    {confirmDelete.productName}
-                  </h3>
+                  <div>
+                    <h3 className="font-semibold text-lg text-gray-900">
+                      {confirmDelete.productName}
+                    </h3>
 
-                  <p className="text-sm text-gray-500">
-                    Price: ₹{confirmDelete.price}
-                  </p>
+                    <p className="text-sm text-gray-500">
+                      Price: ₹{confirmDelete.price}
+                    </p>
 
-                  <p className="text-sm text-gray-500">
-                    Stock: {confirmDelete.stock}
+                    <p className="text-sm text-gray-500">
+                      Stock: {confirmDelete.stock}
+                    </p>
+                  </div>
+
+                </div>
+
+                <div className="mt-6 bg-red-50 border border-red-200 rounded-xl p-4">
+                  <p className="text-sm text-red-600">
+                    Are you sure you want to permanently delete this product?
                   </p>
                 </div>
 
               </div>
 
-              <div className="mt-6 bg-red-50 border border-red-200 rounded-xl p-4">
-                <p className="text-sm text-red-600">
-                  Are you sure you want to permanently delete this product?
-                </p>
+              {/* FOOTER */}
+              <div className="px-6 py-4 border-t flex justify-end gap-3">
+
+                <button
+                  onClick={() => setConfirmDelete(null)}
+                  className="px-5 py-2 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={handleDelete}
+                  className="px-5 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition"
+                >
+                  Delete Product
+                </button>
+
               </div>
-
-            </div>
-
-            {/* FOOTER */}
-            <div className="px-6 py-4 border-t flex justify-end gap-3">
-
-              <button
-                onClick={() => setConfirmDelete(null)}
-                className="px-5 py-2 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={handleDelete}
-                className="px-5 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition"
-              >
-                Delete Product
-              </button>
-
             </div>
           </div>
-        </div>
-      )}
-    </DashboardLayout>
-  );
-};
+        )}
+      </DashboardLayout>
+    );
+  };
 
-export default ProductManagement;
+  export default ProductManagement;
