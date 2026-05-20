@@ -7,10 +7,13 @@ const ProductCard = ({
   onWishlist,
   isWishlisted,
   onClick,
-
+  onMouseEnter,
+  onMouseLeave,
 }) => (
   <div
     onClick={onClick}
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
     className="group animate-fade-in-up  cursor-pointer"
     style={{ animationDelay: `${delay}s` }}
   >
@@ -18,13 +21,35 @@ const ProductCard = ({
       <img
         src={product.image}
         alt={product.name}
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-      />
+        className="w-full h-full object-cover transition-all duration-700 ease-in-out group-hover:scale-105" />
+
+      {/* SLIDER DOTS */}
+      {product.extraImages?.length > 0 && (
+
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-1 z-20">
+
+          {[product.productImage, ...product.extraImages].map(
+            (_, index) => (
+
+              <div
+                key={index}
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${product.currentIndex === index
+                    ? "bg-white w-4"
+                    : "bg-white/50"
+                  }`}
+              />
+
+            )
+          )}
+
+        </div>
+
+      )}
 
       {/* Wishlist */}
       <button
         // onClick={onWishlist}
-         onClick={(e) => {
+        onClick={(e) => {
           e.stopPropagation();
           onWishlist();
         }}
@@ -32,11 +57,10 @@ const ProductCard = ({
         className="absolute top-3 right-3 bg-background/80 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-background"
       >
         <Heart
-          className={`h-4 w-4 transition-colors ${
-            isWishlisted
-              ? "fill-red-500 text-red-500"
-              : "text-foreground"
-          }`}
+          className={`h-4 w-4 transition-colors ${isWishlisted
+            ? "fill-red-500 text-red-500"
+            : "text-foreground"
+            }`}
         />
       </button>
 

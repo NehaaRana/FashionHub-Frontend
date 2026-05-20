@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 import PageHeader from "../components/PageHeader";
 import ProductCard from "../components/ProductCard";
 import { Button } from "../components/ui/button";
-import { getAllProducts , addToCart ,addToWishlist,deleteWishlist ,getUserWishlist} from "../services/api";
+import { getAllProducts, addToCart, addToWishlist, deleteWishlist, getUserWishlist } from "../services/api";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
@@ -13,6 +13,9 @@ const filters = ["All", "Dresses", "Tops", "Bags", "Shoes", "Accessories"];
 const NewArrivals = () => {
   const [products, setProducts] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(8);
+  const [hoveredProduct, setHoveredProduct] = useState(null);
+  const [currentImageIndexes, setCurrentImageIndexes] = useState({});
   useEffect(() => {
     fetchProducts();
     fetchWishlist();
@@ -21,7 +24,7 @@ const NewArrivals = () => {
 
   const navigate = useNavigate();
 
-  const fetchProducts =   async () => {
+  const fetchProducts = async () => {
     try {
       const res = await getAllProducts();
 
@@ -30,26 +33,34 @@ const NewArrivals = () => {
         (p) => p.isActive === true
       );
 
-      setProducts(activeProducts);
+      // setProducts(activeProducts);
+      const updatedProducts = activeProducts.map((p) => ({
+        ...p,
+        extraImages: p.productImages
+          ? JSON.parse(p.productImages)
+          : [],
+      }));
+
+      setProducts(updatedProducts);
     } catch (error) {
       console.log("Error fetching products:", error);
     }
   };
 
   const fetchWishlist = async () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user"));
 
-  if (!user) return;
+    if (!user) return;
 
-  try {
-    const res = await getUserWishlist(user.uid);
-    setWishlist(res.data);
-  } catch (error) {
-    console.log(error);
-  }
-};
+    try {
+      const res = await getUserWishlist(user.uid);
+      setWishlist(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-   // ADD TO CART
+  // ADD TO CART
   const handleAddToCart = async (product) => {
     // check login
     const user = JSON.parse(localStorage.getItem("user"));
@@ -90,94 +101,139 @@ const NewArrivals = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-         text:
+        text:
           error.response?.data || "Wishlist action failed",
       });
     }
   };
 
-const handleWishlist = async (product) => {
+  const handleWishlist = async (product) => {
 
-  const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user"));
 
-  if (!user) {
-    Swal.fire({
-      icon: "warning",
-      title: "Login Required",
-      text: "Please login first!",
-    });
-
-    return;
-  }
-
-  try {
-
-    const existingItem = wishlist.find(
-      (item) => item.pid === product.pid
-    );
-
-    // REMOVE
-    if (existingItem) {
-
-      await deleteWishlist(existingItem.wid);
-
-      setWishlist((prev) =>
-        prev.filter((item) => item.wid !== existingItem.wid)
-      );
-
-      // UPDATE NAVBAR
-      window.dispatchEvent(
-        new CustomEvent("wishlistUpdated")
-      );
-
+    if (!user) {
       Swal.fire({
-        icon: "success",
-        title: "Removed",
-        text: "Removed from wishlist",
-        timer: 1200,
-        showConfirmButton: false,
+        icon: "warning",
+        title: "Login Required",
+        text: "Please login first!",
       });
 
+      return;
     }
 
-    // ADD
-    else {
+    try {
 
-      const wishlistData = {
-        wid: 0,
-        uid: Number(user.uid),
-        pid: Number(product.pid),
-      };
-
-      await addToWishlist(wishlistData);
-
-      fetchWishlist();
-
-      // UPDATE NAVBAR
-      window.dispatchEvent(
-        new CustomEvent("wishlistUpdated")
+      const existingItem = wishlist.find(
+        (item) => item.pid === product.pid
       );
 
+      // REMOVE
+      if (existingItem) {
+
+        await deleteWishlist(existingItem.wid);
+
+        setWishlist((prev) =>
+          prev.filter((item) => item.wid !== existingItem.wid)
+        );
+
+        // UPDATE NAVBAR
+        window.dispatchEvent(
+          new CustomEvent("wishlistUpdated")
+        );
+
+        Swal.fire({
+          icon: "success",
+          title: "Removed",
+          text: "Removed from wishlist",
+          timer: 1200,
+          showConfirmButton: false,
+        });
+
+      }
+
+      // ADD
+      else {
+
+        const wishlistData = {
+          wid: 0,
+          uid: Number(user.uid),
+          pid: Number(product.pid),
+        };
+
+        await addToWishlist(wishlistData);
+
+        fetchWishlist();
+
+        // UPDATE NAVBAR
+        window.dispatchEvent(
+          new CustomEvent("wishlistUpdated")
+        );
+
+        Swal.fire({
+          icon: "success",
+          title: "Added",
+          text: "Added to wishlist",
+          timer: 1200,
+          showConfirmButton: false,
+        });
+      }
+
+    } catch (error) {
+
+      console.log(error);
+
       Swal.fire({
-        icon: "success",
-        title: "Added",
-        text: "Added to wishlist",
-        timer: 1200,
-        showConfirmButton: false,
+        icon: "error",
+        title: "Error",
+        text: "Wishlist action failed",
       });
     }
+  };
 
-  } catch (error) {
+  const startImageSlider = (product) => {
 
-    console.log(error);
+    if (hoveredProduct?.pid === product.pid) return;
 
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Wishlist action failed",
+    const images = [
+      product.productImage,
+      ...(product.extraImages || []),
+    ];
+
+    let index = 0;
+
+    const interval = setInterval(() => {
+
+      index = (index + 1) % images.length;
+
+      setCurrentImageIndexes((prev) => ({
+        ...prev,
+        [product.pid]: index,
+      }));
+
+    }, 1400);
+
+    setHoveredProduct({
+      pid: product.pid,
+      interval,
     });
-  }
-};
+  };
+
+  const stopImageSlider = (product) => {
+
+    if (
+      hoveredProduct &&
+      hoveredProduct.pid === product.pid
+    ) {
+      clearInterval(hoveredProduct.interval);
+    }
+
+    setCurrentImageIndexes((prev) => ({
+      ...prev,
+      [product.pid]: 0,
+    }));
+
+    setHoveredProduct(null);
+  };
   return (
     // <Layout>
     <>
@@ -196,27 +252,33 @@ const handleWishlist = async (product) => {
             {filters.map((f, i) => (
               <button
                 key={f}
-                className={`font-body text-xs uppercase tracking-[0.15em] px-5 py-2.5 rounded-sm border transition-colors ${
-                  i === 0
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "border-border text-muted-foreground hover:text-foreground hover:border-foreground"
-                }`}
+                className={`font-body text-xs uppercase tracking-[0.15em] px-5 py-2.5 rounded-sm border transition-colors ${i === 0
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "border-border text-muted-foreground hover:text-foreground hover:border-foreground"
+                  }`}
               >
                 {f}
               </button>
             ))}
           </div>
 
-           {/* Products */}
+          {/* Products */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-8">
-            {products.map((p, i) => (
+            {products.slice(0, visibleCount).map((p, i) => (
+
               <ProductCard
+
                 key={p.pid}
                 product={{
                   ...p,
                   name: p.productName,
                   price: `₹${p.price}`,
-                  image: `https://localhost:7106${p.productImage}`,
+                  // image: `https://localhost:7106${p.productImage}`,
+                  image: `https://localhost:7106${[
+                    p.productImage,
+                    ...(p.extraImages || []),
+                  ][currentImageIndexes[p.pid] || 0]
+                    }`,
                   badge: "NEW",
                 }}
                 isWishlisted={wishlist.some((item) => item.pid === p.pid)}
@@ -225,14 +287,32 @@ const handleWishlist = async (product) => {
                 onWishlist={() => handleWishlist(p)}
                 // PRODUCT CLICK
                 onClick={() => navigate(`/product/${p.pid}`)}
+                onMouseEnter={() => startImageSlider(p)}
+                onMouseLeave={() => stopImageSlider(p)}
               />
-              ))}
+            ))}
           </div>
-          <div className="text-center mt-14">
+          {/* <div className="text-center mt-14">
             <Button variant="hero" size="lg">
               Load More
             </Button>
-          </div>
+          </div> */}
+          {/* LOAD MORE BUTTON */}
+          {visibleCount < products.length && (
+
+            <div className="text-center mt-14">
+
+              <Button
+                variant="hero"
+                size="lg"
+                onClick={() => setVisibleCount(prev => prev + 4)}
+              >
+                Load More
+              </Button>
+
+            </div>
+
+          )}
         </div>
       </section>
     </>
