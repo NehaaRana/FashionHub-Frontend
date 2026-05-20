@@ -34,12 +34,35 @@ const NewArrivals = () => {
       );
 
       // setProducts(activeProducts);
-      const updatedProducts = activeProducts.map((p) => ({
-        ...p,
-        extraImages: p.productImages
-          ? JSON.parse(p.productImages)
-          : [],
-      }));
+      // const updatedProducts = activeProducts.map((p) => ({
+      //   ...p,
+      //   extraImages: p.productImages
+      //     ? JSON.parse(p.productImages)
+      //     : [],
+      // }));
+
+      const updatedProducts = activeProducts.map((p) => {
+
+  let parsedImages = null;
+
+  try {
+    parsedImages = p.productImages
+      ? JSON.parse(p.productImages)
+      : null;
+  } catch (error) {
+    console.log("Image parse error", error);
+  }
+
+  return {
+    ...p,
+
+    // gallery images
+    extraImages: parsedImages?.gallery || [],
+
+    // color wise images
+    colorImages: parsedImages?.colors || {},
+  };
+});
 
       setProducts(updatedProducts);
     } catch (error) {

@@ -49,18 +49,49 @@ const ProductDetails = () => {
 
       const res = await getAllProducts();
 
+      // const foundProduct = res.data.find(
+      //   (p) => p.pid === Number(id)
+      // );
+
       const foundProduct = res.data.find(
         (p) => p.pid === Number(id)
       );
 
+      if (!foundProduct) {
+        return;
+      }
+
       // setProduct(foundProduct);
-      const extraImages = foundProduct.productImages
-        ? JSON.parse(foundProduct.productImages)
-        : [];
+      // const extraImages = foundProduct.productImages
+      //   ? JSON.parse(foundProduct.productImages)
+      //   : [];
+
+      // setProduct({
+      //   ...foundProduct,
+      //   extraImages,
+      // });
+      let parsedImages = null;
+
+      try {
+
+        parsedImages = foundProduct.productImages
+          ? JSON.parse(foundProduct.productImages)
+          : null;
+
+      } catch (error) {
+
+        console.log("Image parse error", error);
+
+      }
 
       setProduct({
         ...foundProduct,
-        extraImages,
+
+        // gallery images array
+        extraImages: parsedImages?.gallery || [],
+
+        // color wise images object
+        colorImages: parsedImages?.colors || {},
       });
 
       // default selected image
@@ -600,8 +631,8 @@ const ProductDetails = () => {
                 alt=""
                 onClick={() => setCurrentIndex(index)}
                 className={`w-20 h-20 rounded-xl object-cover cursor-pointer border-2 ${currentIndex === index
-                    ? "border-white"
-                    : "border-transparent"
+                  ? "border-white"
+                  : "border-transparent"
                   }`}
               />
 
