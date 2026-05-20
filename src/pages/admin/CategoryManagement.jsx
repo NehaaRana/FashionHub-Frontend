@@ -23,6 +23,8 @@ import {
   createCategory,
   updateCategory,
   deleteCategory,
+    getCurrentUser,
+
 } from "../../services/api";
 
 const emptyForm = {
@@ -38,14 +40,34 @@ const AdminCategories = () => {
   const [filter, setFilter] = useState("All");
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
-
+  const [adminName, setAdminName] = useState("");
   const [form, setForm] = useState({ ...emptyForm });
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   useEffect(() => {
     fetchCategories();
+      fetchAdmin();
+
   }, []);
 
+  const fetchAdmin = async () => {
+  try {
+
+    const res = await getCurrentUser();
+
+    const admin = res.data;
+
+    setAdminName(
+      admin.adminName ||
+      admin.name ||
+      admin.fullName ||
+      "Admin"
+    );
+
+  } catch (err) {
+    console.log(err);
+  }
+};
   const fetchCategories = async () => {
     try {
       const res = await getCategories();
@@ -153,7 +175,12 @@ const AdminCategories = () => {
   const filterChips = ["All", "Active", "Hidden"];
 
   return (
-    <DashboardLayout role="Admin" userName="Anika Malhotra" items={adminItems}>
+    <DashboardLayout
+        role="Admin"
+        userName={adminName}
+        items={adminItems}
+      >
+    {/*  <DashboardLayout role="Admin" userName="Anika Malhotra" items={adminItems}> */}
       <div className="p-6 lg:p-12">
         <DashHeader
           eyebrow="Catalogue"

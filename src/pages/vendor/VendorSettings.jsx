@@ -163,7 +163,7 @@ const VendorSettings = () => {
 
     <DashboardLayout
       role="Vendor"
-      userName={profile.vendorname}
+      userName={profile.ownername}
       items={vendorItems}
     >
 

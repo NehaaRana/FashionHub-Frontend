@@ -20,7 +20,8 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-  getCategories 
+  getCategories ,
+  getCurrentUser
 } from "../../services/api";
 import Swal from "sweetalert2";
 
@@ -64,6 +65,7 @@ const ProductManagement = () => {
 
   const [mainPreview, setMainPreview] = useState(null);
   const [extraPreviews, setExtraPreviews] = useState([]);
+  const [vendorName, setVendorName] = useState("");
 
   // const fetchProducts = async () => {
   //   const res = await getVendorProducts();
@@ -78,26 +80,69 @@ const ProductManagement = () => {
   //   setRows(formatted);
   // };
 
+  // const fetchProducts = async () => {
+  //   // const vendorId = Number(localStorage.getItem("vendorId"));
+  //   const user = JSON.parse(localStorage.getItem("user"));
+  //   const vendorId = user?.vid;
+  //   const res = await getVendorProducts(vendorId);
+
+  //   // const formatted = res.data.map((p) => ({
+  //   //   id: p.pid,
+  //   //   productName: p.productName,
+  //   //   price: p.price,
+  //   //   stock: p.stock,
+  //   //   isActive: p.isActive,
+  //   //   // image: p.productImage,
+  //   //   image: `https://localhost:7106${p.productImage}`, 
+  //   //   created: new Date(p.createdAt).toLocaleDateString(),
+  //   // }));
+
+  //   const formatted = res.data.map((p) => ({
+  //       id: p.pid,
+  //       productName: p.productName,
+  //       description: p.description,
+  //       price: p.price,
+  //       discount: p.discount,
+  //       fabric: p.fabric,
+  //       color: p.color,
+  //       size: p.size,
+  //       stock: p.stock,
+  //       cid: p.cid,
+  //       isActive: p.isActive,
+  //       image: `https://localhost:7106${p.productImage}`,
+  //     }));
+
+  //   setRows(formatted);
+  // };
+
   const fetchProducts = async () => {
-    // const vendorId = Number(localStorage.getItem("vendorId"));
-    const user = JSON.parse(localStorage.getItem("user"));
-    const vendorId = user?.vid;
-    const res = await getVendorProducts(vendorId);
+    try {
 
-    // const formatted = res.data.map((p) => ({
-    //   id: p.pid,
-    //   productName: p.productName,
-    //   price: p.price,
-    //   stock: p.stock,
-    //   isActive: p.isActive,
-    //   // image: p.productImage,
-    //   image: `https://localhost:7106${p.productImage}`, 
-    //   created: new Date(p.createdAt).toLocaleDateString(),
-    // }));
+      // GET CURRENT LOGGED IN VENDOR
+      const userRes = await getCurrentUser();
 
-    const formatted = res.data.map((p) => ({
+      const currentVendor = userRes.data;
+
+      setVendorName(
+            currentVendor.ownername        
+          );
+
+      console.log("CURRENT VENDOR:", currentVendor);
+
+      // GET VENDOR ID
+      const vendorId =
+        currentVendor.vid ||
+        currentVendor.Vid;
+
+      // FETCH PRODUCTS
+      const res = await getVendorProducts(vendorId);
+
+      console.log("PRODUCTS:", res.data);
+
+      const formatted = res.data.map((p) => ({
         id: p.pid,
         productName: p.productName,
+        vendorName: p.vendorName || p.vendor?.vendorName || "Vendor",
         description: p.description,
         price: p.price,
         discount: p.discount,
@@ -107,10 +152,17 @@ const ProductManagement = () => {
         stock: p.stock,
         cid: p.cid,
         isActive: p.isActive,
-        image: `https://localhost:7106${p.productImage}`,
+
+        image: p.productImage
+          ? `https://localhost:7106${p.productImage}`
+          : "/placeholder.png",
       }));
 
-    setRows(formatted);
+      setRows(formatted);
+
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const fetchCategories = async () => {
@@ -218,8 +270,17 @@ const ProductManagement = () => {
       return;
     }
 
-    const user = JSON.parse(localStorage.getItem("user"));
-    const vendorId = user?.vid;
+    // const user = JSON.parse(localStorage.getItem("user"));
+    // const vendorId = user?.vid;
+
+
+    const userRes = await getCurrentUser();
+
+    const currentVendor = userRes.data;
+
+    const vendorId =
+      currentVendor.vid ||
+      currentVendor.Vid;
 
     const formData = new FormData();
 
@@ -357,7 +418,12 @@ const ProductManagement = () => {
   ];
 
   return (
-    <DashboardLayout role="Vendor" userName="Vendor" items={vendorItems}>
+    // <DashboardLayout role="Vendor" userName="Vendor" items={vendorItems}>
+    <DashboardLayout
+        role="Vendor"
+        userName={vendorName}
+        items={vendorItems}
+      >
       <div className="p-6 lg:p-12">
         <DashHeader
           eyebrow="Catalogue"

@@ -6,17 +6,39 @@ import AdminToolbar from "../../components/admin/AdminToolBar";
 import { adminItems } from "../../components/admin/adminNav";
 import { Package, CheckCircle2 } from "lucide-react";
 import axios from "axios";
-import { getAllProducts } from "../../services/api";
+import { getAllProducts ,getCurrentUser } from "../../services/api";
 
 
 const AllProductManagement = () => {
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
+  const [adminName, setAdminName] = useState("");
 
   useEffect(() => {
     fetchProducts();
+    fetchAdmin();
+
   }, []);
+
+  const fetchAdmin = async () => {
+    try {
+
+      const res = await getCurrentUser();
+
+      const admin = res.data;
+
+      setAdminName(
+        admin.adminName ||
+        admin.name ||
+        admin.fullName ||
+        "Admin"
+      );
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // const fetchProducts = async () => {
   //   try {
@@ -93,7 +115,12 @@ const AllProductManagement = () => {
   const filterChips = ["All", "Active", "Hidden"];
 
   return (
-    <DashboardLayout role="Admin" userName="Anika Malhotra" items={adminItems}>
+    // <DashboardLayout role="Admin" userName="Anika Malhotra" items={adminItems}>
+    <DashboardLayout
+        role="Admin"
+        userName={adminName}
+        items={adminItems}
+      >
       <div className="p-6 lg:p-12">
         <DashHeader
           eyebrow="Catalogue"

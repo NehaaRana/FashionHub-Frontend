@@ -32,7 +32,8 @@ const DashboardLayout = ({ role, userName, items, children }) => {
 
         <div className="p-6 border-b border-primary-foreground/10 flex items-center gap-3">
           <div className="h-11 w-11 rounded-full bg-accent text-accent-foreground flex items-center justify-center font-display text-lg font-semibold">
-            {userName.charAt(0)}
+            {/* {userName.charAt(0)} */}
+            {(userName || "U").charAt(0)}
           </div>
           <div className="min-w-0">
             <p className="font-body text-sm font-semibold truncate">{userName}</p>

@@ -332,11 +332,16 @@ const CouponManagement = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
-
+  const [adminName, setAdminName] = useState("");
   const [form, setForm] = useState({ ...emptyForm });
 
   useEffect(() => {
     fetchCoupons();
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (user) {
+        setAdminName(user.username || user.name);
+      }
   }, []);
 
   const fetchCoupons = async () => {
@@ -464,7 +469,12 @@ const handleSave = async () => {
   };
 
   return (
-    <DashboardLayout role="Admin" userName="Admin" items={adminItems}>
+    // <DashboardLayout role="Admin" userName="Admin" items={adminItems}>
+    <DashboardLayout
+        role="Admin"
+        userName={adminName}
+        items={adminItems}
+      >
       <div className="p-6 lg:p-12">
         
         {/* Header */}

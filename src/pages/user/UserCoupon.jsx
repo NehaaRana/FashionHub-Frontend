@@ -16,6 +16,7 @@ const UserCoupons = () => {
   const [coupons, setCoupons] = useState([]);
   const [usedCoupons, setUsedCoupons] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [user, setUser] = useState(null);
   useEffect(() => {
     loadCoupons();
   }, []);
@@ -41,11 +42,24 @@ const UserCoupons = () => {
   const loadCoupons = async () => {
     try {
 
+
       const userRes = await getCurrentUser();
 
-      const uid = userRes.data.uid;
+      //user data
+      // const userRes = await getCurrentUser();
+
+      const currentUser = userRes.data;
+
+      setUser(currentUser);
+
+      const uid = currentUser.uid;
 
       setCurrentUserId(uid);
+
+
+      // const uid = userRes.data.uid;
+
+      // setCurrentUserId(uid);
 
       // const res = await getCoupons();
 
@@ -57,6 +71,8 @@ const UserCoupons = () => {
       const usedRes = await getUserCoupons(uid);
 
       setUsedCoupons(usedRes.data);
+
+      
 
     } catch (error) {
       console.log(error);
@@ -80,8 +96,17 @@ const UserCoupons = () => {
     tab === "active"
       ? coupons
       : usedCoupons;
+
+      if (!user) {
+        return <div className="p-10">Loading...</div>;
+      }
   return (
-    <DashboardLayout role="User" userName="Priya Iyer" items={userNav}>
+    // <DashboardLayout role="User" userName="Priya Iyer" items={userNav}>
+    <DashboardLayout
+        role={user?.role || "User"}
+        userName={user?.username || user?.name || "User"}
+        items={userNav}
+      >
       <div className="p-6 lg:p-12">
         <DashHeader
           eyebrow="Member Rewards"
@@ -135,7 +160,7 @@ const UserCoupons = () => {
                 </span>
               </div>
 
-              <p className="font-display text-3xl font-bold text-foreground mb-1">{c.discountType}</p>
+              {/* <p className="font-display text-3xl font-bold text-foreground mb-1">{c.discountType}</p> */}
               <p className="font-display text-3xl font-bold text-foreground mb-1">{tab === "active"
                 ? c.discountType
                 : c.coupon?.discountType}</p>

@@ -221,18 +221,35 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-import { getVendors, deleteVendor } from "../../services/api";
+import { getVendors, deleteVendor ,  getCurrentUser,
+} from "../../services/api";
 
 const VendorManagement = () => {
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
   const [openRow, setOpenRow] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [adminName, setAdminName] = useState("Admin");
 
   useEffect(() => {
     fetchVendors();
+      loadAdmin();
+
   }, []);
 
+  const loadAdmin = async () => {
+  try {
+    const res = await getCurrentUser();
+
+    setAdminName(
+      res.data?.username ||
+      res.data?.name ||
+      "Admin"
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};
   const fetchVendors = async () => {
     try {
       const res = await getVendors();
@@ -288,7 +305,13 @@ const VendorManagement = () => {
   };
 
   return (
-    <DashboardLayout role="Admin" userName="Admin" items={adminItems}>
+    // <DashboardLayout role="Admin" userName="Admin" items={adminItems}>
+
+    <DashboardLayout
+        role="Admin"
+        userName={adminName}
+        items={adminItems}
+      >
       <div className="p-6 lg:p-12">
 
         {/* Header */}

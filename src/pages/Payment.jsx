@@ -110,7 +110,7 @@ const Payment = () => {
         }
     );
 }
-            alert("Payment Successful");
+            // alert("Payment Successful");
             // alert("Payment Successful");
 
             Swal.fire({
