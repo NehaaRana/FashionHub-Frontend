@@ -56,9 +56,12 @@ const navigate = useNavigate();
           pid: cartItem.pid,
           name: product?.productName,
           size: cartItem.sizeSelected,
+           // COLOR
+          color: cartItem.colorSelected,
           price: product?.price || 0,
           qty: Number(cartItem.quantity),
-          image: `https://localhost:7106${product?.productImage}`,
+          // image: `https://localhost:7106${product?.productImage}`,
+          image: `https://localhost:7106${cartItem.selectedImage}`,
         };
       });
 
@@ -322,6 +325,10 @@ const handleCheckout = () => {
 
                         <p className="font-body text-xs text-muted-foreground uppercase tracking-[0.1em] mt-1">
                           Size: {item.size}
+                        </p>
+
+                        <p className="font-body text-xs text-muted-foreground uppercase tracking-[0.1em] mt-1">
+                          Color: {item.color}
                         </p>
                       </div>
 

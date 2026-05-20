@@ -34,6 +34,9 @@ const ProductDetails = () => {
   const [selectedImage, setSelectedImage] = useState("");
   const [zoomStyle, setZoomStyle] = useState({});
   const [isZooming, setIsZooming] = useState(false);
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+  const [displayImages, setDisplayImages] = useState([]);
 
   const [showViewer, setShowViewer] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -61,15 +64,7 @@ const ProductDetails = () => {
         return;
       }
 
-      // setProduct(foundProduct);
-      // const extraImages = foundProduct.productImages
-      //   ? JSON.parse(foundProduct.productImages)
-      //   : [];
-
-      // setProduct({
-      //   ...foundProduct,
-      //   extraImages,
-      // });
+    
       let parsedImages = null;
 
       try {
@@ -84,20 +79,51 @@ const ProductDetails = () => {
 
       }
 
+      // setProduct({
+      //   ...foundProduct,
+
+      //   // gallery images array
+      //   extraImages: parsedImages?.gallery || [],
+
+      //   // color wise images object
+      //   colorImages: parsedImages?.colors || {},
+      // });
+
+      // default selected image
+     
+      
       setProduct({
         ...foundProduct,
-
-        // gallery images array
         extraImages: parsedImages?.gallery || [],
-
-        // color wise images object
         colorImages: parsedImages?.colors || {},
       });
 
-      // default selected image
-      setSelectedImage(
-        `https://localhost:7106${foundProduct.productImage}`
-      );
+      // DEFAULT COLOR
+      const firstColor = Object.keys(
+        parsedImages?.colors || {}
+      )[0];
+
+      setSelectedColor(firstColor);
+      const firstSize = foundProduct.size?.split(",")[0];
+      setSelectedSize(firstSize);
+
+      // DEFAULT IMAGES OF FIRST COLOR
+      const firstColorImages =
+        parsedImages?.colors?.[firstColor] || [];
+
+      // DISPLAY ONLY FIRST COLOR IMAGES
+      setDisplayImages(firstColorImages);
+
+      // DEFAULT SELECTED IMAGE
+      if (firstColorImages.length > 0) {
+        setSelectedImage(
+          `https://localhost:7106${firstColorImages[0]}`
+        );
+      }
+     
+      // setSelectedImage(
+      //   `https://localhost:7106${foundProduct.productImage}`
+      // );
 
     } catch (error) {
       console.log(error);
@@ -144,10 +170,20 @@ const ProductDetails = () => {
         cartId: 0,
         uid: Number(user.uid),
         pid: Number(product.pid),
-        sizeSelected: product.size || "M",
+        // sizeSelected: product.size || "M",
+        sizeSelected: selectedSize,
         quantity: "1",
         addedAt: new Date().toISOString(),
-        colorSelected: product.color || "Black",
+        // colorSelected: product.color || "Black",
+          // CURRENT SELECTED COLOR
+        colorSelected: selectedColor,
+
+        // CURRENT IMAGE
+        // selectedImage: selectedImage,
+        selectedImage: selectedImage.replace(
+          "https://localhost:7106",
+          ""
+        ),
       };
 
       await addToCart(cartData);
@@ -282,10 +318,13 @@ const ProductDetails = () => {
     (item) => item.pid === product.pid
   );
 
-  const allImages = [
-    product.productImage,
-    ...(product.extraImages || []),
-  ];
+  // const allImages = [
+  //   product.productImage,
+  //   ...(product.extraImages || []),
+  // ];
+
+
+  const allImages = displayImages;
   const handleMouseMove = (e) => {
 
     const { left, top, width, height } =
@@ -360,7 +399,7 @@ const ProductDetails = () => {
               <div className="flex flex-col gap-3">
 
                 {/* MAIN IMAGE THUMB */}
-                <img
+                {/* <img
                   src={`https://localhost:7106${product.productImage}`}
                   alt=""
                   onClick={() =>
@@ -373,10 +412,10 @@ const ProductDetails = () => {
                     ? "border-black"
                     : "border-gray-200"
                     }`}
-                />
+                /> */}
 
                 {/* EXTRA IMAGES */}
-                {product.extraImages?.map((img, index) => (
+                {/* {product.extraImages?.map((img, index) => (
                   <img
                     key={index}
                     src={`https://localhost:7106${img}`}
@@ -392,7 +431,34 @@ const ProductDetails = () => {
                       : "border-gray-200"
                       }`}
                   />
-                ))}
+                ))} */}
+
+
+                {/* THUMBNAILS */}
+                <div className="flex flex-col gap-3">
+
+                  {displayImages.map((img, index) => (
+
+                    <img
+                      key={index}
+                      src={`https://localhost:7106${img}`}
+                      alt=""
+                      onClick={() =>
+                        setSelectedImage(
+                          `https://localhost:7106${img}`
+                        )
+                      }
+                      className={`w-20 h-20 object-cover rounded-xl cursor-pointer border-2 ${
+                        selectedImage ===
+                        `https://localhost:7106${img}`
+                          ? "border-black"
+                          : "border-gray-200"
+                      }`}
+                    />
+
+                  ))}
+
+                </div>
 
               </div>
 
@@ -516,6 +582,67 @@ const ProductDetails = () => {
               {product.description}
             </p>
 
+
+            {/* COLORS */}
+            <div className="mt-8">
+
+              <h3 className="font-semibold text-lg mb-4">
+                Select Color
+              </h3>
+
+              <div className="flex gap-4 flex-wrap">
+
+                {Object.keys(product.colorImages || {}).map(
+                  (color, index) => {
+
+                    const firstImage =
+                      product.colorImages[color][0];
+
+                    return (
+
+                      <div
+                        key={index}
+                        onClick={() => {
+
+                          setSelectedColor(color);
+
+                          const newImages =
+                            product.colorImages[color];
+
+                          setDisplayImages(newImages);
+
+                          setSelectedImage(
+                            `https://localhost:7106${newImages[0]}`
+                          );
+                        }}
+                        className={`border-2 rounded-2xl p-1 cursor-pointer transition-all ${
+                          selectedColor === color
+                            ? "border-black"
+                            : "border-gray-200"
+                        }`}
+                      >
+
+                        <img
+                          src={`https://localhost:7106${firstImage}`}
+                          alt={color}
+                          className="w-20 h-24 object-cover rounded-xl"
+                        />
+
+                        <p className="text-center text-sm mt-2 font-medium">
+                          {color}
+                        </p>
+
+                      </div>
+
+                    );
+                  }
+                )}
+
+              </div>
+
+            </div>
+
+
             {/* DETAILS */}
             <div className="mt-10 space-y-5 border-t border-b py-8">
 
@@ -539,7 +666,7 @@ const ProductDetails = () => {
                 </span>
               </div>
 
-              <div className="flex justify-between">
+              {/* <div className="flex justify-between">
                 <span className="font-medium text-muted-foreground">
                   Size
                 </span>
@@ -547,6 +674,32 @@ const ProductDetails = () => {
                 <span className="font-semibold">
                   {product.size}
                 </span>
+              </div> */}
+
+              <div>
+                <span className="font-medium text-muted-foreground block mb-3">
+                  Select Size
+                </span>
+
+                <div className="flex gap-3 flex-wrap">
+
+                  {product.size?.split(",").map((size, index) => (
+
+                    <button
+                      key={index}
+                      onClick={() => setSelectedSize(size)}
+                      className={`w-12 h-12 rounded-full border text-sm font-semibold transition-all ${
+                        selectedSize === size
+                          ? "bg-black text-white border-black"
+                          : "border-gray-300 text-black"
+                      }`}
+                    >
+                      {size}
+                    </button>
+
+                  ))}
+
+                </div>
               </div>
 
             </div>
@@ -605,7 +758,8 @@ const ProductDetails = () => {
           <div className="w-[85%] h-[85%] overflow-hidden rounded-2xl">
 
             <img
-              src={`https://localhost:7106${allImages[currentIndex]}`}
+              // src={`https://localhost:7106${allImages[currentIndex]}`}
+              src={`https://localhost:7106${displayImages[currentIndex]}`}
               alt=""
               className="w-full h-full object-contain hover:scale-150 transition-transform duration-300 cursor-zoom-in"
             />
@@ -623,8 +777,8 @@ const ProductDetails = () => {
           {/* THUMBNAILS */}
           <div className="absolute bottom-5 flex gap-3">
 
-            {allImages.map((img, index) => (
-
+            {/* {allImages.map((img, index) => ( */}
+            {displayImages.map((img, index) => (
               <img
                 key={index}
                 src={`https://localhost:7106${img}`}

@@ -123,22 +123,22 @@ const ProductManagement = () => {
       // GET CURRENT LOGGED IN VENDOR
       const userRes = await getCurrentUser();
 
-      const formatted = res.data.map((p) => ({
-        id: p.pid,
-        productName: p.productName,
-        description: p.description,
-        price: p.price,
-        discount: p.discount,
-        fabric: p.fabric,
-        color: p.color,
-        size: p.size,
-        stock: p.stock,
-        cid: p.cid,
-        isActive: p.isActive,
-        // image: `https://localhost:7106${p.productImage}`,
-        image: `https://localhost:7106${p.productImage}`,
-        productImages: p.productImages,
-      }));
+      // const formatted = res.data.map((p) => ({
+      //   id: p.pid,
+      //   productName: p.productName,
+      //   description: p.description,
+      //   price: p.price,
+      //   discount: p.discount,
+      //   fabric: p.fabric,
+      //   color: p.color,
+      //   size: p.size,
+      //   stock: p.stock,
+      //   cid: p.cid,
+      //   isActive: p.isActive,
+      //   // image: `https://localhost:7106${p.productImage}`,
+      //   image: `https://localhost:7106${p.productImage}`,
+      //   productImages: p.productImages,
+      // }));
       const currentVendor = userRes.data;
 
       setVendorName(
@@ -332,101 +332,164 @@ const ProductManagement = () => {
         formData.append("Image", form.image);
       }
 
+      // if (form.images && form.images.length > 0) {
+      //   for (let i = 0; i < form.images.length; i++) {
+      //     formData.append("Images", form.images[i]);
+      //   }
+
+      //   // const user = JSON.parse(localStorage.getItem("user"));
+      //   // const vendorId = user?.vid;
+
+      //   // const formData = new FormData();
+
+      //   // formData.append("Vid", vendorId);
+      //   // formData.append("Cid", Number(form.cid)); // ⚠️ must not be empty
+      //   // formData.append("ProductName", form.productName);
+      //   // formData.append("Description", form.description);
+      //   // formData.append("Price", form.price);
+      //   // formData.append("Discount", form.discount);
+      //   // formData.append("Fabric", form.fabric);
+      //   // formData.append("Color", form.color);
+      //   // formData.append("Size", form.size);
+      //   // formData.append("Stock", form.stock);
+      //   // formData.append("IsActive", form.isActive);
+
+      //   // if (form.image) {
+      //   //   formData.append("Image", form.image);
+      //   // }
+
+      //   // if (form.images && form.images.length > 0) {
+      //   //   for (let i = 0; i < form.images.length; i++) {
+      //   //     formData.append("Images", form.images[i]);
+      //   //   }
+      //   // }
+
+      //   // const colorMap = {};
+
+      //   // for (const color in form.colorImages) {
+      //   //   const files = form.colorImages[color];
+
+      //   //   colorMap[color] = [];
+
+      //   //   files.forEach((file) => {
+      //   //     colorMap[color].push(file.name);
+      //   //   });
+      //   // }
+
+      //   // formData.append(
+      //   //   "ColorImagesJson",
+      //   //   JSON.stringify(colorMap)
+      //   // );
+
+      //   const colorMap = {};
+
+      //   for (const color in form.colorImages) {
+
+      //     const files = form.colorImages[color];
+
+      //     colorMap[color] = [];
+
+      //     files.forEach((file) => {
+
+      //       formData.append("Images", file);
+
+      //       colorMap[color].push(file.name);
+      //     });
+      //   }
+
+      //   formData.append(
+      //     "ColorImagesJson",
+      //     JSON.stringify(colorMap)
+      //   );
+      //   if (editing) {
+      //     await updateProduct(editing.id, formData);
+      //     Swal.fire({
+      //       icon: "success",
+      //       title: "Product Updated",
+      //       text: "Product updated successfully",
+      //       timer: 1500,
+      //       showConfirmButton: false,
+      //     });
+
+      //   } else {
+      //     await createProduct(formData);
+      //     Swal.fire({
+      //       icon: "success",
+      //       title: "Product Added",
+      //       text: "Product created successfully",
+      //       timer: 1500,
+      //       showConfirmButton: false,
+      //     });
+      //   }
+
+      //   // alert("Product saved successfully ");
+
+      //   fetchProducts();
+      //   setModalOpen(false);
+      // } 
+    
       if (form.images && form.images.length > 0) {
+
         for (let i = 0; i < form.images.length; i++) {
           formData.append("Images", form.images[i]);
         }
+      }
 
-        const user = JSON.parse(localStorage.getItem("user"));
-        const vendorId = user?.vid;
+      const colorMap = {};
 
-        const formData = new FormData();
+      for (const color in form.colorImages) {
 
-        formData.append("Vid", vendorId);
-        formData.append("Cid", Number(form.cid)); // ⚠️ must not be empty
-        formData.append("ProductName", form.productName);
-        formData.append("Description", form.description);
-        formData.append("Price", form.price);
-        formData.append("Discount", form.discount);
-        formData.append("Fabric", form.fabric);
-        formData.append("Color", form.color);
-        formData.append("Size", form.size);
-        formData.append("Stock", form.stock);
-        formData.append("IsActive", form.isActive);
+        const files = form.colorImages[color];
 
-        if (form.image) {
-          formData.append("Image", form.image);
-        }
+        colorMap[color] = [];
 
-        if (form.images && form.images.length > 0) {
-          for (let i = 0; i < form.images.length; i++) {
-            formData.append("Images", form.images[i]);
-          }
-        }
+        files.forEach((file) => {
 
-        // const colorMap = {};
+          formData.append("Images", file);
 
-        // for (const color in form.colorImages) {
-        //   const files = form.colorImages[color];
+          colorMap[color].push(file.name);
 
-        //   colorMap[color] = [];
+        });
+      }
 
-        //   files.forEach((file) => {
-        //     colorMap[color].push(file.name);
-        //   });
-        // }
+      formData.append(
+        "ColorImagesJson",
+        JSON.stringify(colorMap)
+      );
 
-        // formData.append(
-        //   "ColorImagesJson",
-        //   JSON.stringify(colorMap)
-        // );
 
-        const colorMap = {};
 
-        for (const color in form.colorImages) {
+      // ✅ MOVE API CALL HERE
 
-          const files = form.colorImages[color];
+      if (editing) {
 
-          colorMap[color] = [];
+        await updateProduct(editing.id, formData);
 
-          files.forEach((file) => {
+        Swal.fire({
+          icon: "success",
+          title: "Product Updated",
+          text: "Product updated successfully",
+          timer: 1500,
+          showConfirmButton: false,
+        });
 
-            formData.append("Images", file);
+      } else {
 
-            colorMap[color].push(file.name);
-          });
-        }
+        await createProduct(formData);
 
-        formData.append(
-          "ColorImagesJson",
-          JSON.stringify(colorMap)
-        );
-        if (editing) {
-          await updateProduct(editing.id, formData);
-          Swal.fire({
-            icon: "success",
-            title: "Product Updated",
-            text: "Product updated successfully",
-            timer: 1500,
-            showConfirmButton: false,
-          });
+        Swal.fire({
+          icon: "success",
+          title: "Product Added",
+          text: "Product created successfully",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
 
-        } else {
-          await createProduct(formData);
-          Swal.fire({
-            icon: "success",
-            title: "Product Added",
-            text: "Product created successfully",
-            timer: 1500,
-            showConfirmButton: false,
-          });
-        }
+      fetchProducts();
 
-        // alert("Product saved successfully ");
-
-        fetchProducts();
-        setModalOpen(false);
-      } 
+      setModalOpen(false);
+    
     }
     catch (err) {
         console.error(err);
@@ -493,6 +556,7 @@ const ProductManagement = () => {
 
     const colorOptions = [
       "Red",
+      "Maroon",
       "Black",
       "White",
       "Blue",
