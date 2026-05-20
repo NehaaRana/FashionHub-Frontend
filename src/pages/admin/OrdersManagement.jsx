@@ -137,15 +137,39 @@ import {
   Clock,
 } from "lucide-react";
 
-import { getOrders } from "../../services/api";
+import { getOrders,getCurrentUser  } from "../../services/api";
 
 const OrdersManagement = () => {
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
+  
+const [adminName, setAdminName] = useState("");
 
   useEffect(() => {
     fetchOrders();
+      fetchAdmin();
+
   }, []);
+
+
+  const fetchAdmin = async () => {
+  try {
+
+    const res = await getCurrentUser();
+
+    const admin = res.data;
+
+    setAdminName(
+      admin.adminName ||
+      admin.name ||
+      admin.fullName ||
+      "Admin"
+    );
+
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   const fetchOrders = async () => {
     try {
@@ -185,7 +209,13 @@ const OrdersManagement = () => {
   }, [rows]);
 
   return (
-    <DashboardLayout role="Admin" userName="Admin" items={adminItems}>
+
+    <DashboardLayout
+      role="Admin"
+      userName={adminName}
+      items={adminItems}
+    >
+     {/* <DashboardLayout role="Admin" userName="Admin" items={adminItems}> */}
       <div className="p-6 lg:p-12">
 
         {/* Header */}

@@ -119,7 +119,13 @@ const UserOrders = () => {
     };
 
     return (
-        <DashboardLayout role="User" userName="Priya Iyer" items={userNav}>
+        // <DashboardLayout role="User" userName="Priya Iyer" items={userNav}>
+           <DashboardLayout
+                    role={user?.role || "User"}
+                    userName={user?.username || user?.name || "User"}
+                    items={userNav}
+                >
+                    
             <div className="p-6 lg:p-12">
                 <DashHeader
                     eyebrow="Order History"

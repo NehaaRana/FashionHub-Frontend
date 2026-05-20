@@ -6,20 +6,32 @@ import AdminToolbar from "../../components/admin/AdminToolBar";
 import { ShoppingBag, PackageCheck, Clock } from "lucide-react";
 import { vendorItems } from "../../components/vendor/vendorNav";
 
-import { getVendorOrders } from "../../services/api";
+import { getVendorOrders,getCurrentUser  } from "../../services/api";
 
 const VendorOrdersManagement = () => {
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
-
+  const [vendorName, setVendorName] = useState("");
   useEffect(() => {
     fetchOrders();
   }, []);
 
   const fetchOrders = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const vendorId = user?.vid;
+      // const user = JSON.parse(localStorage.getItem("user"));
+      // const vendorId = user?.vid;
+
+          const userRes = await getCurrentUser();
+
+          const currentVendor = userRes.data;
+
+          // SET OWNER NAME
+          setVendorName(currentVendor.ownername);
+       // GET VENDOR ID
+    const vendorId =
+      currentVendor.vid ||
+      currentVendor.Vid;
+
 
       const res = await getVendorOrders(vendorId);
 
@@ -67,7 +79,12 @@ const VendorOrdersManagement = () => {
   }, [rows]);
 
   return (
-    <DashboardLayout role="Vendor" userName="Vendor" items={vendorItems}>
+    // <DashboardLayout role="Vendor" userName="Vendor" items={vendorItems}>
+    <DashboardLayout
+        role="Vendor"
+        userName={vendorName}
+        items={vendorItems}
+      >
       <div className="p-6 lg:p-12">
 
         <DashHeader

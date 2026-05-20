@@ -8,20 +8,34 @@ import { Button } from "../../components/ui/button";
 import { Star, MessageSquare, Trash2 } from "lucide-react";
 import { vendorItems } from "../../components/vendor/vendorNav";
 
-import { getVendorReviews, deleteReview } from "../../services/api";
+import { getVendorReviews, deleteReview ,  getCurrentUser
+} from "../../services/api";
 
 const ReviewManagement = () => {
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [vendorName, setVendorName] = useState("");
 
   useEffect(() => {
     fetchReviews();
   }, []);
 
   const fetchReviews = async () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const vendorId = user?.vid;
+    // const user = JSON.parse(localStorage.getItem("user"));
+    // const vendorId = user?.vid;
+    // GET CURRENT VENDOR
+    const userRes = await getCurrentUser();
+
+    const currentVendor = userRes.data;
+
+    // SET OWNER NAME
+    setVendorName(currentVendor.ownername);
+
+    // GET VENDOR ID
+    const vendorId =
+      currentVendor.vid ||
+      currentVendor.Vid;
 
     const res = await getVendorReviews(vendorId);
 
@@ -59,7 +73,12 @@ const ReviewManagement = () => {
   };
 
   return (
-    <DashboardLayout role="Vendor" userName="Vendor" items={vendorItems}>
+    // <DashboardLayout role="Vendor" userName="Vendor" items={vendorItems}>
+    <DashboardLayout
+        role="Vendor"
+        userName={vendorName}
+        items={vendorItems}
+      >
       <div className="p-6 lg:p-12">
 
         <DashHeader

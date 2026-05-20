@@ -20,7 +20,8 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-  getCategories
+  getCategories,
+  getCurrentUser
 } from "../../services/api";
 import Swal from "sweetalert2";
 
@@ -66,6 +67,7 @@ const ProductManagement = () => {
   const [mainPreview, setMainPreview] = useState(null);
   const [extraPreviews, setExtraPreviews] = useState([]);
   const [colorPreviews, setColorPreviews] = useState({});
+  const [vendorName, setVendorName] = useState("");
 
   // const fetchProducts = async () => {
   //   const res = await getVendorProducts();
@@ -80,22 +82,46 @@ const ProductManagement = () => {
   //   setRows(formatted);
   // };
 
-  const fetchProducts = async () => {
-    // const vendorId = Number(localStorage.getItem("vendorId"));
-    const user = JSON.parse(localStorage.getItem("user"));
-    const vendorId = user?.vid;
-    const res = await getVendorProducts(vendorId);
+  // const fetchProducts = async () => {
+  //   // const vendorId = Number(localStorage.getItem("vendorId"));
+  //   const user = JSON.parse(localStorage.getItem("user"));
+  //   const vendorId = user?.vid;
+  //   const res = await getVendorProducts(vendorId);
 
-    // const formatted = res.data.map((p) => ({
-    //   id: p.pid,
-    //   productName: p.productName,
-    //   price: p.price,
-    //   stock: p.stock,
-    //   isActive: p.isActive,
-    //   // image: p.productImage,
-    //   image: `https://localhost:7106${p.productImage}`, 
-    //   created: new Date(p.createdAt).toLocaleDateString(),
-    // }));
+  //   // const formatted = res.data.map((p) => ({
+  //   //   id: p.pid,
+  //   //   productName: p.productName,
+  //   //   price: p.price,
+  //   //   stock: p.stock,
+  //   //   isActive: p.isActive,
+  //   //   // image: p.productImage,
+  //   //   image: `https://localhost:7106${p.productImage}`, 
+  //   //   created: new Date(p.createdAt).toLocaleDateString(),
+  //   // }));
+
+  //   const formatted = res.data.map((p) => ({
+  //       id: p.pid,
+  //       productName: p.productName,
+  //       description: p.description,
+  //       price: p.price,
+  //       discount: p.discount,
+  //       fabric: p.fabric,
+  //       color: p.color,
+  //       size: p.size,
+  //       stock: p.stock,
+  //       cid: p.cid,
+  //       isActive: p.isActive,
+  //       image: `https://localhost:7106${p.productImage}`,
+  //     }));
+
+  //   setRows(formatted);
+  // };
+
+  const fetchProducts = async () => {
+    try {
+
+      // GET CURRENT LOGGED IN VENDOR
+      const userRes = await getCurrentUser();
 
     const formatted = res.data.map((p) => ({
       id: p.pid,
@@ -113,8 +139,48 @@ const ProductManagement = () => {
       image: `https://localhost:7106${p.productImage}`,
       productImages: p.productImages,
     }));
+      const currentVendor = userRes.data;
 
-    setRows(formatted);
+      setVendorName(
+            currentVendor.ownername        
+          );
+
+      console.log("CURRENT VENDOR:", currentVendor);
+
+      // GET VENDOR ID
+      const vendorId =
+        currentVendor.vid ||
+        currentVendor.Vid;
+
+      // FETCH PRODUCTS
+      const res = await getVendorProducts(vendorId);
+
+      console.log("PRODUCTS:", res.data);
+
+      const formatted = res.data.map((p) => ({
+        id: p.pid,
+        productName: p.productName,
+        vendorName: p.vendorName || p.vendor?.vendorName || "Vendor",
+        description: p.description,
+        price: p.price,
+        discount: p.discount,
+        fabric: p.fabric,
+        color: p.color,
+        size: p.size,
+        stock: p.stock,
+        cid: p.cid,
+        isActive: p.isActive,
+
+        image: p.productImage
+          ? `https://localhost:7106${p.productImage}`
+          : "/placeholder.png",
+      }));
+
+      setRows(formatted);
+
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const fetchCategories = async () => {
@@ -214,16 +280,61 @@ const ProductManagement = () => {
     setModalOpen(true);
   };
   const handleSave = async () => {
-    try {
-      if (!form.productName.trim()) {
-        // alert("Product name required");
-        Swal.fire({
-          icon: "warning",
-          title: "Product Name Required",
-          text: "Please enter product name",
-          confirmButtonColor: "#c08a5b",
-        });
-        return;
+    // try {
+    //   if (!form.productName.trim()) {
+    //     // alert("Product name required");
+    //     Swal.fire({
+    //       icon: "warning",
+    //       title: "Product Name Required",
+    //       text: "Please enter product name",
+    //       confirmButtonColor: "#c08a5b",
+    //     });
+    //     return;
+     try {
+    if (!form.productName.trim()) {
+      // alert("Product name required");
+       Swal.fire({
+        icon: "warning",
+        title: "Product Name Required",
+        text: "Please enter product name",
+        confirmButtonColor: "#c08a5b",
+      });
+      return;
+    }
+
+    // const user = JSON.parse(localStorage.getItem("user"));
+    // const vendorId = user?.vid;
+
+
+    const userRes = await getCurrentUser();
+
+    const currentVendor = userRes.data;
+
+    const vendorId =
+      currentVendor.vid ||
+      currentVendor.Vid;
+
+    const formData = new FormData();
+
+    formData.append("Vid", vendorId);
+    formData.append("Cid",Number(form.cid)); // ⚠️ must not be empty
+    formData.append("ProductName", form.productName);
+    formData.append("Description", form.description);
+    formData.append("Price", form.price);
+    formData.append("Discount", form.discount);
+    formData.append("Fabric", form.fabric);
+    formData.append("Color", form.color);
+    formData.append("Size", form.size); 
+    formData.append("Stock", form.stock);
+    formData.append("IsActive", form.isActive);
+
+    if (form.image) {
+      formData.append("Image", form.image);
+    }
+
+    if (form.images && form.images.length > 0) {
+      for (let i = 0; i < form.images.length; i++) {
+        formData.append("Images", form.images[i]);
       }
 
       const user = JSON.parse(localStorage.getItem("user"));
@@ -402,7 +513,12 @@ const ProductManagement = () => {
   ];
 
   return (
-    <DashboardLayout role="Vendor" userName="Vendor" items={vendorItems}>
+    // <DashboardLayout role="Vendor" userName="Vendor" items={vendorItems}>
+    <DashboardLayout
+        role="Vendor"
+        userName={vendorName}
+        items={vendorItems}
+      >
       <div className="p-6 lg:p-12">
         <DashHeader
           eyebrow="Catalogue"
