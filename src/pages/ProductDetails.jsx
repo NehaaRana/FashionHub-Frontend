@@ -22,6 +22,10 @@ import {
   addToWishlist,
   deleteWishlist,
   getUserWishlist,
+  getProductReviews,
+  getAverageRating,
+  getVendors,
+  addReview,
 } from "../services/api";
 
 const ProductDetails = () => {
@@ -40,6 +44,21 @@ const ProductDetails = () => {
 
   const [showViewer, setShowViewer] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const [reviews, setReviews] = useState([]);
+
+  const [averageRating, setAverageRating] =
+    useState(0);
+
+  const [totalReviews, setTotalReviews] =
+    useState(0);
+
+  const [vendor, setVendor] = useState(null);
+
+  const [reviewText, setReviewText] =
+    useState("");
+
+  const [rating, setRating] = useState(5);
   useEffect(() => {
     fetchProduct();
     fetchWishlist();
@@ -64,7 +83,7 @@ const ProductDetails = () => {
         return;
       }
 
-    
+
       let parsedImages = null;
 
       try {
@@ -90,13 +109,38 @@ const ProductDetails = () => {
       // });
 
       // default selected image
-     
-      
+
+
       setProduct({
         ...foundProduct,
         extraImages: parsedImages?.gallery || [],
         colorImages: parsedImages?.colors || {},
       });
+
+      // FETCH VENDOR
+      const vendorRes = await getVendors();
+
+      const foundVendor = vendorRes.data.find(
+        (v) => v.vid === foundProduct.vid
+      );
+
+      setVendor(foundVendor);
+
+      // FETCH REVIEWS
+      const reviewRes = await getProductReviews(
+        foundProduct.pid
+      );
+
+      setReviews(reviewRes.data);
+
+      // FETCH AVERAGE RATING
+      const avgRes = await getAverageRating(
+        foundProduct.pid
+      );
+
+      setAverageRating(avgRes.data.averageRating);
+
+      setTotalReviews(avgRes.data.totalReviews);
 
       // DEFAULT COLOR
       const firstColor = Object.keys(
@@ -120,7 +164,7 @@ const ProductDetails = () => {
           `https://localhost:7106${firstColorImages[0]}`
         );
       }
-     
+
       // setSelectedImage(
       //   `https://localhost:7106${foundProduct.productImage}`
       // );
@@ -175,7 +219,7 @@ const ProductDetails = () => {
         quantity: "1",
         addedAt: new Date().toISOString(),
         // colorSelected: product.color || "Black",
-          // CURRENT SELECTED COLOR
+        // CURRENT SELECTED COLOR
         colorSelected: selectedColor,
 
         // CURRENT IMAGE
@@ -360,6 +404,69 @@ const ProductDetails = () => {
     }
   };
 
+  const handleReviewSubmit = async () => {
+
+    const user = JSON.parse(
+      localStorage.getItem("user")
+    );
+
+    if (!user) {
+
+      Swal.fire({
+        icon: "warning",
+        title: "Login Required",
+        text: "Please login first!",
+      });
+
+      return;
+    }
+
+    try {
+
+      const orderId = prompt(
+        "Enter your Order ID"
+      );
+
+      const reviewData = {
+        rid: 0,
+        pid: product.pid,
+        rating: rating,
+        feedback: reviewText,
+        uid: user.uid,
+        oid: Number(orderId),
+      };
+
+      await addReview(reviewData);
+
+      Swal.fire({
+        icon: "success",
+        title: "Review Added",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      setReviewText("");
+
+      const updatedReviews =
+        await getProductReviews(product.pid);
+
+      setReviews(updatedReviews.data);
+
+    } catch (error) {
+
+      console.log(error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text:
+          error.response?.data?.message ||
+          "Review failed",
+      });
+
+    }
+  };
+
   const prevImage = () => {
 
     if (currentIndex > 0) {
@@ -448,12 +555,11 @@ const ProductDetails = () => {
                           `https://localhost:7106${img}`
                         )
                       }
-                      className={`w-20 h-20 object-cover rounded-xl cursor-pointer border-2 ${
-                        selectedImage ===
+                      className={`w-20 h-20 object-cover rounded-xl cursor-pointer border-2 ${selectedImage ===
                         `https://localhost:7106${img}`
-                          ? "border-black"
-                          : "border-gray-200"
-                      }`}
+                        ? "border-black"
+                        : "border-gray-200"
+                        }`}
                     />
 
                   ))}
@@ -544,16 +650,31 @@ const ProductDetails = () => {
             {/* RATING */}
             <div className="flex items-center gap-2 mt-4">
 
-              <div className="flex items-center">
+              {/* <div className="flex items-center">
                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              </div>
+              </div> */}
 
+              <div className="flex items-center gap-1">
+
+                {[...Array(5)].map((_, index) => (
+
+                  <Star
+                    key={index}
+                    className={`h-4 w-4 ${index < Math.round(averageRating)
+                      ? "fill-yellow-400 text-yellow-400"
+                      : "text-gray-300"
+                      }`}
+                  />
+
+                ))}
+
+              </div>
               <span className="text-sm text-muted-foreground">
-                (124 Reviews)
+                ({totalReviews} Reviews)
               </span>
             </div>
 
@@ -602,6 +723,20 @@ const ProductDetails = () => {
 
                       <div
                         key={index}
+                        // onClick={() => {
+
+                        //   setSelectedColor(color);
+
+                        //   const newImages =
+                        //     product.colorImages[color];
+
+                        //   setDisplayImages(newImages);
+
+                        //   setSelectedImage(
+                        //     `https://localhost:7106${newImages[0]}`
+                        //   );
+                        // }}
+
                         onClick={() => {
 
                           setSelectedColor(color);
@@ -614,12 +749,15 @@ const ProductDetails = () => {
                           setSelectedImage(
                             `https://localhost:7106${newImages[0]}`
                           );
+
+                          // RESET VIEWER INDEX
+                          setCurrentIndex(0);
+
                         }}
-                        className={`border-2 rounded-2xl p-1 cursor-pointer transition-all ${
-                          selectedColor === color
-                            ? "border-black"
-                            : "border-gray-200"
-                        }`}
+                        className={`border-2 rounded-2xl p-1 cursor-pointer transition-all ${selectedColor === color
+                          ? "border-black"
+                          : "border-gray-200"
+                          }`}
                       >
 
                         <img
@@ -688,11 +826,10 @@ const ProductDetails = () => {
                     <button
                       key={index}
                       onClick={() => setSelectedSize(size)}
-                      className={`w-12 h-12 rounded-full border text-sm font-semibold transition-all ${
-                        selectedSize === size
-                          ? "bg-black text-white border-black"
-                          : "border-gray-300 text-black"
-                      }`}
+                      className={`w-12 h-12 rounded-full border text-sm font-semibold transition-all ${selectedSize === size
+                        ? "bg-black text-white border-black"
+                        : "border-gray-300 text-black"
+                        }`}
                     >
                       {size}
                     </button>
@@ -729,8 +866,172 @@ const ProductDetails = () => {
 
             </div>
 
+            {/* VENDOR INFO */}
+            <div className="mt-10 border rounded-3xl p-6 bg-secondary/30">
+
+              {/* HEADING */}
+              <div className="flex items-center justify-between mb-5">
+
+                <div>
+                  <h2 className="text-2xl font-bold">
+                    Seller Information
+                  </h2>
+
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Product sold and fulfilled by this vendor
+                  </p>
+                </div>
+
+                <div className="bg-green-100 text-green-700 text-xs font-semibold px-4 py-2 rounded-full">
+                  Verified Seller
+                </div>
+
+              </div>
+
+              {/* VENDOR DETAILS */}
+              <div className="flex items-center gap-5">
+
+                {/* SHOP LOGO */}
+                <img
+                  src={
+                    vendor?.shopLogo
+                      ? `https://localhost:7106${vendor.shopLogo}`
+                      : "https://via.placeholder.com/100"
+                  }
+                  alt={vendor?.shopName}
+                  className="w-20 h-20 rounded-full object-cover border"
+                />
+
+                <div className="space-y-1">
+
+                  <h3 className="text-xl font-bold">
+                    {vendor?.shopName}
+                  </h3>
+
+                  <p className="text-sm text-muted-foreground">
+                    Trusted Fashion Partner
+                  </p>
+
+                  <p className="text-sm">
+                    {vendor?.email}
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
           </div>
         </div>
+      </div>
+
+      {/* REVIEWS */}
+      <div className="container mt-20">
+
+        <h2 className="text-3xl font-bold mb-10">
+          Customer Reviews
+        </h2>
+
+        {/* REVIEW FORM */}
+        {/* <div className="border rounded-3xl p-6 mb-10">
+
+          <h3 className="text-xl font-semibold mb-4">
+            Write Review
+          </h3>
+
+          <select
+            value={rating}
+            onChange={(e) =>
+              setRating(Number(e.target.value))
+            }
+            className="w-full border rounded-xl p-3 mb-4"
+          >
+            <option value={5}>5 Star</option>
+            <option value={4}>4 Star</option>
+            <option value={3}>3 Star</option>
+            <option value={2}>2 Star</option>
+            <option value={1}>1 Star</option>
+          </select>
+
+          <textarea
+            rows="4"
+            placeholder="Write review..."
+            value={reviewText}
+            onChange={(e) =>
+              setReviewText(e.target.value)
+            }
+            className="w-full border rounded-xl p-4"
+          />
+
+          <button
+            onClick={handleReviewSubmit}
+            className="mt-5 bg-black text-white px-8 py-3 rounded-2xl"
+          >
+            Submit Review
+          </button>
+
+        </div> */}
+
+        {/* REVIEW LIST */}
+        <div className="space-y-6">
+
+          {reviews.map((review) => (
+
+            <div
+              key={review.rid}
+              className="border rounded-3xl p-6"
+            >
+
+              <div className="flex justify-between">
+
+                <div className="flex items-center gap-4">
+
+                  <div className="w-14 h-14 rounded-full bg-black text-white flex items-center justify-center font-bold">
+                    {review.userName?.charAt(0)}
+                  </div>
+
+                  <div>
+
+                    <h4 className="font-semibold">
+                      {review.userName}
+                    </h4>
+
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(
+                        review.createdAt
+                      ).toLocaleDateString()}
+                    </p>
+
+                  </div>
+
+                </div>
+
+                <div className="flex">
+
+                  {[...Array(review.rating)].map(
+                    (_, i) => (
+                      <Star
+                        key={i}
+                        className="w-4 h-4 fill-yellow-400 text-yellow-400"
+                      />
+                    )
+                  )}
+
+                </div>
+
+              </div>
+
+              <p className="mt-5 text-muted-foreground leading-7">
+                {review.feedback}
+              </p>
+
+            </div>
+
+          ))}
+
+        </div>
+
       </div>
 
       {/* FULLSCREEN IMAGE VIEWER */}

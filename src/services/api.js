@@ -158,6 +158,15 @@ export const getVendorReviews = (vid) =>
 // Get all reviews (admin use)
 export const getReviews = () => API.get("/Reviews");
 
+// GET REVIEWS OF SPECIFIC PRODUCT
+export const getProductReviews = (pid) =>
+  API.get(`/Reviews/product/${pid}`);
+
+// GET AVERAGE RATING
+export const getAverageRating = (pid) =>
+  API.get(`/Reviews/average/${pid}`);
+
+
 // Create review (customer side)
 export const createReview = (data) =>
   API.post("/Reviews", data);
