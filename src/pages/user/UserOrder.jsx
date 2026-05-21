@@ -429,7 +429,9 @@ const UserOrders = () => {
 
                                 {/* IMAGE */}
                                 <img
-                                    src={`https://localhost:7106${item.productImage}`}
+                                    // src={`https://localhost:7106${item.productImage}`}
+                                    src={`https://localhost:7106${item.selectedImage || item.productImage}`}
+
                                     alt={item.productName}
                                     className="w-32 h-32 object-cover rounded-xl border"
                                 />
