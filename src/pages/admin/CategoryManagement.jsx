@@ -366,20 +366,13 @@ const AdminCategories = () => {
             {/* Season */}
             <div>
               <label className="block text-xs font-semibold mb-2">Season</label>
-              {/* <input
-        value={form.season}
-        onChange={(e) =>
-          setForm({ ...form, season: e.target.value })
-        }
-        className="w-full border rounded px-3 py-2"
-        placeholder="e.g. Summer, Winter"
-      /> */}
               <select
                 value={form.season}
                 onChange={(e) => setForm({ ...form, season: e.target.value })}
                 className="w-full border rounded px-3 py-2"
               >
                 <option value="">Select Season</option>
+                <option value="All Seasons">All Seasons</option>
                 <option value="Summer">Summer</option>
                 <option value="Winter">Winter</option>
               </select>

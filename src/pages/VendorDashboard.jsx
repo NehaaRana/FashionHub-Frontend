@@ -107,7 +107,11 @@ const VendorDashboard = () => {
         const userRes = await getCurrentUser();
         const currentVendor = userRes.data;
 
-        console.log(currentVendor);
+        // console.log(currentVendor);
+        console.log("CURRENT VENDOR:", JSON.stringify(currentVendor, null, 2));
+console.log("VID:", currentVendor?.vid);
+console.log("ID:", currentVendor?.id);
+console.log("EMAIL:", currentVendor?.email);
 
         setUser(currentVendor);
 
