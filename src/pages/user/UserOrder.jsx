@@ -9,6 +9,13 @@ import { getUserOrders, getCurrentUser } from "../../services/api";
 import Swal from "sweetalert2";
 import { addReview } from "../../services/api";
 import { Star } from "lucide-react";
+import {
+    FaRegSadTear,
+    FaFrown,
+    FaMeh,
+    FaSmile,
+    FaGrinStars
+} from "react-icons/fa";
 // const orders = [
 //   { id: "#FH-10241", date: "Apr 28, 2026", items: 2, total: "₹4,890", status: "Delivered", payment: "UPI" },
 //   { id: "#FH-10198", date: "Apr 19, 2026", items: 1, total: "₹1,750", status: "Shipped", payment: "Card" },
@@ -35,7 +42,7 @@ const UserOrders = () => {
     const [open, setOpen] = useState(null);
     const [reviewModal, setReviewModal] = useState(false);  
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const [rating, setRating] = useState(5);
+    const [rating, setRating] = useState(0);
     const [feedback, setFeedback] = useState("");
 
 
@@ -88,8 +95,11 @@ const UserOrders = () => {
                 pid: selectedProduct.pid,
                 uid: user.uid,
                 oid: open.oid,
+                orderItemId: selectedProduct.orderItemId,
                 rating: rating,
-                feedback: feedback
+                feedback: feedback,
+                colorSelected: selectedProduct.colorSelected,
+                sizeSelected: selectedProduct.sizeSelected
             };
 
             const res = await addReview(payload);
@@ -488,15 +498,51 @@ const UserOrders = () => {
                                         {/* {open.orderStatus === "Delivered" && */}
                                         {open.paymentStatus === "Paid" && (
 
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedProduct(item);
-                                                    setReviewModal(true);
-                                                }}
-                                                className="mt-4 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition"
-                                            >
-                                                Write Review
-                                            </button>
+                                            // <button
+                                            //     onClick={() => {
+                                            //         setSelectedProduct(item);
+                                            //         setReviewModal(true);
+                                            //     }}
+                                            //     className="mt-4 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition"
+                                            // >
+                                            //     Write Review
+                                            // </button>
+
+                                            <div className="flex items-center justify-between mt-5 border-t pt-4">
+
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-9 h-9 rounded-full bg-yellow-100 flex items-center justify-center">
+                                                        <Star className="w-5 h-5 text-yellow-500 fill-yellow-400" />
+                                                    </div>
+
+                                                    <div>
+                                                        <p className="text-sm font-semibold text-gray-800">
+                                                            Share your experience
+                                                        </p>
+
+                                                        <p className="text-xs text-gray-500">
+                                                            Rate this product & help others
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedProduct(item);
+                                                        setReviewModal(true);
+
+                                                        // RESET VALUES
+                                                        setRating(0);
+                                                        setFeedback("");
+                                                    }}
+                                                    className="px-5 py-2.5 rounded-full border border-black text-black text-sm font-semibold hover:bg-black hover:text-white transition-all duration-300"
+                                                >
+                                                    Write Review
+                                                </button>
+
+                                            </div>
+                                        
+                                        
                                         )}
 
                                     </div>
@@ -586,84 +632,269 @@ const UserOrders = () => {
                         )} */}
 
 
+                        {/* {reviewModal && selectedProduct && (
+                            <div className="fixed inset-0 z-[60] bg-black/60 flex items-center justify-center p-4">
+
+                                <div className="bg-white rounded-2xl w-full max-w-lg p-6">
+
+                              
+                                <div className="flex items-center justify-between mb-5">
+                                    <h2 className="text-2xl font-bold">
+                                    Review: {selectedProduct.productName}
+                                    </h2>
+
+                                    <button
+                                    onClick={() => {
+                                        setReviewModal(false);
+                                        setSelectedProduct(null);
+                                    }}
+                                    className="text-2xl"
+                                    >
+                                    ×
+                                    </button>
+                                </div>
+
+                               
+                                <div className="mb-5">
+                                    <p className="font-medium mb-3">Rating</p>
+
+                                    <div className="flex gap-2">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <button
+                                        key={star}
+                                        type="button"
+                                        onClick={() => setRating(star)}
+                                        className="transition-transform hover:scale-110"
+                                        >
+                                        <Star
+                                            className={`w-8 h-8 transition-colors ${
+                                            star <= rating
+                                                ? "fill-yellow-400 text-yellow-400"
+                                                : "text-gray-300"
+                                            }`}
+                                        />
+                                        </button>
+                                    ))}
+                                    </div>
+
+                                    <p className="text-sm text-gray-500 mt-2">
+                                    {rating === 5 && "Excellent"}
+                                    {rating === 4 && "Good"}
+                                    {rating === 3 && "Average"}
+                                    {rating === 2 && "Poor"}
+                                    {rating === 1 && "Terrible"}
+                                    </p>
+                                </div>
+
+                              
+                                <div className="mb-5">
+                                    <p className="font-medium mb-2">Feedback</p>
+
+                                    <textarea
+                                    rows="5"
+                                    value={feedback}
+                                    onChange={(e) => setFeedback(e.target.value)}
+                                    placeholder="Write your experience..."
+                                    className="w-full border rounded-lg p-3 resize-none"
+                                    />
+                                </div>
+
+                                
+                                <button
+                                    onClick={handleSubmitReview}
+                                    className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition"
+                                >
+                                    Submit Review
+                                </button>
+
+                                </div>
+                            </div>
+                        )} */}
+
                         {reviewModal && selectedProduct && (
-  <div className="fixed inset-0 z-[60] bg-black/60 flex items-center justify-center p-4">
+                            <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
 
-    <div className="bg-white rounded-2xl w-full max-w-lg p-6">
+                                {/* <div className="bg-white rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl animate-fade-in-up"> */}
+                                <div className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl animate-fade-in-up">
+                                    {/* TOP PRODUCT SECTION */}
+                                    {/* <div className="flex items-center gap-4 p-5 border-b bg-gray-50"> */}
+                                    <div className="flex items-center gap-3 p-4 border-b bg-gray-50">
+                                        <img
+                                            src={`https://localhost:7106${selectedProduct.selectedImage || selectedProduct.productImage}`}
+                                            alt={selectedProduct.productName}
+                                            // className="w-20 h-20 rounded-xl object-cover border"
+                                            className="w-16 h-16 rounded-xl object-cover border"
+                                        />
 
-      {/* HEADER */}
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="text-2xl font-bold">
-          Review: {selectedProduct.productName}
-        </h2>
+                                        <div className="flex-1">
+                                            <h2 className="text-lg font-bold text-gray-800 line-clamp-2">
+                                                {selectedProduct.productName}
+                                            </h2>
 
-        <button
-          onClick={() => {
-            setReviewModal(false);
-            setSelectedProduct(null);
-          }}
-          className="text-2xl"
-        >
-          ×
-        </button>
-      </div>
+                                            <div className="flex items-center gap-3 mt-2 text-sm text-gray-500">
+                                                <span>
+                                                    Size: {selectedProduct.sizeSelected}
+                                                </span>
 
-      {/* STAR RATING */}
-      <div className="mb-5">
-        <p className="font-medium mb-3">Rating</p>
+                                                <span>•</span>
 
-        <div className="flex gap-2">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              type="button"
-              onClick={() => setRating(star)}
-              className="transition-transform hover:scale-110"
-            >
-              <Star
-                className={`w-8 h-8 transition-colors ${
-                  star <= rating
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-gray-300"
-                }`}
-              />
-            </button>
-          ))}
-        </div>
+                                                <span>
+                                                    Color: {selectedProduct.colorSelected}
+                                                </span>
+                                            </div>
+                                        </div>
 
-        <p className="text-sm text-gray-500 mt-2">
-          {rating === 5 && "Excellent"}
-          {rating === 4 && "Good"}
-          {rating === 3 && "Average"}
-          {rating === 2 && "Poor"}
-          {rating === 1 && "Terrible"}
-        </p>
-      </div>
+                                        <button
+                                            onClick={() => {
+                                                setReviewModal(false);
+                                                setSelectedProduct(null);
+                                            }}
+                                            className="text-3xl text-gray-400 hover:text-black transition"
+                                        >
+                                            ×
+                                        </button>
 
-      {/* FEEDBACK */}
-      <div className="mb-5">
-        <p className="font-medium mb-2">Feedback</p>
+                                    </div>
 
-        <textarea
-          rows="5"
-          value={feedback}
-          onChange={(e) => setFeedback(e.target.value)}
-          placeholder="Write your experience..."
-          className="w-full border rounded-lg p-3 resize-none"
-        />
-      </div>
+                                    {/* BODY */}
+                                    <div className="p-5">
 
-      {/* SUBMIT */}
-      <button
-        onClick={handleSubmitReview}
-        className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition"
-      >
-        Submit Review
-      </button>
+                                        {/* TITLE */}
+                                        <div className="text-center mb-5">
 
-    </div>
-  </div>
-)}
+                                            <h3 className="text-xl font-bold text-gray-800">
+                                                How was your experience?
+                                            </h3>
+
+                                            <p className="text-gray-500 text-sm mt-2">
+                                                Your feedback helps other customers shop better.
+                                            </p>
+
+                                        </div>
+
+                                        {/* STAR RATING */}
+                                        <div className="flex flex-col items-center mb-5">
+
+                                            <div className="flex gap-2">
+
+                                                {[1, 2, 3, 4, 5].map((star) => (
+
+                                                    <button
+                                                        key={star}
+                                                        type="button"
+                                                        onClick={() => setRating(star)}
+                                                        className="transition-all duration-200 hover:scale-125"
+                                                    >
+                                                        <Star
+                                                            className={`w-8 h-8 ${
+                                                                star <= rating
+                                                                    ? "fill-yellow-400 text-yellow-400"
+                                                                    : "text-gray-300"
+                                                            }`}
+                                                        />
+                                                    </button>
+
+                                                ))}
+
+                                            </div>
+
+                                            {/* <p className="mt-4 text-sm font-medium text-gray-600">
+
+                                                {rating === 0 && "Tap to rate"}
+                                                {rating === 1 && "Terrible 😞"}
+                                                {rating === 2 && "Poor 😕"}
+                                                {rating === 3 && "Average 🙂"}
+                                                {rating === 4 && "Good 😃"}
+                                                {rating === 5 && "Excellent 🤩"}
+
+                                            </p> */}
+                                            
+                                            <p className="mt-4 text-sm font-medium text-gray-600 flex items-center gap-2">
+
+                                                {rating === 0 && (
+                                                    <>
+                                                        <Star className="w-4 h-4 text-gray-400" />
+                                                        Tap to rate
+                                                    </>
+                                                )}
+
+                                                {rating === 1 && (
+                                                    <>
+                                                        <FaRegSadTear className="text-red-500 text-lg" />
+                                                        Terrible
+                                                    </>
+                                                )}
+
+                                                {rating === 2 && (
+                                                    <>
+                                                        <FaFrown className="text-orange-500 text-lg" />
+                                                        Poor
+                                                    </>
+                                                )}
+
+                                                {rating === 3 && (
+                                                    <>
+                                                        <FaMeh className="text-yellow-500 text-lg" />
+                                                        Average
+                                                    </>
+                                                )}
+
+                                                {rating === 4 && (
+                                                    <>
+                                                        <FaSmile className="text-lime-500 text-lg" />
+                                                        Good
+                                                    </>
+                                                )}
+
+                                                {rating === 5 && (
+                                                    <>
+                                                        <FaGrinStars className="text-green-500 text-lg" />
+                                                        Excellent
+                                                    </>
+                                                )}
+
+                                            </p>
+
+                                        </div>
+
+                                        {/* FEEDBACK */}
+                                        <div className="mb-4">
+
+                                            <label className="block text-sm font-semibold mb-3 text-gray-700">
+                                                Write your review
+                                            </label>
+
+                                            <textarea
+                                                rows="3"
+                                                value={feedback}
+                                                onChange={(e) => setFeedback(e.target.value)}
+                                                placeholder="Tell others what you liked or disliked about this product..."
+                                                className="w-full border border-gray-300 rounded-2xl p-4 resize-none focus:outline-none focus:ring-2 focus:ring-black text-sm"
+                                            />
+
+                                        </div>
+
+                                        {/* SUBMIT BUTTON */}
+                                        <button
+                                            onClick={handleSubmitReview}
+                                            disabled={rating === 0}
+                                            className={`w-full py-3 rounded-2xl text-sm font-semibold transition-all duration-300 ${
+                                                rating === 0
+                                                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                                                    : "bg-black text-white hover:bg-gray-800"
+                                            }`}
+                                        >
+                                            Submit Review
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        )}
+
+
                     </div>
                 </div>
 
