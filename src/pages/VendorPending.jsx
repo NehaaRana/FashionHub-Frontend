@@ -16,10 +16,10 @@ import Footer from "../components/Footer";
 import { Button } from "../components/ui/button";
 // import { vendorStore, subscribeVendors } from "../lib/vendorStore";
 import { useLocation } from "react-router-dom";
-  import { getVendorByEmail } from "../services/api";
+import { getVendorByEmail } from "../services/api";
 const VendorPending = () => {
   // const [app, setApp] = useState(() => vendorStore.current());
-  
+
 
   const location = useLocation();
   const emailFromNav = location.state?.email;
@@ -98,7 +98,7 @@ const VendorPending = () => {
 };
 
 const StatusCard = ({ app }) => {
-  if (app.status === "Approved") {
+  if (app.approvedByAdmin  === "Approved") {
     return (
       <div className="bg-card border border-border rounded-sm overflow-hidden">
         <div className="bg-gradient-to-br from-accent/20 via-accent/5 to-transparent p-10 text-center border-b border-border">
@@ -112,7 +112,7 @@ const StatusCard = ({ app }) => {
             Welcome to <span className="italic font-normal text-accent">FashionHub</span>
           </h1>
           <p className="font-body text-sm text-muted-foreground mt-3">
-            Your store <strong className="text-foreground">{app.storeName}</strong> is live.
+            Your store <strong className="text-foreground">{app.vendorname}</strong> is live.
             Start adding products and accepting orders.
           </p>
         </div>
@@ -129,7 +129,7 @@ const StatusCard = ({ app }) => {
     );
   }
 
-  if (app.status === "Rejected") {
+  if (app.approvedByAdmin  === "Rejected") {
     return (
       <div className="bg-card border border-border rounded-sm overflow-hidden">
         <div className="bg-destructive/5 p-10 text-center border-b border-border">
@@ -177,7 +177,7 @@ const StatusCard = ({ app }) => {
           Application <span className="italic font-normal text-accent">in queue</span>
         </h1>
         <p className="font-body text-sm text-muted-foreground mt-3 max-w-md mx-auto">
-          Our merchandising team is reviewing <strong className="text-foreground">{app.storeName}</strong>.
+          Our merchandising team is reviewing <strong className="text-foreground">{app.vendorname}</strong>.
           Expect a decision within <strong className="text-foreground">24-48 hours</strong>.
         </p>
       </div>
@@ -209,10 +209,20 @@ const StatusCard = ({ app }) => {
 
 const Meta = ({ app }) => (
   <div className="grid grid-cols-2 gap-4 text-left">
-    <MetaRow label="Application ID" value={app.id} />
-    <MetaRow label="Submitted" value={new Date(app.submittedAt).toLocaleDateString()} />
+    <MetaRow label="Application ID" value={app.vid} />
+    {/* <MetaRow label="Submitted" value={new Date(app.submittedAt).toLocaleDateString()} /> */}
+    <MetaRow
+  label="Submitted"
+  value={new Date(app.createdAt).toLocaleDateString()}
+/>
+
+<MetaRow
+  label="Category"
+  value={app.specialization}
+/>
     <MetaRow label="Email" value={app.email} />
-    <MetaRow label="Category" value={app.category} />
+    {/* <MetaRow label="Category" value={app.category} /> */}
+
   </div>
 );
 

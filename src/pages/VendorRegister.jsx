@@ -13,7 +13,9 @@ import {
   ChevronRight,
   ChevronLeft,
   CheckCircle2,
-  Lock
+  Lock,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import PromoBar from "../components/PromoBar";
 import Navbar from "../components/Navbar";
@@ -68,6 +70,7 @@ const VendorRegister = () => {
   }, []);
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     storeName: "",
     ownerName: "",
@@ -99,7 +102,7 @@ const VendorRegister = () => {
 
     if (!canNext) {
       // alert("Please fill all required fields!");
-       Swal.fire({
+      Swal.fire({
         icon: "warning",
         title: "Incomplete Form",
         text: "Please fill all required fields!",
@@ -230,7 +233,7 @@ const VendorRegister = () => {
                       className={inputCls}
                     />
                   </Field>
-                  <Field label="Password" icon={Lock}>
+                  {/* <Field label="Password" icon={Lock}>
                     <input
                       type="password"
                       required
@@ -238,6 +241,29 @@ const VendorRegister = () => {
                       onChange={(e) => set("password", e.target.value)}
                       className={inputCls}
                     />
+                  </Field> */}
+                  <Field label="Password" icon={Lock}>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        required
+                        value={form.password}
+                        onChange={(e) => set("password", e.target.value)}
+                        className={`${inputCls} pr-10`}
+                      />
+
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-3.5 text-muted-foreground"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
                   </Field>
                   <Field label="Phone" icon={Phone}>
                     <input

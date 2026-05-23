@@ -91,20 +91,81 @@ const Login = () => {
         showConfirmButton: false,
       });
 
+      // setTimeout(() => {
+      //   navigate("/dashboard");
+      //   window.location.reload();
+      // }, 1500);
       setTimeout(() => {
-        navigate("/dashboard");
-        window.location.reload();
-      }, 1500);
+
+  // Admin
+  if (role === "Admin") {
+    navigate("/dashboard");
+  }
+
+  // Vendor
+  else if (role === "Vendor") {
+
+    navigate("/vendor-pending", {
+      state: { email: form.email }
+    });
+
+  }
+
+  // Normal User
+  else {
+    navigate("/dashboard");
+  }
+
+  window.location.reload();
+
+}, 1500);
 
     } catch (error) {
       console.error(error.response?.data);
 
-      Swal.fire({
-        icon: "error",
-        title: "Login Failed",
-        text: "Invalid Email or Password",
-        confirmButtonColor: "#000",
-      });
+      // Swal.fire({
+      //   icon: "error",
+      //   title: "Login Failed",
+      //   text: "Invalid Email or Password",
+      //   confirmButtonColor: "#000",
+      // });
+      const status = error.response?.data?.status;
+const message = error.response?.data?.message;
+
+if (status === "Pending") {
+
+  Swal.fire({
+    icon: "info",
+    title: "Application Under Review",
+    text: message,
+    confirmButtonColor: "#000",
+  });
+
+  navigate("/vendor-pending", {
+    state: { email: form.email }
+  });
+
+}
+else if (status === "Rejected") {
+
+  Swal.fire({
+    icon: "error",
+    title: "Application Rejected",
+    text: message,
+    confirmButtonColor: "#000",
+  });
+
+}
+else {
+
+  Swal.fire({
+    icon: "error",
+    title: "Login Failed",
+    text: "Invalid Email or Password",
+    confirmButtonColor: "#000",
+  });
+
+}
     }
   };
  

@@ -221,7 +221,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-import { getVendors, deleteVendor ,  getCurrentUser,
+import {
+  getVendors, deleteVendor, getCurrentUser,
 } from "../../services/api";
 
 const VendorManagement = () => {
@@ -233,23 +234,23 @@ const VendorManagement = () => {
 
   useEffect(() => {
     fetchVendors();
-      loadAdmin();
+    loadAdmin();
 
   }, []);
 
   const loadAdmin = async () => {
-  try {
-    const res = await getCurrentUser();
+    try {
+      const res = await getCurrentUser();
 
-    setAdminName(
-      res.data?.username ||
-      res.data?.name ||
-      "Admin"
-    );
-  } catch (err) {
-    console.log(err);
-  }
-};
+      setAdminName(
+        res.data?.username ||
+        res.data?.name ||
+        "Admin"
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const fetchVendors = async () => {
     try {
       const res = await getVendors();
@@ -265,7 +266,8 @@ const VendorManagement = () => {
         city: v.city,
         state: v.state,
         specialization: v.specialization,
-        approved: v.approvedByAdmin,
+        // approved: v.approvedByAdmin,
+        approvedStatus: v.approvedByAdmin,
       }));
 
       setRows(formatted);
@@ -286,9 +288,16 @@ const VendorManagement = () => {
   //  Stats
   const stats = useMemo(() => {
     const total = rows.length;
-    const approved = rows.filter((v) => v.approved).length;
-    const pending = rows.filter((v) => !v.approved).length;
+    // const approved = rows.filter((v) => v.approved).length;
+    // const pending = rows.filter((v) => !v.approved).length;
 
+    const approved = rows.filter(
+      (v) => v.approvedStatus === "Approved"
+    ).length;
+
+    const pending = rows.filter(
+      (v) => v.approvedStatus === "Pending"
+    ).length;
     return { total, approved, pending };
   }, [rows]);
 
@@ -308,10 +317,10 @@ const VendorManagement = () => {
     // <DashboardLayout role="Admin" userName="Admin" items={adminItems}>
 
     <DashboardLayout
-        role="Admin"
-        userName={adminName}
-        items={adminItems}
-      >
+      role="Admin"
+      userName={adminName}
+      items={adminItems}
+    >
       <div className="p-6 lg:p-12">
 
         {/* Header */}
@@ -356,7 +365,7 @@ const VendorManagement = () => {
               <tbody>
                 {filtered.map((v) => (
                   <Fragment key={v.id}>
-                    
+
                     {/* Main Row */}
                     <tr className="border-t hover:bg-secondary/30">
 
@@ -380,12 +389,18 @@ const VendorManagement = () => {
                       <td className="px-6 py-4">
                         <span
                           className={`px-3 py-1 text-[10px] uppercase font-semibold rounded-sm ${
-                            v.approved
+                            // v.approved
+                            //   ? "bg-emerald-100 text-emerald-700"
+                            //   : "bg-yellow-100 text-yellow-700"
+                            v.approvedStatus === "Approved"
                               ? "bg-emerald-100 text-emerald-700"
-                              : "bg-yellow-100 text-yellow-700"
-                          }`}
+                              : v.approvedStatus === "Rejected"
+                                ? "bg-red-100 text-red-700"
+                                : "bg-yellow-100 text-yellow-700"
+                            }`}
                         >
-                          {v.approved ? "Approved" : "Pending"}
+                          {/* {v.approved ? "Approved" : "Pending"} */}
+                          {v.approvedStatus}
                         </span>
                       </td>
 

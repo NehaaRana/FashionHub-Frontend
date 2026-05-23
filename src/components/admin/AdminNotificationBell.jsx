@@ -16,7 +16,7 @@ const fetchPending = async () => {
     try {
       const res = await getPendingVendors();
     //   setPending(res.data);
-    setPending(res?.data || []);
+    setPending(res || []);
     } catch (err) {
       console.error(err);
     }
