@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
 import DashHeader from "../components/dashboard/DashHeader";
 import StatCard from "../components/dashboard/StatCard";
-import { getVendorProducts, getOrders ,getCurrentUser,getVendorOrders} from "../services/api";
+import { getVendorProducts, getOrders ,getCurrentUser,getVendorOrders,getVendorReviews} from "../services/api";
 import {
   LayoutDashboard,
   Package,
@@ -25,9 +25,9 @@ const items = [
   { label: "Overview", to: "/vendor", icon: LayoutDashboard },
   { label: "My Products", to: "/vendor/products", icon: Package },
   { label: "Orders", to: "/vendor/orders", icon: ShoppingCart },
-  { label: "Earnings", to: "/vendor/earnings", icon: DollarSign },
+  // { label: "Earnings", to: "/vendor/earnings", icon: DollarSign },
   { label: "Reviews", to: "/vendor/reviews", icon: Star },
-  { label: "Messages", to: "/vendor/messages", icon: MessageSquare },
+  // { label: "Messages", to: "/vendor/messages", icon: MessageSquare },
   { label: "Store Settings", to: "/vendor/settings", icon: Settings },
 ];
 
@@ -116,30 +116,66 @@ console.log("EMAIL:", currentVendor?.email);
         setUser(currentVendor);
 
         // FETCH PRODUCTS + ORDERS
-        const [productsRes, ordersRes] = await Promise.all([
-          getVendorProducts(currentVendor.vid || currentVendor.Vid),
-          getOrders(),
-        ]);
+        // const [productsRes, ordersRes] = await Promise.all([
+        //   getVendorProducts(currentVendor.vid || currentVendor.Vid),
+        //   getOrders(),
+        // ]);
 
-        // FILTER VENDOR ORDERS
-        const vendorOrders = ordersRes.data.filter(
-          (o) =>
-            o.vendorId === currentVendor.vid ||
-            o.vendorId === currentVendor.Vid
-        );
+        // // FILTER VENDOR ORDERS
+        // const vendorOrders = ordersRes.data.filter(
+        //   (o) =>
+        //     o.vendorId === currentVendor.vid ||
+        //     o.vendorId === currentVendor.Vid
+        // );
+
+        const vendorId = currentVendor.vid || currentVendor.Vid;
+
+          // FETCH PRODUCTS + VENDOR ORDERS
+          const [productsRes, ordersRes,reviewsRes] = await Promise.all([
+            getVendorProducts(vendorId),
+            getVendorOrders(vendorId),
+            getVendorReviews(vendorId),
+
+          ]);
+
+          const vendorOrders = ordersRes.data;
 
         setProducts(productsRes.data);
         setOrders(vendorOrders);
+        // ONLY PAID ORDERS
+        const paidOrders = vendorOrders.filter(
+          (o) =>
+            o.paymentStatus?.toLowerCase() === "paid"
+        );
 
+
+        //avg review
+        const reviews = reviewsRes.data;
+
+        const averageRating =
+          reviews.length > 0
+            ? (
+                reviews.reduce(
+                  (sum, r) => sum + Number(r.rating || 0),
+                  0
+                ) / reviews.length
+              ).toFixed(1)
+            : 0;
         // STATS
         setStats({
           products: productsRes.data.length,
           orders: vendorOrders.length,
-          earnings: vendorOrders.reduce(
-            (sum, o) => sum + o.totalAmount,
-            0
-          ),
-          rating: 4.8,
+          // earnings: vendorOrders.reduce(
+          //   (sum, o) => sum + o.totalAmount,
+          //   0
+          // ),
+           earnings: paidOrders.reduce(
+              (sum, o) => sum + Number(o.amount || 0),
+              0
+            ),
+          // rating: 4.8,
+            rating: averageRating,
+
         });
 
       } catch (err) {
@@ -152,7 +188,7 @@ console.log("EMAIL:", currentVendor?.email);
   const isApproved = !app || app.status === "Approved";
   // const vendorName = user?.vendorname || user?.brandname||"Vendor";
  const vendorName =
-  user?.vendorname ||
+  user?.ownername ||
   user?.Vendorname ||
   user?.brandname ||
   user?.Brandname ||

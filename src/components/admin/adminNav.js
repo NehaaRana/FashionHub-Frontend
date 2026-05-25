@@ -26,6 +26,6 @@ export const adminItems = [
     badgeKey: "vendorApplications"
   },
   { label: "Coupons", to: "/admin/coupons", icon: Tag },
-  { label: "Analytics", to: "/admin/analytics", icon: BarChart3 },
-  { label: "Settings", to: "/admin/settings", icon: Settings },
+  // { label: "Analytics", to: "/admin/analytics", icon: BarChart3 },
+  // { label: "Settings", to: "/admin/settings", icon: Settings },
 ];

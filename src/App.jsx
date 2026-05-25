@@ -92,6 +92,18 @@ function App() {
           }
         />
   
+          {/* Redirect Vendor URL */}
+<Route
+  path="/vendor/dashboard"
+  element={<Navigate to="/dashboard" replace />}
+/>
+
+{/* Redirect Admin URL */}
+<Route
+  path="/admin"
+  element={<Navigate to="/dashboard" replace />}
+/>
+
         {/* User */}
         {/* <Route
           path="/dashboard"
