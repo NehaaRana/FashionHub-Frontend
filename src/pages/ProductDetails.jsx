@@ -58,6 +58,13 @@ const ProductDetails = () => {
   const [reviewText, setReviewText] =
     useState("");
 
+  const [showAllReviews, setShowAllReviews] =
+  useState(false);
+
+  const displayedReviews = showAllReviews
+  ? reviews
+  : reviews.slice(0, 2);
+
   const [rating, setRating] = useState(5);
   useEffect(() => {
     fetchProduct();
@@ -682,7 +689,7 @@ const ProductDetails = () => {
             <div className="flex items-center gap-4 mt-6">
 
               <h2 className="text-4xl font-bold text-primary">
-                ₹{finalPrice}
+                ₹{finalPrice.toFixed(2)}
               </h2>
 
               {product.discount > 0 && (
@@ -974,7 +981,7 @@ const ProductDetails = () => {
         </div> */}
 
         {/* REVIEW LIST */}
-        <div className="space-y-6">
+        {/* <div className="space-y-6">
 
           {reviews.map((review) => (
 
@@ -1030,8 +1037,106 @@ const ProductDetails = () => {
 
           ))}
 
+        </div> */}
+        {/* REVIEW LIST */}
+        <div className="space-y-5">
+
+          {displayedReviews.length > 0 ? (
+
+            displayedReviews.map((review) => (
+
+              <div
+                key={review.rid}
+                className="border border-gray-200 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition-all"
+              >
+
+                <div className="flex items-start justify-between gap-4">
+
+                  {/* LEFT */}
+                  <div className="flex items-center gap-4">
+
+                    {/* USER ICON */}
+                    <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center font-semibold text-lg uppercase">
+                      {review.userName?.charAt(0)}
+                    </div>
+
+                    {/* USER INFO */}
+                    <div>
+
+                      <h4 className="font-semibold text-[16px]">
+                        {review.userName}
+                      </h4>
+
+                      <p className="text-sm text-gray-500">
+                        {new Date(
+                          review.createdAt
+                        ).toLocaleDateString()}
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                  {/* STARS */}
+                  <div className="flex gap-1">
+
+                    {[...Array(5)].map((_, i) => (
+
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${
+                          i < review.rating
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "text-gray-300"
+                        }`}
+                      />
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+                {/* REVIEW TEXT */}
+                <p className="mt-4 text-gray-600 leading-7 text-[15px]">
+                  {review.feedback}
+                </p>
+
+              </div>
+
+            ))
+
+          ) : (
+
+            <div className="text-center py-10 border rounded-2xl bg-gray-50">
+              <p className="text-gray-500">
+                No reviews available
+              </p>
+            </div>
+
+          )}
+
         </div>
 
+        {/* SEE MORE BUTTON */}
+        {reviews.length > 2 && (
+
+          <div className="flex justify-center mt-8">
+
+            <button
+              onClick={() =>
+                setShowAllReviews(!showAllReviews)
+              }
+              className="px-6 py-3 rounded-xl border border-black text-black font-medium hover:bg-black hover:text-white transition-all"
+            >
+              {showAllReviews
+                ? "Show Less Reviews"
+                : `See More Reviews (${reviews.length - 2})`}
+            </button>
+
+          </div>
+
+        )}
       </div>
 
       {/* FULLSCREEN IMAGE VIEWER */}

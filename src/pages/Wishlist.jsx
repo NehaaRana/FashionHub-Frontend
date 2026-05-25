@@ -4,10 +4,13 @@ import PageHeader from "../components/PageHeader";
 import ProductCard from "../components/ProductCard";
 import { getCurrentUser, getUserWishlist,deleteWishlist } from "../services/api";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const Wishlist = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchWishlist();
@@ -95,7 +98,9 @@ const Wishlist = () => {
                   product={p}
                   delay={0.05 * i}
                   isWishlisted={true}
-                   onWishlist={() => removeWishlist(p.wid)}
+                  onWishlist={() => removeWishlist(p.wid)}
+                  onClick={() => navigate(`/product/${p.pid}`)}
+
                 />
               ))}
             </div>

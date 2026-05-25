@@ -5,6 +5,5 @@ export const userNav = [
   { label: "My Orders", to: "/dashboard/orders", icon: ShoppingBag },
   { label: "Wishlist", to: "/dashboard/wishlist", icon: Heart },
   { label: "Coupons", to: "/dashboard/coupons", icon: Tag },
-  { label: "Addresses", to: "/dashboard/addresses", icon: MapPin },
   { label: "Profile", to: "/dashboard/profile", icon: User },
 ];
