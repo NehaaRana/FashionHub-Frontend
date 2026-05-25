@@ -43,26 +43,26 @@ const NewArrivals = () => {
 
       const updatedProducts = activeProducts.map((p) => {
 
-  let parsedImages = null;
+        let parsedImages = null;
 
-  try {
-    parsedImages = p.productImages
-      ? JSON.parse(p.productImages)
-      : null;
-  } catch (error) {
-    console.log("Image parse error", error);
-  }
+        try {
+          parsedImages = p.productImages
+            ? JSON.parse(p.productImages)
+            : null;
+        } catch (error) {
+          console.log("Image parse error", error);
+        }
 
-  return {
-    ...p,
+        return {
+          ...p,
 
-    // gallery images
-    extraImages: parsedImages?.gallery || [],
+          // gallery images
+          extraImages: parsedImages?.gallery || [],
 
-    // color wise images
-    colorImages: parsedImages?.colors || {},
-  };
-});
+          // color wise images
+          colorImages: parsedImages?.colors || {},
+        };
+      });
 
       setProducts(updatedProducts);
     } catch (error) {
