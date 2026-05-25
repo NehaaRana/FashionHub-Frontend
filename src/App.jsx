@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes,Navigate  } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -39,7 +39,7 @@ import ProductDetails from "./pages/ProductDetails";
 
 function App() {
 
-   const role = localStorage.getItem("role"); // define role
+  const role = localStorage.getItem("role"); // define role
   return (
     <BrowserRouter>
       <Routes>
@@ -59,26 +59,26 @@ function App() {
           <Route path="/payment" element={<Payment />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
 
-             {/* PRODUCT DETAILS PAGE */}
+          {/* PRODUCT DETAILS PAGE */}
           <Route path="/product/:id" element={<ProductDetails />} />
 
-          
+
           {/* <Route path="/admin/categories" element={<CategoryManagement />} />
           <Route path="/admin/coupons" element={<CouponManagement />} /> */}
-   
+
         </Route>
-          <Route path="/admin/customers" element={<UserManagement />} />
-          <Route path="/admin/vendors" element={<VendorManagement />} />
-          <Route path="/admin/orders" element={<OrdersManagement />} />
-          <Route path="/admin/products" element={<AllProductManagement />} />
-       
+        <Route path="/admin/customers" element={<UserManagement />} />
+        <Route path="/admin/vendors" element={<VendorManagement />} />
+        <Route path="/admin/orders" element={<OrdersManagement />} />
+        <Route path="/admin/products" element={<AllProductManagement />} />
+
         <Route path="/admin/categories" element={<CategoryManagement />} />
         <Route path="/admin/coupons" element={<CouponManagement />} />
         <Route path="/vendor/products" element={<ProductManagement />} />
         <Route path="/vendor/reviews" element={<ReviewManagement />} />
         <Route path="/vendor/orders" element={<VendorOrdersManagement />} />
         <Route path="/vendor/settings" element={<VendorSettings />} />
-         {/* Role-Based Dashboard Route */}
+        {/* Role-Based Dashboard Route */}
         <Route
           path="/dashboard"
           element={
@@ -91,18 +91,18 @@ function App() {
             )
           }
         />
-  
-          {/* Redirect Vendor URL */}
-<Route
-  path="/vendor/dashboard"
-  element={<Navigate to="/dashboard" replace />}
-/>
 
-{/* Redirect Admin URL */}
-<Route
-  path="/admin"
-  element={<Navigate to="/dashboard" replace />}
-/>
+        {/* Redirect Vendor URL */}
+        <Route
+          path="/vendor/dashboard"
+          element={<Navigate to="/dashboard" replace />}
+        />
+
+        {/* Redirect Admin URL */}
+        <Route
+          path="/admin"
+          element={<Navigate to="/dashboard" replace />}
+        />
 
         {/* User */}
         {/* <Route
