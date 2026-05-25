@@ -9,10 +9,16 @@ import {
 
 const navLinks = [
   { label: "New Arrivals", to: "/new-arrivals" },
-  { label: "Summer Sale", to: "/summer-sale" },
-  { label: "Winter Collection", to: "/winter-collection" },
-  { label: "Festival Combos", to: "/festival-combos" },
-  { label: "Coupons", to: "/coupons" },
+   { label: "Western ", to: "/western-wear" },
+  { label: "Ethnic ", to: "/ethnic-wear" },
+  { label: "Dresses", to: "/dresses" },
+  { label: "Tops", to: "/tops" },
+  { label: "Bottom ", to: "/bottom-wear" },
+  { label: "Winter", to: "/winter-wear" },
+  // { label: "Summer Sale", to: "/summer-sale" },
+  // { label: "Winter Collection", to: "/winter-collection" },
+  // { label: "Festival Combos", to: "/festival-combos" },
+  // { label: "Coupons", to: "/coupons" },
 ];
 
 const Navbar = () => {

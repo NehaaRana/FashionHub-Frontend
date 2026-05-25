@@ -4,6 +4,12 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Layout from "./components/Layout";
 import NewArrivals from "./pages/NewArrivals";
+import WesternWear from "./pages/WesternWear";
+import EthnicWear from "./pages/EthnicWear";
+import Dresses from "./pages/Dresses";
+import Tops from "./pages/Tops";
+import BottomWear from "./pages/BottomWear";
+import WinterWear from "./pages/WinterWear";
 import AdminDashboard from "./pages/AdminDashboard";
 import UserDashboard from "./pages/UserDashboard";
 import VendorDashboard from "./pages/VendorDashboard";
@@ -49,6 +55,14 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/vendor-register" element={<VendorRegister />} />
           <Route path="/new-arrivals" element={<NewArrivals />} />
+            {/* NEW CATEGORY PAGES */}
+
+          <Route path="/western-wear" element={<WesternWear />} />
+          <Route path="/ethnic-wear" element={<EthnicWear />} />
+          <Route path="/dresses" element={<Dresses />} />
+          <Route path="/tops" element={<Tops />} />
+          <Route path="/bottom-wear" element={<BottomWear />} />
+          <Route path="/winter-wear" element={<WinterWear />} />
           <Route path="/summer-sale" element={<SummerSale />} />
           <Route path="/winter-collection" element={<WinterCollection />} />
           <Route path="/festival-combos" element={<FestivalCombos />} />
@@ -148,7 +162,7 @@ function App() {
         <Route path="/dashboard/orders" element={<UserOrders />} />
         <Route path="/dashboard/wishlist" element={<UserWishlist />} />
         <Route path="/dashboard/coupons" element={<UserCoupons />} />
-        <Route path="/dashboard/addresses" element={<UserAddresses />} />
+        {/* <Route path="/dashboard/addresses" element={<UserAddresses />} /> */}
         <Route path="/dashboard/profile" element={<UserProfile />} />
       </Routes>
     </BrowserRouter>
