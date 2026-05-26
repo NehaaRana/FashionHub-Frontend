@@ -20,18 +20,26 @@ import {
   DollarSign,
   TrendingUp,
   List,
+  ClipboardList,
 } from "lucide-react";
 
 const items = [
   { label: "Overview", to: "/admin", icon: LayoutDashboard },
+   { label: "Categories", to: "/admin/categories", icon: List },
+   { label: "Products", to: "/admin/products", icon: Package },
+  { label: "Orders", to: "/admin/orders", icon: ShoppingCart },
   { label: "Customers", to: "/admin/customers", icon: Users },
   { label: "Vendors", to: "/admin/vendors", icon: Store },
-  { label: "Products", to: "/admin/products", icon: Package },
-  { label: "Categories", to: "/admin/categories", icon: List },
-  { label: "Orders", to: "/admin/orders", icon: ShoppingCart },
+   {
+      label: "Vendor Applications",
+      to: "/admin/vendor-applications",
+      icon: ClipboardList,
+      badgeKey: "vendorApplications"
+    },
+   
   { label: "Coupons", to: "/admin/coupons", icon: Tag },
-  { label: "Analytics", to: "/admin/analytics", icon: BarChart3 },
-  { label: "Settings", to: "/admin/settings", icon: Settings },
+  // { label: "Analytics", to: "/admin/analytics", icon: BarChart3 },
+  // { label: "Settings", to: "/admin/settings", icon: Settings },
 ];
 
 // const recentOrders = [
