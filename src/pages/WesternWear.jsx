@@ -32,7 +32,8 @@ const WesternWear = () => {
       const filtered = res.data.filter(
         (p) =>
           p.isActive === true &&
-          p.categoryName?.toLowerCase().includes("western")
+          p.categoryName?.toLowerCase().includes("western") ||
+          p.categoryName?.toLowerCase().includes("casual")
       );
 
       setProducts(filtered);

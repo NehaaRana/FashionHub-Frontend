@@ -35,7 +35,10 @@ const Tops = () => {
       const filtered = res.data.filter(
         (p) =>
           p.isActive === true &&
-          p.categoryName?.toLowerCase().includes("top")
+          p.categoryName?.toLowerCase().includes("top") ||
+          p.categoryName?.toLowerCase().includes("t-shirt") ||
+          p.categoryName?.toLowerCase().includes("shirt") ||
+          p.categoryName?.toLowerCase().includes("blouse")
       );
 
       setProducts(filtered);

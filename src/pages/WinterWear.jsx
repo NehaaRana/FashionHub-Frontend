@@ -38,7 +38,9 @@ const WinterWear = () => {
           (
             p.categoryName?.toLowerCase().includes("winter") ||
             p.categoryName?.toLowerCase().includes("hoodie") ||
-            p.categoryName?.toLowerCase().includes("jacket")
+            p.categoryName?.toLowerCase().includes("jacket") ||
+            p.season?.toLowerCase().includes("winter")
+
           )
       );
 

@@ -35,7 +35,9 @@ const Dresses = () => {
       const filtered = res.data.filter(
         (p) =>
           p.isActive === true &&
-          p.categoryName?.toLowerCase().includes("dress")
+          p.categoryName?.toLowerCase().includes("dress") ||
+          p.categoryName?.toLowerCase().includes("gown") ||
+          p.categoryName?.toLowerCase().includes("one piece")
       );
 
       setProducts(filtered);

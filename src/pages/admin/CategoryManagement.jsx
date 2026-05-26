@@ -241,9 +241,24 @@ const AdminCategories = () => {
                   <tr key={c.id} className="border-t border-border hover:bg-secondary/30 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-sm bg-accent/15 text-accent flex items-center justify-center font-display font-semibold">
+                        {/* <div className="h-10 w-10 rounded-sm bg-accent/15 text-accent flex items-center justify-center font-display font-semibold">
                           {c.categoryName.charAt(0)}
-                        </div>
+                        </div> */}
+                        {/* First Letter Circle */}
+    <div className="h-10 w-10 rounded-sm bg-accent/15 text-accent flex items-center justify-center font-display font-semibold">
+      {c.categoryName.charAt(0)}
+    </div>
+
+    {/* Full Category Name */}
+    <div>
+      <p className="font-body text-sm font-semibold text-foreground">
+        {c.categoryName}
+      </p>
+
+      <p className="text-xs text-muted-foreground">
+        {c.occasion}
+      </p>
+    </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 font-body text-sm text-foreground">{c.occasion}</td>

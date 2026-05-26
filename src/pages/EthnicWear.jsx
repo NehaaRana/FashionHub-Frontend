@@ -34,7 +34,10 @@ const EthnicWear = () => {
       const filtered = res.data.filter(
         (p) =>
           p.isActive === true &&
-          p.categoryName?.toLowerCase().includes("ethnic")
+          p.categoryName?.toLowerCase().includes("ethnic")||
+          p.categoryName?.toLowerCase().includes("saree") ||
+          p.categoryName?.toLowerCase().includes("kurti") ||
+          p.categoryName?.toLowerCase().includes("lehenga")
       );
 
       setProducts(filtered);
