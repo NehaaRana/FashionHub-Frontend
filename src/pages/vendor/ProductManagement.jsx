@@ -470,6 +470,7 @@ const ProductManagement = () => {
     "Black",
     "White",
     "Blue",
+    "Beige",
     "Green",
     "Pink",
     "Yellow",

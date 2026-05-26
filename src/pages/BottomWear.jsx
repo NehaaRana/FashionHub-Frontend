@@ -38,7 +38,9 @@ const BottomWear = () => {
           (
             p.categoryName?.toLowerCase().includes("bottom") ||
             p.categoryName?.toLowerCase().includes("jeans") ||
-            p.categoryName?.toLowerCase().includes("pants")
+            p.categoryName?.toLowerCase().includes("pants") ||
+            p.categoryName?.toLowerCase().includes("trouser") ||
+            p.categoryName?.toLowerCase().includes("legging")
           )
       );
 
