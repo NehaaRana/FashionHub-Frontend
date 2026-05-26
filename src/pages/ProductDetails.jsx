@@ -199,21 +199,52 @@ const ProductDetails = () => {
     }
   };
 
+  const checkUserAccess = () => {
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // NOT LOGIN
+  if (!user) {
+
+    Swal.fire({
+      icon: "warning",
+      title: "Login Required",
+      text: "Please login first!",
+    });
+
+    return false;
+  }
+
+  // BLOCK ADMIN & VENDOR
+  if (Number(user.gid) !== 1) {
+
+    Swal.fire({
+      icon: "warning",
+      title: "Access Denied",
+      text: "Only users can perform this action",
+    });
+
+    return false;
+  }
+
+  return true;
+};
   // ADD TO CART
   const handleAddToCart = async () => {
+  if (!checkUserAccess()) return;
 
     const user = JSON.parse(localStorage.getItem("user"));
 
-    if (!user) {
+    // if (!user) {
 
-      Swal.fire({
-        icon: "warning",
-        title: "Login Required",
-        text: "Please login first!",
-      });
+    //   Swal.fire({
+    //     icon: "warning",
+    //     title: "Login Required",
+    //     text: "Please login first!",
+    //   });
 
-      return;
-    }
+    //   return;
+    // }
 
     try {
 
@@ -268,18 +299,19 @@ const ProductDetails = () => {
   // WISHLIST
   const handleWishlist = async () => {
 
+    if (!checkUserAccess()) return;
     const user = JSON.parse(localStorage.getItem("user"));
 
-    if (!user) {
+    // if (!user) {
 
-      Swal.fire({
-        icon: "warning",
-        title: "Login Required",
-        text: "Please login first!",
-      });
+    //   Swal.fire({
+    //     icon: "warning",
+    //     title: "Login Required",
+    //     text: "Please login first!",
+    //   });
 
-      return;
-    }
+    //   return;
+    // }
 
     try {
 
@@ -413,20 +445,21 @@ const ProductDetails = () => {
 
   const handleReviewSubmit = async () => {
 
+    if (!checkUserAccess()) return;
     const user = JSON.parse(
       localStorage.getItem("user")
     );
 
-    if (!user) {
+    // if (!user) {
 
-      Swal.fire({
-        icon: "warning",
-        title: "Login Required",
-        text: "Please login first!",
-      });
+    //   Swal.fire({
+    //     icon: "warning",
+    //     title: "Login Required",
+    //     text: "Please login first!",
+    //   });
 
-      return;
-    }
+    //   return;
+    // }
 
     try {
 

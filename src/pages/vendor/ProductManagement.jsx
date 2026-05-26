@@ -157,7 +157,7 @@ const ProductManagement = () => {
 
     setMainPreview(null);
     setExtraPreviews([]);
-
+    setColorPreviews({});
     setModalOpen(true);
   };
 
@@ -176,10 +176,13 @@ const ProductManagement = () => {
       galleryImages = parsedData.gallery || [];
 
       parsedColorImages = parsedData.colors || {};
+      console.log("PARSED GALLERY:", galleryImages);
+      console.log("PARSED COLORS:", parsedColorImages);
+
 
     } catch (err) {
 
-      console.log(err);
+      console.log("JSON PARSE ERROR:", err);
 
       parsedColorImages = {};
       galleryImages = [];
@@ -190,7 +193,8 @@ const ProductManagement = () => {
     setForm({
       ...p,
       image: null,
-      images: [],
+      // images: [],
+      images: galleryImages,
       colorImages: parsedColorImages,
     });
 
@@ -253,18 +257,10 @@ const ProductManagement = () => {
       formData.append("Stock", form.stock);
       formData.append("IsActive", form.isActive);
 
-      if (form.image) {
-        formData.append("Image", form.image);
-      }
-
-      if (form.images && form.images.length > 0) {
-
-        for (let i = 0; i < form.images.length; i++) {
-          formData.append("Images", form.images[i]);
-        }
-      }
-
-      const colorMap = {};
+      // if (form.image) {
+      //   formData.append("Image", form.image);
+      // }
+      // // const colorMap = {};
 
       // for (const color in form.colorImages) {
 
@@ -274,13 +270,64 @@ const ProductManagement = () => {
 
       //   files.forEach((file) => {
 
-      //     formData.append("Images", file);
+      //     // OLD IMAGE
+      //     if (typeof file === "string") {
 
-      //     colorMap[color].push(file.name);
+      //       colorMap[color].push(file);
 
+      //     }
+
+      //     // NEW IMAGE
+      //     else {
+
+      //       formData.append("Images", file);
+
+      //       colorMap[color].push(file.name);
+      //     }
       //   });
       // }
+      // formData.append(
+      //   "GalleryImagesJson",
+      //   JSON.stringify(galleryImages)
+      // );
+      // formData.append(
+      //   "ColorImagesJson",
+      //   JSON.stringify(colorMap)
+      // );
 
+
+      if (form.image) {
+        formData.append("Image", form.image);
+      }
+
+      // GALLERY + COLOR IMAGES
+      const galleryImages = [];
+      const colorMap = {};
+
+      // NORMAL GALLERY IMAGES
+      if (form.images && form.images.length > 0) {
+
+        form.images.forEach((file) => {
+
+          // OLD IMAGE
+          if (typeof file === "string") {
+
+            galleryImages.push(file);
+          }
+
+          // NEW IMAGE
+          else {
+
+            formData.append("Images", file);
+
+            galleryImages.push(file.name);
+            // galleryImages.push(`/images/${file.name}`);
+            // galleryImages.push(`/images/${file.name}`);
+          }
+        });
+      }
+
+      // COLOR WISE IMAGES
       for (const color in form.colorImages) {
 
         const files = form.colorImages[color];
@@ -289,35 +336,43 @@ const ProductManagement = () => {
 
         files.forEach((file) => {
 
-          // OLD IMAGE PATH
+          // OLD IMAGE
           if (typeof file === "string") {
 
             colorMap[color].push(file);
-
           }
 
-          // NEW FILE
+          // NEW IMAGE
           else {
 
             formData.append("Images", file);
 
             colorMap[color].push(file.name);
-
+            // colorMap[color].push(`/images/${file.name}`);
+            // colorMap[color].push(`/images/${file.name}`);
           }
-
         });
       }
+
+      formData.append(
+        "GalleryImagesJson",
+        JSON.stringify(galleryImages)
+      );
+
       formData.append(
         "ColorImagesJson",
         JSON.stringify(colorMap)
       );
 
-
-
       // ✅ MOVE API CALL HERE
 
       if (editing) {
+        console.log("FINAL GALLERY:", galleryImages);
+        console.log("FINAL COLOR MAP:", colorMap);
 
+        for (let pair of formData.entries()) {
+          console.log(pair[0], pair[1]);
+        }
         await updateProduct(editing.id, formData);
 
         Swal.fire({
@@ -928,7 +983,7 @@ const ProductManagement = () => {
                             className="w-full h-32 object-cover rounded-xl"
                           />
 
-                          <button
+                          {/* <button
                             type="button"
                             onClick={() => {
 
@@ -952,6 +1007,37 @@ const ProductManagement = () => {
                               setExtraPreviews(
                                 updatedPreview
                               );
+                            }}
+                            className="absolute top-2 right-2 bg-red-500 text-white w-7 h-7 rounded-full"
+                          >
+                            ×
+                          </button> */}
+
+                          <button
+                            type="button"
+                            onClick={() => {
+
+                              setForm((prev) => {
+
+                                const updatedImages = [...(prev.images || [])];
+
+                                updatedImages.splice(index, 1);
+
+                                return {
+                                  ...prev,
+                                  images: updatedImages,
+                                };
+                              });
+
+                              setExtraPreviews((prev) => {
+
+                                const updatedPreview = [...prev];
+
+                                updatedPreview.splice(index, 1);
+
+                                return updatedPreview;
+                              });
+
                             }}
                             className="absolute top-2 right-2 bg-red-500 text-white w-7 h-7 rounded-full"
                           >
@@ -995,8 +1081,27 @@ const ProductManagement = () => {
                             onChange={(e) => {
 
                               const files = Array.from(e.target.files);
+                              // setForm((prev) => ({
+                              //   ...prev,
+                              //   colorImages: {
+                              //     ...prev.colorImages,
+                              //     [color]: [
+                              //       ...(prev.colorImages[color] || []),
+                              //       ...files,
+                              //     ],
+                              //   },
+                              // }));
+
                               setForm((prev) => ({
                                 ...prev,
+
+                                // ADD TO GALLERY ALSO
+                                images: [
+                                  ...(prev.images || []),
+                                  ...files,
+                                ],
+
+                                // ADD TO COLOR
                                 colorImages: {
                                   ...prev.colorImages,
                                   [color]: [
@@ -1005,7 +1110,6 @@ const ProductManagement = () => {
                                   ],
                                 },
                               }));
-
                               const previews = files.map((file) =>
                                 URL.createObjectURL(file)
                               );
@@ -1060,32 +1164,189 @@ const ProductManagement = () => {
 
                                 <button
                                   type="button"
+                                  // onClick={() => {
+
+                                  //   // REMOVE PREVIEW
+                                  //   const updatedPreviews =
+                                  //     [...colorPreviews[color]];
+
+                                  //   updatedPreviews.splice(index, 1);
+
+                                  //   setColorPreviews((prev) => ({
+                                  //     ...prev,
+                                  //     [color]: updatedPreviews,
+                                  //   }));
+
+                                  //   // REMOVE FILE
+                                  //   // const updatedFiles =
+                                  //   //   [...(form.colorImages[color] || [])];
+
+                                  //   // updatedFiles.splice(index, 1);
+
+                                  //   // setForm((prev) => ({
+                                  //   //   ...prev,
+                                  //   //   colorImages: {
+                                  //   //     ...prev.colorImages,
+                                  //   //     [color]: updatedFiles,
+                                  //   //   },
+                                  //   // }));
+                                  //   const removedImage =
+                                  //     form.colorImages[color][index];
+
+                                  //   // REMOVE FROM COLOR
+                                  //   const updatedFiles =
+                                  //     [...(form.colorImages[color] || [])];
+
+                                  //   updatedFiles.splice(index, 1);
+
+                                  //   // REMOVE FROM GALLERY
+                                  //   // const updatedGallery =
+                                  //   //   (form.images || []).filter(
+                                  //   //     (img) => img !== removedImage
+                                  //   //   );
+
+                                  //   // CHECK IF IMAGE EXISTS IN OTHER COLORS
+                                  //   let stillUsed = false;
+
+                                  //   for (const clr in form.colorImages) {
+
+                                  //     if (clr === color) continue;
+
+                                  //     if (
+                                  //       (form.colorImages[clr] || []).includes(removedImage)
+                                  //     ) {
+                                  //       stillUsed = true;
+                                  //       break;
+                                  //     }
+                                  //   }
+
+                                  //   // REMOVE FROM GALLERY ONLY IF UNUSED
+                                  //   let updatedGallery = [...(form.images || [])];
+
+                                  //   if (!stillUsed) {
+
+                                  //     const removeIndex =
+                                  //       updatedGallery.indexOf(removedImage);
+
+                                  //     if (removeIndex > -1) {
+                                  //       updatedGallery.splice(removeIndex, 1);
+                                  //     }
+                                  //   }
+
+                                  //   setForm((prev) => ({
+                                  //     ...prev,
+
+                                  //     images: updatedGallery,
+
+                                  //     colorImages: {
+                                  //       ...prev.colorImages,
+                                  //       [color]: updatedFiles,
+                                  //     },
+                                  //   }));
+                                  // }}
                                   onClick={() => {
 
+                                    const removedImage =
+                                      form.colorImages[color][index];
+
                                     // REMOVE PREVIEW
-                                    const updatedPreviews =
-                                      [...colorPreviews[color]];
+                                    setColorPreviews((prev) => {
 
-                                    updatedPreviews.splice(index, 1);
+                                      const updated = [...(prev[color] || [])];
 
-                                    setColorPreviews((prev) => ({
-                                      ...prev,
-                                      [color]: updatedPreviews,
-                                    }));
+                                      updated.splice(index, 1);
 
-                                    // REMOVE FILE
-                                    const updatedFiles =
-                                      [...(form.colorImages[color] || [])];
+                                      return {
+                                        ...prev,
+                                        [color]: updated,
+                                      };
+                                    });
 
-                                    updatedFiles.splice(index, 1);
+                                    setForm((prev) => {
 
-                                    setForm((prev) => ({
-                                      ...prev,
-                                      colorImages: {
+                                      // REMOVE FROM CURRENT COLOR
+                                      const updatedColorFiles =
+                                        [...(prev.colorImages[color] || [])];
+
+                                      updatedColorFiles.splice(index, 1);
+
+                                      // UPDATED COLOR MAP
+                                      const updatedColorImages = {
                                         ...prev.colorImages,
-                                        [color]: updatedFiles,
-                                      },
-                                    }));
+                                        [color]: updatedColorFiles,
+                                      };
+
+                                      // CHECK IF IMAGE EXISTS IN OTHER COLORS
+                                      let stillUsed = false;
+
+                                      for (const clr in updatedColorImages) {
+
+                                        if (clr === color) continue;
+
+                                        const exists =
+                                          (updatedColorImages[clr] || []).some(
+                                            (img) => {
+
+                                              // STRING IMAGE
+                                              if (
+                                                typeof img === "string" &&
+                                                typeof removedImage === "string"
+                                              ) {
+                                                return img === removedImage;
+                                              }
+
+                                              // FILE IMAGE
+                                              if (
+                                                typeof img !== "string" &&
+                                                typeof removedImage !== "string"
+                                              ) {
+                                                return img.name === removedImage.name;
+                                              }
+
+                                              return false;
+                                            }
+                                          );
+
+                                        if (exists) {
+                                          stillUsed = true;
+                                          break;
+                                        }
+                                      }
+
+                                      // REMOVE FROM GALLERY ONLY IF UNUSED
+                                      let updatedGallery = [...(prev.images || [])];
+
+                                      if (!stillUsed) {
+
+                                        updatedGallery = updatedGallery.filter((img) => {
+
+                                          // STRING IMAGE
+                                          if (
+                                            typeof img === "string" &&
+                                            typeof removedImage === "string"
+                                          ) {
+                                            return img !== removedImage;
+                                          }
+
+                                          // FILE IMAGE
+                                          if (
+                                            typeof img !== "string" &&
+                                            typeof removedImage !== "string"
+                                          ) {
+                                            return img.name !== removedImage.name;
+                                          }
+
+                                          return true;
+                                        });
+                                      }
+
+                                      return {
+                                        ...prev,
+                                        images: updatedGallery,
+                                        colorImages: updatedColorImages,
+                                      };
+                                    });
+
                                   }}
                                   className="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full text-sm"
                                 >

@@ -33,14 +33,6 @@ const NewArrivals = () => {
         (p) => p.isActive === true
       );
 
-      // setProducts(activeProducts);
-      // const updatedProducts = activeProducts.map((p) => ({
-      //   ...p,
-      //   extraImages: p.productImages
-      //     ? JSON.parse(p.productImages)
-      //     : [],
-      // }));
-
       const updatedProducts = activeProducts.map((p) => {
 
         let parsedImages = null;
@@ -83,22 +75,90 @@ const NewArrivals = () => {
     }
   };
 
-  // ADD TO CART
-  const handleAddToCart = async (product) => {
-    // check login
+  const checkUserAccess = () => {
+
     const user = JSON.parse(localStorage.getItem("user"));
 
+    // NOT LOGIN
     if (!user) {
+
       Swal.fire({
         icon: "warning",
         title: "Login Required",
         text: "Please login first!",
       });
 
-      return;
+      return false;
     }
 
+    // ONLY USER CAN ACCESS
+    if (Number(user.gid) !== 1) {
+
+      Swal.fire({
+        icon: "warning",
+        title: "Access Denied",
+        text: "Only users can perform this action",
+      });
+
+      return false;
+    }
+
+    return true;
+  };
+  // ADD TO CART
+  // const handleAddToCart = async (product) => {
+  //   // check login
+  //   const user = JSON.parse(localStorage.getItem("user"));
+
+  //   if (!user) {
+  //     Swal.fire({
+  //       icon: "warning",
+  //       title: "Login Required",
+  //       text: "Please login first!",
+  //     });
+
+  //     return;
+  //   }
+
+  //   try {
+  //     const cartData = {
+  //       cartId: 0,
+  //       uid: Number(user.uid),
+  //       pid: Number(product.pid),
+  //       sizeSelected: product.size || "M",
+  //       quantity: "1",
+  //       addedAt: new Date().toISOString(),
+  //       colorSelected: product.color || "Black",
+  //     };
+  //     await addToCart(cartData);
+  //     window.dispatchEvent(new CustomEvent("cartUpdated"));
+
+  //     Swal.fire({
+  //       icon: "success",
+  //       title: "Added!",
+  //       text: "Product added to cart successfully",
+  //       timer: 1500,
+  //       showConfirmButton: false,
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text:
+  //         error.response?.data || "Wishlist action failed",
+  //     });
+  //   }
+  // };
+  const handleAddToCart = async (product) => {
+
+    if (!checkUserAccess()) return;
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
     try {
+
       const cartData = {
         cartId: 0,
         uid: Number(user.uid),
@@ -108,8 +168,12 @@ const NewArrivals = () => {
         addedAt: new Date().toISOString(),
         colorSelected: product.color || "Black",
       };
+
       await addToCart(cartData);
-      window.dispatchEvent(new CustomEvent("cartUpdated"));
+
+      window.dispatchEvent(
+        new CustomEvent("cartUpdated")
+      );
 
       Swal.fire({
         icon: "success",
@@ -118,31 +182,109 @@ const NewArrivals = () => {
         timer: 1500,
         showConfirmButton: false,
       });
+
     } catch (error) {
+
       console.log(error);
 
       Swal.fire({
         icon: "error",
         title: "Error",
         text:
-          error.response?.data || "Wishlist action failed",
+          error.response?.data ||
+          "Cart action failed",
       });
     }
   };
+  // const handleWishlist = async (product) => {
+
+  //   const user = JSON.parse(localStorage.getItem("user"));
+
+  //   if (!user) {
+  //     Swal.fire({
+  //       icon: "warning",
+  //       title: "Login Required",
+  //       text: "Please login first!",
+  //     });
+
+  //     return;
+  //   }
+
+  //   try {
+
+  //     const existingItem = wishlist.find(
+  //       (item) => item.pid === product.pid
+  //     );
+
+  //     // REMOVE
+  //     if (existingItem) {
+
+  //       await deleteWishlist(existingItem.wid);
+
+  //       setWishlist((prev) =>
+  //         prev.filter((item) => item.wid !== existingItem.wid)
+  //       );
+
+  //       // UPDATE NAVBAR
+  //       window.dispatchEvent(
+  //         new CustomEvent("wishlistUpdated")
+  //       );
+
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "Removed",
+  //         text: "Removed from wishlist",
+  //         timer: 1200,
+  //         showConfirmButton: false,
+  //       });
+
+  //     }
+
+  //     // ADD
+  //     else {
+
+  //       const wishlistData = {
+  //         wid: 0,
+  //         uid: Number(user.uid),
+  //         pid: Number(product.pid),
+  //       };
+
+  //       await addToWishlist(wishlistData);
+
+  //       fetchWishlist();
+
+  //       // UPDATE NAVBAR
+  //       window.dispatchEvent(
+  //         new CustomEvent("wishlistUpdated")
+  //       );
+
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "Added",
+  //         text: "Added to wishlist",
+  //         timer: 1200,
+  //         showConfirmButton: false,
+  //       });
+  //     }
+
+  //   } catch (error) {
+
+  //     console.log(error);
+
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: "Wishlist action failed",
+  //     });
+  //   }
+  // };
+
 
   const handleWishlist = async (product) => {
 
+    if (!checkUserAccess()) return;
+
     const user = JSON.parse(localStorage.getItem("user"));
-
-    if (!user) {
-      Swal.fire({
-        icon: "warning",
-        title: "Login Required",
-        text: "Please login first!",
-      });
-
-      return;
-    }
 
     try {
 
@@ -156,10 +298,11 @@ const NewArrivals = () => {
         await deleteWishlist(existingItem.wid);
 
         setWishlist((prev) =>
-          prev.filter((item) => item.wid !== existingItem.wid)
+          prev.filter(
+            (item) => item.wid !== existingItem.wid
+          )
         );
 
-        // UPDATE NAVBAR
         window.dispatchEvent(
           new CustomEvent("wishlistUpdated")
         );
@@ -187,7 +330,6 @@ const NewArrivals = () => {
 
         fetchWishlist();
 
-        // UPDATE NAVBAR
         window.dispatchEvent(
           new CustomEvent("wishlistUpdated")
         );
@@ -212,7 +354,6 @@ const NewArrivals = () => {
       });
     }
   };
-
   const startImageSlider = (product) => {
 
     if (hoveredProduct?.pid === product.pid) return;
@@ -315,11 +456,6 @@ const NewArrivals = () => {
               />
             ))}
           </div>
-          {/* <div className="text-center mt-14">
-            <Button variant="hero" size="lg">
-              Load More
-            </Button>
-          </div> */}
           {/* LOAD MORE BUTTON */}
           {visibleCount < products.length && (
 
