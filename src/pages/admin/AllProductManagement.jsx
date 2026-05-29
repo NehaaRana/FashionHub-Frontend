@@ -40,32 +40,8 @@ const AllProductManagement = () => {
     }
   };
 
-  // const fetchProducts = async () => {
-  //   try {
-  //     const res = await axios.get("https://localhost:7106/api/Products");
-
-  //     const formatted = res.data.map((item) => ({
-  //       id: item.pid,
-  //       productName: item.productName,
-  //       price: item.price,
-  //       discount: item.discount,
-  //       stock: item.stock,
-  //       color: item.color,
-  //       size: item.size,
-  //       image: item.productImage,
-  //       isActive: item.isActive,
-  //       created: new Date(item.createdAt).toLocaleDateString(),
-  //     }));
-
-  //     setRows(formatted);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
   // Search + Filter
- 
- 
+  
   const fetchProducts = async () => {
     try {
       const res = await getAllProducts();
@@ -115,7 +91,6 @@ const AllProductManagement = () => {
   const filterChips = ["All", "Active", "Hidden"];
 
   return (
-    // <DashboardLayout role="Admin" userName="Anika Malhotra" items={adminItems}>
     <DashboardLayout
         role="Admin"
         userName={adminName}
@@ -140,7 +115,7 @@ const AllProductManagement = () => {
           search={search}
           onSearch={setSearch}
           searchPlaceholder="Search products..."
-          onAdd={null}   // ❌ No add button
+          onAdd={null}   
           addLabel=""
         />
 

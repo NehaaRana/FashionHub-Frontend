@@ -1,6 +1,6 @@
 import { Heart, ShoppingBag, Search, Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useCallback } from "react";
 import {
   getUserWishlist,
@@ -9,7 +9,7 @@ import {
 
 const navLinks = [
   { label: "New Arrivals", to: "/new-arrivals" },
-   { label: "Western ", to: "/western-wear" },
+  { label: "Western ", to: "/western-wear" },
   { label: "Ethnic ", to: "/ethnic-wear" },
   { label: "Dresses", to: "/dresses" },
   { label: "Tops", to: "/tops" },
@@ -32,6 +32,11 @@ const Navbar = () => {
   const [wishlistCount, setWishlistCount] = useState(0);
 
   const [cartCount, setCartCount] = useState(0);
+  const [showSearch, setShowSearch] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const navigate = useNavigate();
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
@@ -42,75 +47,6 @@ const Navbar = () => {
       setIsLoggedIn(true);
     }
   }, []);
-
-  // useEffect(() => {
-
-  //   const fetchCounts = async () => {
-
-  //     try {
-
-  //       const storedUser = JSON.parse(localStorage.getItem("user"));
-
-  //       if (!storedUser) return;
-
-  //       const uid = storedUser.uid;
-
-  //       // ================= WISHLIST COUNT =================
-  //       const wishlistRes = await getUserWishlist(uid);
-
-  //       setWishlistCount(wishlistRes.data.length);
-
-  //       // ================= CART COUNT =================
-  //       const cartRes = await getCarts();
-
-  //       // filter current user cart items
-  //       const userCartItems = cartRes.data.filter(
-  //         (item) => item.uid === uid
-  //       );
-
-  //       setCartCount(userCartItems.length);
-
-  //     } catch (error) {
-
-  //       console.log(error);
-
-  //     }
-  //   };
-
-  //   fetchCounts();
-
-  // }, []);
-
-  // const fetchCounts = async () => {
-
-  //   try {
-
-  //     const storedUser = JSON.parse(localStorage.getItem("user"));
-
-  //     if (!storedUser) return;
-
-  //     const uid = storedUser.uid;
-
-  //     // wishlist
-  //     const wishlistRes = await getUserWishlist(uid);
-
-  //     setWishlistCount(wishlistRes.data.length);
-
-  //     // cart
-  //     const cartRes = await getCarts();
-
-  //     const userCartItems = cartRes.data.filter(
-  //       (item) => item.uid === uid
-  //     );
-
-  //     setCartCount(userCartItems.length);
-
-  //   } catch (error) {
-
-  //     console.log(error);
-
-  //   }
-  // };
 
   const fetchCounts = useCallback(async () => {
 
@@ -161,6 +97,7 @@ const Navbar = () => {
 
     window.addEventListener("wishlistUpdated", handleUpdate);
 
+   
     return () => {
 
       window.removeEventListener("cartUpdated", handleUpdate);
@@ -170,6 +107,16 @@ const Navbar = () => {
     };
 
   }, [fetchCounts]);
+
+   const handleSearch = () => {
+
+      if (!searchQuery.trim()) return;
+
+      navigate(`/search?q=${searchQuery}`);
+
+      setShowSearch(false);
+
+    };
   return (
     <nav className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-gray-200">
       {/* <div className="w-full px-4 flex items-center justify-between h-16 lg:h-20"> */}
@@ -222,9 +169,49 @@ const Navbar = () => {
           ) : (
             // AFTER LOGIN
             <>
-              <button className="text-foreground hover:text-accent transition-colors">
+              {/* <button className="text-foreground hover:text-accent transition-colors">
                 <Search className="h-5 w-5" />
-              </button>
+              </button> */}
+              <div className="relative">
+
+                <button
+                  onClick={() => setShowSearch(!showSearch)}
+                  className="text-foreground hover:text-accent transition-colors"
+                >
+                  <Search className="h-5 w-5" />
+                </button>
+
+                {showSearch && (
+                  <div className="absolute right-0 top-10 bg-white border border-gray-200 rounded-xl shadow-xl p-3 w-72 z-50">
+
+                    <div className="flex items-center gap-2">
+
+                      <input
+                        type="text"
+                        placeholder="Search products..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleSearch();
+                          }
+                        }}
+                        className="flex-1 border rounded-lg px-3 py-2 text-sm outline-none"
+                      />
+
+                      <button
+                        onClick={handleSearch}
+                        className="bg-black text-white px-4 py-2 rounded-lg text-sm"
+                      >
+                        Go
+                      </button>
+
+                    </div>
+
+                  </div>
+                )}
+
+              </div>
 
               <div className="relative">
                 <button

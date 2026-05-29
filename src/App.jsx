@@ -41,7 +41,7 @@ import UserProfile from "./pages/user/UserProfile";
 import Payment from "./pages/Payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import ProductDetails from "./pages/ProductDetails";
-
+import Search from "./pages/Search";
 
 function App() {
 
@@ -72,6 +72,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/search" element={<Search />} />
 
           {/* PRODUCT DETAILS PAGE */}
           <Route path="/product/:id" element={<ProductDetails />} />
