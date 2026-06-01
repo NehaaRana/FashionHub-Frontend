@@ -1,28 +1,3 @@
-// import { useSearchParams } from "react-router-dom";
-
-// const Search = () => {
-
-//   const [searchParams] = useSearchParams();
-
-//   const query = searchParams.get("q");
-
-//   return (
-//     <div className="container py-10">
-
-//       <h1 className="text-3xl font-bold">
-//         Search Results
-//       </h1>
-
-//       <p className="mt-4">
-//         Searching for: {query}
-//       </p>
-
-//     </div>
-//   );
-// };
-
-// export default Search;
-
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
@@ -63,44 +38,27 @@ const Search = () => {
   const [priceRange, setPriceRange] = useState(10000);
   const [allProducts, setAllProducts] = useState([]);
 
-  // useEffect(() => {
-
-  //   fetchProducts();
-
-  //   fetchWishlist();
-
-  // }, [
-  //   query,
-  //   selectedCategories,
-  //   selectedBrands,
-  //   selectedColors,
-  //   selectedSizes,
-  //   priceRange
-  // ]);
-
   useEffect(() => {
 
-  fetchProducts();
+    fetchProducts();
 
-}, [
-  query,
-  selectedCategories,
-  selectedBrands,
-  selectedColors,
-  selectedSizes,
-  priceRange
-]);
+    fetchWishlist();
 
-useEffect(() => {
+  }, [
+    query,
+    selectedCategories,
+    selectedBrands,
+    selectedColors,
+    selectedSizes,
+    priceRange
+  ]);
 
-  fetchWishlist();
-
-}, []);
   const fetchProducts = async () => {
 
     try {
 
       const res = await getAllProducts();
+      console.log(res.data);
 
       const activeProducts = res.data.filter(
         (p) => p.isActive === true
@@ -155,7 +113,7 @@ useEffect(() => {
 
         const brandMatch =
           selectedBrands.length === 0 ||
-          selectedBrands.includes(p.vendorname);
+          selectedBrands.includes(p.vendorName);
 
         const colorMatch =
           selectedColors.length === 0 ||
@@ -176,22 +134,6 @@ useEffect(() => {
           priceMatch
         );
       });
-
-      // const categories = [
-      //   ...new Set(allProducts.map((p) => p.categoryName))
-      // ];
-
-      // const brands = [
-      //   ...new Set(allProducts.map((p) => p.vendorname))
-      // ];
-
-      // const colors = [
-      //   ...new Set(allProducts.map((p) => p.color))
-      // ];
-
-      // const sizes = [
-      //   ...new Set(allProducts.map((p) => p.size))
-      // ];
 
       setProducts(finalProducts);
       setAllProducts(updatedProducts);
@@ -396,20 +338,37 @@ useEffect(() => {
   //   ...new Set(products.map((p) => p.size))
   // ];
 
-  const categories = [
-  ...new Set(allProducts.map((p) => p.categoryName))
+  const searchedProducts = allProducts.filter((p) => {
+
+  const searchText = query.toLowerCase();
+
+  return (
+
+    p.productName?.toLowerCase().includes(searchText) ||
+
+    p.categoryName?.toLowerCase().includes(searchText) ||
+
+    p.season?.toLowerCase().includes(searchText) ||
+
+    p.description?.toLowerCase().includes(searchText)
+
+  );
+});
+
+const categories = [
+  ...new Set(searchedProducts.map((p) => p.categoryName))
 ];
 
 const brands = [
-  ...new Set(allProducts.map((p) => p.vendorname))
+  ...new Set(searchedProducts.map((p) => p.vendorName))
 ];
 
 const colors = [
-  ...new Set(allProducts.map((p) => p.color))
+  ...new Set(searchedProducts.map((p) => p.color))
 ];
 
 const sizes = [
-  ...new Set(allProducts.map((p) => p.size))
+  ...new Set(searchedProducts.map((p) => p.size))
 ];
   return (
     <>
