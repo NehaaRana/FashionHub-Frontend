@@ -201,6 +201,8 @@ export const updateCart = (id, data) =>
 export const placeOrder = (data) =>
   API.post("/Orders", data);
 
+export const updateOrderStatus = (id, data) =>
+  API.put(`/Orders/UpdateStatus/${id}`, data);
 
 // PAYMENTS
 export const createPayment = (data) =>

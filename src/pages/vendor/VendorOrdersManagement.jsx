@@ -6,7 +6,8 @@ import AdminToolbar from "../../components/admin/AdminToolBar";
 import { ShoppingBag, PackageCheck, Clock } from "lucide-react";
 import { vendorItems } from "../../components/vendor/vendorNav";
 
-import { getVendorOrders,getCurrentUser  } from "../../services/api";
+import { getVendorOrders,getCurrentUser,  updateOrderStatus
+  } from "../../services/api";
 
 const VendorOrdersManagement = () => {
   const [rows, setRows] = useState([]);
@@ -52,6 +53,22 @@ const VendorOrdersManagement = () => {
       setRows(formatted);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleStatusChange = async (orderId, status) => {
+    try {
+
+      await updateOrderStatus(orderId, {
+        orderStatus: status
+      });
+
+      fetchOrders();
+
+    } catch (error) {
+
+      console.log(error);
+
     }
   };
 
@@ -137,6 +154,7 @@ const VendorOrdersManagement = () => {
                   "Order Status",
                   "Payment",
                   "Address",
+                  "Action"
                 ].map((h) => (
                   <th
                     key={h}
@@ -181,6 +199,33 @@ const VendorOrdersManagement = () => {
 
                   <td className="px-6 py-4 whitespace-nowrap">
                     {o.address}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+
+                    {o.orderStatus === "Pending" && (
+                      <button
+                        onClick={() => handleStatusChange(o.id, "Processing")}
+                        className="px-3 py-1 bg-blue-500 text-white rounded"
+                      >
+                        Accept
+                      </button>
+                    )}
+
+                    {o.orderStatus === "Processing" && (
+                      <button
+                        onClick={() => handleStatusChange(o.id, "Delivered")}
+                        className="px-3 py-1 bg-green-500 text-white rounded"
+                      >
+                        Mark Delivered
+                      </button>
+                    )}
+
+                    {o.orderStatus === "Delivered" && (
+                      <span className="text-green-600 font-semibold">
+                        Completed
+                      </span>
+                    )}
+
                   </td>
                 </tr>
               ))}

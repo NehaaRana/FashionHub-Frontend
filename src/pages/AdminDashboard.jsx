@@ -144,7 +144,11 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
           <StatCard
             label="Total Revenue"
-            value={`₹${stats.revenue}`}
+            // value={`₹${stats.revenue.toFixed(2)}`}
+             value={`₹${stats.revenue.toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}`}
             icon={FaIndianRupeeSign}
           />
 
@@ -165,15 +169,11 @@ const AdminDashboard = () => {
             value={stats.vendors}
             icon={Store}
           />
-          {/* <StatCard label="Total Revenue" value="₹18.4L" delta="12.5%" icon={DollarSign} delay={0} />
-          <StatCard label="Orders" value="2,847" delta="8.2%" icon={ShoppingCart} delay={0.05} />
-          <StatCard label="Customers" value="14,920" delta="5.7%" icon={Users} delay={0.1} />
-          <StatCard label="Active Vendors" value="186" delta="2.1%" trend="down" icon={Store} delay={0.15} /> */}
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           {/* Recent Orders */}
-          <div className="xl:col-span-2 bg-card border border-border rounded-sm overflow-hidden animate-fade-in-up">
+          <div className="xl:col-span-2 bg-card border border-border rounded-sm   overflow-hidden animate-fade-in-up">
             <div className="flex items-center justify-between p-6 border-b border-border">
               <div>
                 <h2 className="font-display text-xl font-semibold text-foreground">Recent Orders</h2>
