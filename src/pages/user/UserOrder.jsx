@@ -32,7 +32,7 @@ const statusColor = {
 };
 
 // const tabs = ["All", "Processing", "Shipped", "Delivered", "Cancelled"];
-const tabs = ["All", "Pending", "Processing", "Shipped", "Delivered", "Cancelled"];
+const tabs = ["All", "Pending", "Processing", "Delivered"];
 const UserOrders = () => {
     const [orders, setOrders] = useState([]);
     const [user, setUser] = useState(null);

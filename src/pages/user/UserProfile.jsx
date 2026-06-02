@@ -5,6 +5,20 @@ import { userNav } from "./userNav";
 import { Camera, Mail, Phone, Calendar, Lock } from "lucide-react";
 import { getCurrentUser, updateUser } from "../../services/api";
 import Swal from "sweetalert2";
+  const Field = ({ label, value, onChange, type = "text" }) => (
+    <div>
+      <label className="font-body text-[10px] uppercase tracking-[0.18em] text-muted-foreground block mb-1.5">
+        {label}
+      </label>
+
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full px-3 py-2.5 bg-background border border-border rounded-sm font-body text-sm focus:outline-none focus:border-accent"
+      />
+    </div>
+  );
 const UserProfile = () => {
 
   const [profile, setProfile] = useState({
@@ -33,20 +47,7 @@ const UserProfile = () => {
     </div>
   );
 
-  const Field = ({ label, value, onChange, type = "text" }) => (
-    <div>
-      <label className="font-body text-[10px] uppercase tracking-[0.18em] text-muted-foreground block mb-1.5">
-        {label}
-      </label>
 
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2.5 bg-background border border-border rounded-sm font-body text-sm focus:outline-none focus:border-accent"
-      />
-    </div>
-  );
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -79,6 +80,7 @@ const UserProfile = () => {
 
   const handleSave = async () => {
     try {
+      console.log("Profile Data:", profile);
       await updateUser(user.uid, profile);
         await Swal.fire({
           icon: "success",
@@ -121,7 +123,7 @@ const UserProfile = () => {
 
             <div className="mt-6 space-y-2 text-left">
               <Row icon={Mail} text={profile.email} />
-              <Row icon={Phone} text={profile.phone} />
+              <Row icon={Phone} text={profile.mobileno} />
               <Row icon={Calendar} text="Member since 2024" />
             </div>
           </div>
@@ -194,7 +196,7 @@ const UserProfile = () => {
                 </div>
               </div>
 
-              <button onClick={handleSave} className="mt-4 bg-primary px-4 py-2">
+              <button onClick={handleSave} className="mt-4 bg-primary text-white  px-4 py-2">
                 Save Changes
               </button>
 
