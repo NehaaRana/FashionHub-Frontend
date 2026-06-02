@@ -22,21 +22,22 @@ import {
   List,
   ClipboardList,
 } from "lucide-react";
+import { FaIndianRupeeSign } from "react-icons/fa6";
 
 const items = [
   { label: "Overview", to: "/admin", icon: LayoutDashboard },
-   { label: "Categories", to: "/admin/categories", icon: List },
-   { label: "Products", to: "/admin/products", icon: Package },
+  { label: "Categories", to: "/admin/categories", icon: List },
+  { label: "Products", to: "/admin/products", icon: Package },
   { label: "Orders", to: "/admin/orders", icon: ShoppingCart },
   { label: "Customers", to: "/admin/customers", icon: Users },
   { label: "Vendors", to: "/admin/vendors", icon: Store },
-   {
-      label: "Vendor Applications",
-      to: "/admin/vendor-applications",
-      icon: ClipboardList,
-      badgeKey: "vendorApplications"
-    },
-   
+  {
+    label: "Vendor Applications",
+    to: "/admin/vendor-applications",
+    icon: ClipboardList,
+    badgeKey: "vendorApplications"
+  },
+
   { label: "Coupons", to: "/admin/coupons", icon: Tag },
   // { label: "Analytics", to: "/admin/analytics", icon: BarChart3 },
   // { label: "Settings", to: "/admin/settings", icon: Settings },
@@ -108,7 +109,7 @@ const AdminDashboard = () => {
 
         // TOTAL REVENUE
         const totalRevenue = ordersRes.data.reduce(
-          (sum, order) => sum + order.totalAmount,
+          (sum, order) => sum + Number(order.amount || 0),
           0
         );
 
@@ -144,7 +145,7 @@ const AdminDashboard = () => {
           <StatCard
             label="Total Revenue"
             value={`₹${stats.revenue}`}
-            icon={DollarSign}
+            icon={FaIndianRupeeSign}
           />
 
           <StatCard
@@ -238,9 +239,8 @@ const AdminDashboard = () => {
 
                       <td className="px-6 py-4">
                         <span
-                          className={`inline-block font-body text-[10px] uppercase tracking-[0.15em] font-semibold px-3 py-1 rounded-sm ${
-                            statusColor[o.orderStatus]
-                          }`}
+                          className={`inline-block font-body text-[10px] uppercase tracking-[0.15em] font-semibold px-3 py-1 rounded-sm ${statusColor[o.orderStatus]
+                            }`}
                         >
                           {o.orderStatus}
                         </span>

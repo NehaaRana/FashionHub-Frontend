@@ -5,6 +5,7 @@ import { useEffect, useCallback } from "react";
 import {
   getUserWishlist,
   getCarts,
+  getAllProducts,
 } from "../services/api";
 
 const navLinks = [
@@ -35,6 +36,8 @@ const Navbar = () => {
   const [showSearch, setShowSearch] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -87,6 +90,66 @@ const Navbar = () => {
 
   useEffect(() => {
 
+    fetchSearchProducts();
+
+  }, []);
+
+  const fetchSearchProducts = async () => {
+
+    try {
+
+      const res = await getAllProducts();
+
+      setAllProducts(res.data);
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
+
+  const handleSearchInput = (value) => {
+
+    setSearchQuery(value);
+
+    if (!value.trim()) {
+
+      setSearchSuggestions([]);
+
+      return;
+
+    }
+
+    const filtered = allProducts.filter((p) =>
+
+      p.productName?.toLowerCase().includes(value.toLowerCase()) ||
+
+      p.categoryName?.toLowerCase().includes(value.toLowerCase()) ||
+
+      p.vendorName?.toLowerCase().includes(value.toLowerCase())
+
+      // );
+    ).sort((a, b) => {
+
+      const aStarts = a.productName
+        ?.toLowerCase()
+        .startsWith(value.toLowerCase());
+
+      const bStarts = b.productName
+        ?.toLowerCase()
+        .startsWith(value.toLowerCase());
+
+      return bStarts - aStarts;
+
+    });
+
+    setSearchSuggestions(filtered.slice(0, 5));
+
+  };
+  useEffect(() => {
+
     const handleUpdate = () => {
 
       fetchCounts();
@@ -97,7 +160,7 @@ const Navbar = () => {
 
     window.addEventListener("wishlistUpdated", handleUpdate);
 
-   
+
     return () => {
 
       window.removeEventListener("cartUpdated", handleUpdate);
@@ -108,17 +171,18 @@ const Navbar = () => {
 
   }, [fetchCounts]);
 
-   const handleSearch = () => {
+  const handleSearch = () => {
 
-      if (!searchQuery.trim()) return;
+    if (!searchQuery.trim()) return;
 
-      navigate(`/search?q=${searchQuery}`);
+    navigate(`/search?q=${searchQuery}`);
 
-      setShowSearch(false);
+    setShowSearch(false);
 
-    };
+  };
   return (
-    <nav className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-gray-200">
+    // <nav className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-gray-200">
+    <nav className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-gray-200 overflow-x-hidden">
       {/* <div className="w-full px-4 flex items-center justify-between h-16 lg:h-20"> */}
       <div className="container flex items-center justify-between h-16 lg:h-20">
         {/* Mobile menu button */}
@@ -150,6 +214,219 @@ const Navbar = () => {
         </ul>
         <div className="flex items-center gap-4">
 
+
+          {/* <div className="relative">
+
+            <button
+              onClick={() => setShowSearch(!showSearch)}
+              className="text-foreground hover:text-accent transition-colors"
+            >
+              <Search className="h-5 w-5" />
+            </button>
+
+            {showSearch && (
+             
+              <div className="absolute right-0 top-10 bg-white border border-gray-200 rounded-xl shadow-xl p-3 w-72 z-50">
+
+                <div className="flex items-center gap-2">
+
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchQuery}
+                    onChange={(e) => handleSearchInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSearch();
+                      }
+                    }}
+                    className="flex-1 border rounded-lg px-3 py-2 text-sm outline-none"
+                  />
+
+                  <button
+                    onClick={handleSearch}
+                    className="bg-black text-white px-4 py-2 rounded-lg text-sm"
+                  >
+                    Go
+                  </button>
+
+                </div>
+
+                {searchSuggestions.length > 0 && (
+
+                  <div className="mt-3 max-h-80 overflow-y-auto">
+
+                    {searchSuggestions.map((item) => (
+
+                      <div
+                        key={item.pid}
+                        onClick={() => {
+
+                          navigate(`/product/${item.pid}`);
+
+                          setShowSearch(false);
+
+                          setSearchQuery("");
+
+                        }}
+                        className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg cursor-pointer"
+                      >
+
+                        <img
+                          src={`https://localhost:7106${item.productImage}`}
+                          alt={item.productName}
+                          className="w-14 h-14 object-cover rounded-md"
+                        />
+
+                        <div>
+
+                          <p className="text-sm font-medium">
+                            {item.productName}
+                          </p>
+
+                          <p className="text-xs text-gray-500">
+                            {item.categoryName}
+                          </p>
+
+                          <p className="text-xs font-semibold">
+                            ₹{item.price}
+                          </p>
+
+                        </div>
+
+                      </div>
+
+                    ))}
+
+                  </div>
+
+                )}
+
+              </div>
+            )}
+
+          </div> */}
+
+          <div className="relative flex items-center">
+
+            {!showSearch ? (
+
+              <button
+                onClick={() => setShowSearch(true)}
+                className="text-foreground hover:text-accent transition-colors"
+              >
+                <Search className="h-5 w-5" />
+              </button>
+
+            ) : (
+
+              <div className="relative">
+
+                <div className="flex items-center border border-gray-300 rounded-full px-3 py-2 w-[220px] lg:w-[260px] bg-white">
+
+                  <Search className="h-4 w-4 text-gray-400 mr-2 shrink-0" />
+
+                  <input
+                    type="text"
+                    placeholder="Search for products..."
+                    value={searchQuery}
+                    onChange={(e) =>
+                      handleSearchInput(e.target.value)
+                    }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSearch();
+                      }
+                    }}
+                    autoFocus
+                    className="flex-1 outline-none text-sm bg-transparent min-w-0"
+                  />
+
+                  <button
+                    onClick={() => {
+                      setShowSearch(false);
+                      setSearchQuery("");
+                      setSearchSuggestions([]);
+                    }}
+                    className="ml-2 shrink-0"
+                  >
+                    <X className="h-4 w-4 text-gray-500" />
+                  </button>
+
+                </div>
+
+                {/* SEARCH SUGGESTIONS */}
+                {searchSuggestions.length > 0 && (
+
+                  <div className="absolute top-14 left-0 w-full bg-white border border-gray-200 rounded-xl shadow-xl max-h-80 overflow-y-auto z-50">
+
+                    {searchSuggestions.map((item) => (
+
+                      <div
+                        key={item.pid}
+                        onClick={() => {
+
+                          navigate(`/product/${item.pid}`);
+
+                          setShowSearch(false);
+
+                          setSearchQuery("");
+
+                        }}
+                        className="px-4 py-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0"
+                      >
+
+                        {/* <img
+                          src={`https://localhost:7106${item.productImage}`}
+                          alt={item.productName}
+                          className="w-14 h-14 object-cover rounded-md"
+                        /> */}
+
+                        {/* <div>
+
+                          <p className="text-sm font-medium">
+                            {item.productName}
+                          </p>
+
+                          <p className="text-xs text-gray-500">
+                            {item.categoryName}
+                          </p>
+
+                          <p className="text-xs font-semibold">
+                            ₹{item.price}
+                          </p>
+
+                        </div> */}
+                        <p className="text-sm font-medium truncate">
+                          {item.productName}
+                        </p>
+
+                        <div className="flex items-center justify-between mt-1">
+
+                          <p className="text-xs text-gray-500">
+                            {item.categoryName}
+                          </p>
+
+                          <p className="text-xs font-semibold">
+                            ₹{item.price}
+                          </p>
+
+                        </div>
+
+
+                      </div>
+
+                    ))}
+
+                  </div>
+
+                )}
+
+              </div>
+
+            )}
+
+          </div>
           {!isLoggedIn ? (
             <>
               <Link
@@ -172,46 +449,6 @@ const Navbar = () => {
               {/* <button className="text-foreground hover:text-accent transition-colors">
                 <Search className="h-5 w-5" />
               </button> */}
-              <div className="relative">
-
-                <button
-                  onClick={() => setShowSearch(!showSearch)}
-                  className="text-foreground hover:text-accent transition-colors"
-                >
-                  <Search className="h-5 w-5" />
-                </button>
-
-                {showSearch && (
-                  <div className="absolute right-0 top-10 bg-white border border-gray-200 rounded-xl shadow-xl p-3 w-72 z-50">
-
-                    <div className="flex items-center gap-2">
-
-                      <input
-                        type="text"
-                        placeholder="Search products..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleSearch();
-                          }
-                        }}
-                        className="flex-1 border rounded-lg px-3 py-2 text-sm outline-none"
-                      />
-
-                      <button
-                        onClick={handleSearch}
-                        className="bg-black text-white px-4 py-2 rounded-lg text-sm"
-                      >
-                        Go
-                      </button>
-
-                    </div>
-
-                  </div>
-                )}
-
-              </div>
 
               <div className="relative">
                 <button

@@ -35,7 +35,9 @@ const Search = () => {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
-  const [priceRange, setPriceRange] = useState(10000);
+  // const [priceRange, setPriceRange] = useState(10000);
+  const [minPrice, setMinPrice] = useState(100);
+  const [maxPrice, setMaxPrice] = useState(10000);
   const [allProducts, setAllProducts] = useState([]);
 
   useEffect(() => {
@@ -50,7 +52,9 @@ const Search = () => {
     selectedBrands,
     selectedColors,
     selectedSizes,
-    priceRange
+    // priceRange,
+    minPrice,
+  maxPrice
   ]);
 
   const fetchProducts = async () => {
@@ -92,6 +96,45 @@ const Search = () => {
 
         const searchText = query.toLowerCase();
 
+        // const productColors = product.colors
+        //   ?.split(",")
+        //   .map((c) => c.trim());
+
+        // const colorMatch =
+        //   selectedColors.length === 0 ||
+        //   productColors.some((c) =>
+        //     selectedColors.includes(c)
+        //   );
+
+        // const productSizes = product.sizes
+        //   ?.split(",")
+        //   .map((s) => s.trim());
+
+        // const sizeMatch =
+        //   selectedSizes.length === 0 ||
+        //   productSizes.some((s) =>
+        //     selectedSizes.includes(s)
+        //   );
+
+          // const productColors = p.color
+          //   ? p.color.split(",").map((c) => c.trim())
+          //   : [];
+
+          // const colorMatch =
+          //   selectedColors.length === 0 ||
+          //   productColors.some((c) =>
+          //     selectedColors.includes(c)
+          //   );
+
+          // const productSizes = p.size
+          //   ? p.size.split(",").map((s) => s.trim())
+          //   : [];
+
+          // const sizeMatch =
+          //   selectedSizes.length === 0 ||
+          //   productSizes.some((s) =>
+          //     selectedSizes.includes(s)
+          //   );
         return (
 
           p.productName?.toLowerCase().includes(searchText) ||
@@ -115,16 +158,38 @@ const Search = () => {
           selectedBrands.length === 0 ||
           selectedBrands.includes(p.vendorName);
 
+        // const colorMatch =
+        //   selectedColors.length === 0 ||
+        //   selectedColors.includes(p.color);
+
+        // const sizeMatch =
+        //   selectedSizes.length === 0 ||
+        //   selectedSizes.includes(p.size);
+
+        const productColors = p.color
+          ? p.color.split(",").map((c) => c.trim())
+          : [];
+
         const colorMatch =
           selectedColors.length === 0 ||
-          selectedColors.includes(p.color);
+          productColors.some((c) =>
+            selectedColors.includes(c)
+          );
+
+        const productSizes = p.size
+          ? p.size.split(",").map((s) => s.trim())
+          : [];
 
         const sizeMatch =
           selectedSizes.length === 0 ||
-          selectedSizes.includes(p.size);
-
+          productSizes.some((s) =>
+            selectedSizes.includes(s)
+          );
+        // const priceMatch =
+        //   Number(p.price) <= priceRange;
         const priceMatch =
-          Number(p.price) <= priceRange;
+          Number(p.price) >= minPrice &&
+          Number(p.price) <= maxPrice;
 
         return (
           categoryMatch &&
@@ -322,6 +387,29 @@ const Search = () => {
     setHoveredProduct(null);
   };
 
+  // const uniqueColors = [
+  //   ...new Set(
+  //     products.flatMap((p) =>
+  //       p.colors
+  //         ? p.colors
+  //           .split(",")
+  //           .map((c) => c.trim())
+  //         : []
+  //     )
+  //   ),
+  // ].filter((c) => c && c !== "null");
+
+  // const uniqueSizes = [
+  //   ...new Set(
+  //     products.flatMap((p) =>
+  //       p.sizes
+  //         ? p.sizes
+  //           .split(",")
+  //           .map((s) => s.trim())
+  //         : []
+  //     )
+  //   ),
+  // ].filter((s) => s && s !== "null");
   // const categories = [
   //   ...new Set(products.map((p) => p.categoryName))
   // ];
@@ -340,36 +428,81 @@ const Search = () => {
 
   const searchedProducts = allProducts.filter((p) => {
 
-  const searchText = query.toLowerCase();
+    const searchText = query.toLowerCase();
 
-  return (
+    return (
 
-    p.productName?.toLowerCase().includes(searchText) ||
+      p.productName?.toLowerCase().includes(searchText) ||
 
-    p.categoryName?.toLowerCase().includes(searchText) ||
+      p.categoryName?.toLowerCase().includes(searchText) ||
 
-    p.season?.toLowerCase().includes(searchText) ||
+      p.season?.toLowerCase().includes(searchText) ||
 
-    p.description?.toLowerCase().includes(searchText)
+      p.description?.toLowerCase().includes(searchText)
 
-  );
-});
+    );
+  });
 
-const categories = [
-  ...new Set(searchedProducts.map((p) => p.categoryName))
-];
+  const colorCounts = {};
 
-const brands = [
-  ...new Set(searchedProducts.map((p) => p.vendorName))
-];
+  searchedProducts.forEach((p) => {
 
-const colors = [
-  ...new Set(searchedProducts.map((p) => p.color))
-];
+    if (p.color) {
 
-const sizes = [
-  ...new Set(searchedProducts.map((p) => p.size))
-];
+      p.color.split(",").forEach((c) => {
+
+        const color = c.trim();
+
+        if (color) {
+
+          colorCounts[color] =
+            (colorCounts[color] || 0) + 1;
+
+        }
+
+      });
+
+    }
+
+  });
+  const categories = [
+    ...new Set(searchedProducts.map((p) => p.categoryName))
+  ];
+
+  const brands = [
+    ...new Set(searchedProducts.map((p) => p.vendorName))
+  ];
+
+  // const colors = [
+  //   ...new Set(searchedProducts.map((p) => p.color))
+  // ];
+
+  const colors = [
+    ...new Set(
+      searchedProducts.flatMap((p) =>
+        p.color
+          ? p.color
+            .split(",")
+            .map((c) => c.trim())
+          : []
+      )
+    ),
+  ].filter((c) => c && c !== "null");
+
+  // const sizes = [
+  //   ...new Set(searchedProducts.map((p) => p.size))
+  // ];
+  const sizes = [
+    ...new Set(
+      searchedProducts.flatMap((p) =>
+        p.size
+          ? p.size
+            .split(",")
+            .map((s) => s.trim())
+          : []
+      )
+    ),
+  ].filter((s) => s && s !== "null");
   return (
     <>
       <PageHeader
@@ -388,7 +521,9 @@ const sizes = [
             brands={brands}
             colors={colors}
             sizes={sizes}
-
+            // colors={uniqueColors}
+            // sizes={uniqueSizes}
+            colorCounts={colorCounts}
             selectedCategories={selectedCategories}
             setSelectedCategories={setSelectedCategories}
 
@@ -401,9 +536,15 @@ const sizes = [
             selectedSizes={selectedSizes}
             setSelectedSizes={setSelectedSizes}
 
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
+            // priceRange={priceRange}
+            // setPriceRange={setPriceRange}
+            minPrice={minPrice}
+            setMinPrice={setMinPrice}
+
+            maxPrice={maxPrice}
+            setMaxPrice={setMaxPrice}
           />
+
           {products.length === 0 ? (
 
             <div className="text-center py-20">
@@ -414,8 +555,12 @@ const sizes = [
 
           ) : (
 
+
             <div className="flex-1">
 
+              <p className="text-sm text-gray-500 mb-4">
+                Showing {products.length} products
+              </p>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-8">
 
                 {products.map((p, i) => (

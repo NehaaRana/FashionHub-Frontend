@@ -16,9 +16,17 @@ const FilterSidebar = ({
   selectedSizes,
   setSelectedSizes,
 
-  priceRange,
-  setPriceRange,
+  // priceRange,
+  // setPriceRange,
+  minPrice,
+setMinPrice,
+
+maxPrice,
+setMaxPrice,
+
+colorCounts = {},
 }) => {
+
 
   const toggleFilter = (
     value,
@@ -120,7 +128,7 @@ const FilterSidebar = ({
       </div>
 
       {/* COLORS */}
-      <div>
+      {/* <div>
 
         <h3 className="font-semibold mb-3 uppercase text-sm">
           Colors
@@ -155,8 +163,63 @@ const FilterSidebar = ({
 
         </div>
 
-      </div>
+      </div> */}
 
+{/* COLORS */}
+<div>
+
+  <h3 className="font-semibold mb-3 uppercase text-sm">
+    Colors
+  </h3>
+
+  <div className="space-y-2">
+
+    {colors.map((color) => (
+
+      <label
+        key={color}
+        className="flex items-center justify-between text-sm cursor-pointer"
+      >
+
+        <div className="flex items-center gap-2">
+
+          <input
+            type="checkbox"
+            checked={selectedColors.includes(color)}
+            onChange={() =>
+              toggleFilter(
+                color,
+                selectedColors,
+                setSelectedColors
+              )
+            }
+          />
+
+          {/* COLOR DOT */}
+          <span
+            className="w-4 h-4 rounded-full border"
+            style={{
+              backgroundColor:
+                color.toLowerCase(),
+            }}
+          />
+
+          <span>{color}</span>
+
+        </div>
+
+        {/* COUNT */}
+        <span className="text-gray-400 text-xs">
+          ({colorCounts[color] || 0})
+        </span>
+
+      </label>
+
+    ))}
+
+  </div>
+
+</div>
       {/* SIZES */}
       <div>
 
@@ -196,7 +259,7 @@ const FilterSidebar = ({
       </div>
 
       {/* PRICE */}
-      <div>
+      {/* <div>
 
         <h3 className="font-semibold mb-3 uppercase text-sm">
           Price
@@ -217,8 +280,100 @@ const FilterSidebar = ({
           Up to ₹{priceRange}
         </p>
 
-      </div>
+      </div> */}
 
+{/* PRICE */}
+<div>
+
+  <h3 className="font-semibold mb-3 uppercase text-sm">
+    Price
+  </h3>
+
+  <div className="space-y-3">
+
+    <div>
+
+      <p className="text-xs mb-1">
+        Min Price
+      </p>
+
+      <input
+        type="range"
+        min="100"
+        max="10000"
+        value={minPrice}
+        // onChange={(e) =>
+        //   setMinPrice(Number(e.target.value))
+        // }
+        onChange={(e) => {
+
+  const value = Number(e.target.value);
+
+  if (value <= maxPrice) {
+    setMinPrice(value);
+  }
+
+}}
+        className="w-full"
+      />
+
+      <p className="text-sm">
+        ₹{minPrice}
+      </p>
+
+    </div>
+
+    <div>
+
+      <p className="text-xs mb-1">
+        Max Price
+      </p>
+
+      <input
+        type="range"
+        min="100"
+        max="10000"
+        value={maxPrice}
+        // onChange={(e) =>
+        //   setMaxPrice(Number(e.target.value))
+        // }
+        onChange={(e) => {
+
+  const value = Number(e.target.value);
+
+  if (value >= minPrice) {
+    setMaxPrice(value);
+  }
+
+}}
+        className="w-full"
+      />
+
+      <p className="text-sm">
+        ₹{maxPrice}
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+<button
+  onClick={() => {
+
+    setSelectedCategories([]);
+    setSelectedBrands([]);
+    setSelectedColors([]);
+    setSelectedSizes([]);
+
+    setMinPrice(100);
+    setMaxPrice(10000);
+
+  }}
+  className="w-full border py-2 text-sm hover:bg-black hover:text-white transition"
+>
+  Clear All Filters
+</button>
     </div>
 
   );
