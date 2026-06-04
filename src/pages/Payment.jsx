@@ -57,7 +57,7 @@ const Payment = () => {
     const [method, setMethod] = useState("card");
     const [processing, setProcessing] = useState(false);
 
-
+    
     const handlePay = async () => {
 
         try {
@@ -119,13 +119,17 @@ const Payment = () => {
                 text: "Your payment has been processed successfully.",
                 confirmButtonColor: "#000",
             });
-
+            console.log("Navigating with Order ID:", {
+                    oid: createdOrder?.oid,
+                    orderId: createdOrder?.orderId
+                });
             // navigate("/dashboard/orders");
             navigate("/payment-success", {
                 state: {
                     total,
                     method,
-                    orderId: createdOrder?.oid,
+                    orderId: createdOrder?.oid||
+                     createdOrder?.orderId,
                     paymentStatus:
                         method === "cod"
                             ? "Pending"

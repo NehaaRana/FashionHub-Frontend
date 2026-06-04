@@ -83,6 +83,13 @@ const Checkout = () => {
 
       // ONLY ONE API CALL
       const orderRes = await placeOrder(orderData);
+    
+
+        // Clear user's cart
+        // await clearCart(user.uid);
+
+        // Update navbar count
+        window.dispatchEvent(new Event("cartUpdated"));
 
       // alert("Order Placed Successfully");
       Swal.fire({
@@ -109,7 +116,7 @@ const Checkout = () => {
           total,
           paymentMethod,
           appliedCoupon,
-    user,
+          user,
         },
       });
 

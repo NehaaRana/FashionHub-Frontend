@@ -11,144 +11,255 @@ import {
 const PaymentSuccess = () => {
 
   const { state } = useLocation();
+  
+  console.log("Payment Success State:", state);
+
 
   // DYNAMIC DATA
   const total = state?.total || 0;
 
   const method = state?.method || "CARD";
 
+  // const orderId =
+  //   state?.orderId || state?.oid || "N/A";
   const orderId =
-    state?.orderId || state?.oid || "N/A";
-
+  state?.createdOrder?.oid ||
+  state?.createdOrder?.orderId ||
+  state?.orderId ||
+  "N/A";
+  console.log(orderId);
   const paymentStatus =
     state?.paymentStatus || "Paid";
 
   // DOWNLOAD INVOICE
-  const handleDownloadInvoice = () => {
+  // const handleDownloadInvoice = () => {
 
-    const doc = new jsPDF();
+  //   const doc = new jsPDF();
 
-    // ===== HEADER =====
-    doc.setFontSize(24);
-    doc.setTextColor(40, 40, 40);
+  //   // ===== HEADER =====
+  //   doc.setFontSize(24);
+  //   doc.setTextColor(40, 40, 40);
 
-    doc.text("FASHION HUB", 70, 20);
+  //   doc.text("FASHION HUB", 70, 20);
 
-    doc.setFontSize(12);
+  //   doc.setFontSize(12);
 
-    doc.setTextColor(120, 120, 120);
+  //   doc.setTextColor(120, 120, 120);
 
-    doc.text(
-      "Premium Fashion Store Invoice",
-      60,
-      28
-    );
+  //   doc.text(
+  //     "Premium Fashion Store Invoice",
+  //     60,
+  //     28
+  //   );
 
-    // ===== LINE =====
-    doc.setDrawColor(200, 200, 200);
+  //   // ===== LINE =====
+  //   doc.setDrawColor(200, 200, 200);
 
-    doc.line(20, 35, 190, 35);
+  //   doc.line(20, 35, 190, 35);
 
-    // ===== INVOICE TITLE =====
-    doc.setFontSize(20);
+  //   // ===== INVOICE TITLE =====
+  //   doc.setFontSize(20);
 
-    doc.setTextColor(0, 0, 0);
+  //   doc.setTextColor(0, 0, 0);
 
-    doc.text("INVOICE", 20, 50);
+  //   doc.text("INVOICE", 20, 50);
 
-    // ===== ORDER DETAILS =====
-    doc.setFontSize(12);
+  //   // ===== ORDER DETAILS =====
+  //   doc.setFontSize(12);
 
-    doc.text(
-      `Order ID: #${orderId}`,
-      20,
-      70
-    );
+  //   doc.text(
+  //     `Order ID: #${orderId}`,
+  //     20,
+  //     70
+  //   );
 
-    doc.text(
-      `Payment Method: ${method}`,
-      20,
-      80
-    );
+  //   doc.text(
+  //     `Payment Method: ${method}`,
+  //     20,
+  //     80
+  //   );
 
-    doc.text(
-      `Payment Status: ${paymentStatus}`,
-      20,
-      90
-    );
+  //   doc.text(
+  //     `Payment Status: ${paymentStatus}`,
+  //     20,
+  //     90
+  //   );
 
-    doc.text(
-      `Date: ${new Date().toLocaleDateString()}`,
-      20,
-      100
-    );
+  //   doc.text(
+  //     `Date: ${new Date().toLocaleDateString()}`,
+  //     20,
+  //     100
+  //   );
 
-    // ===== AMOUNT BOX =====
-    doc.setFillColor(245, 245, 245);
+  //   // ===== AMOUNT BOX =====
+  //   doc.setFillColor(245, 245, 245);
 
-    doc.roundedRect(
-      20,
-      115,
-      170,
-      35,
-      3,
-      3,
-      "F"
-    );
+  //   doc.roundedRect(
+  //     20,
+  //     115,
+  //     170,
+  //     35,
+  //     3,
+  //     3,
+  //     "F"
+  //   );
 
-    doc.setFontSize(14);
+  //   doc.setFontSize(14);
 
-    doc.text(
-      "Total Amount Paid",
-      30,
-      130
-    );
+  //   doc.text(
+  //     "Total Amount Paid",
+  //     30,
+  //     130
+  //   );
 
-    doc.setFontSize(24);
+  //   doc.setFontSize(24);
 
-    doc.setTextColor(0, 0, 0);
+  //   doc.setTextColor(0, 0, 0);
 
-    doc.text(
-      `₹${Number(total).toLocaleString()}`,
-      30,
-      143
-    );
+  //   doc.text(
+  //     `₹${Number(total).toLocaleString()}`,
+  //     30,
+  //     143
+  //   );
 
-    // ===== THANK YOU =====
-    doc.setFontSize(13);
+  //   // ===== THANK YOU =====
+  //   doc.setFontSize(13);
 
-    doc.setTextColor(80, 80, 80);
+  //   doc.setTextColor(80, 80, 80);
 
-    doc.text(
-      "Thank you for shopping with Fashion Hub!",
-      40,
-      180
-    );
+  //   doc.text(
+  //     "Thank you for shopping with Fashion Hub!",
+  //     40,
+  //     180
+  //   );
 
-    doc.text(
-      "We hope to see you again soon.",
-      55,
-      190
-    );
+  //   doc.text(
+  //     "We hope to see you again soon.",
+  //     55,
+  //     190
+  //   );
 
-    // ===== FOOTER =====
-    doc.setDrawColor(220, 220, 220);
+  //   // ===== FOOTER =====
+  //   doc.setDrawColor(220, 220, 220);
 
-    doc.line(20, 250, 190, 250);
+  //   doc.line(20, 250, 190, 250);
 
-    doc.setFontSize(10);
+  //   doc.setFontSize(10);
 
-    doc.setTextColor(120, 120, 120);
+  //   doc.setTextColor(120, 120, 120);
 
-    doc.text(
-      "Fashion Hub © 2026",
-      80,
-      260
-    );
+  //   doc.text(
+  //     "Fashion Hub © 2026",
+  //     80,
+  //     260
+  //   );
 
-    // ===== DOWNLOAD =====
-    doc.save(`Invoice_${orderId}.pdf`);
-  };
+  //   // ===== DOWNLOAD =====
+  //   doc.save(`Invoice_${orderId}.pdf`);
+  // };
+
+const handleDownloadInvoice = () => {
+  const doc = new jsPDF();
+
+  // ===== HEADER =====
+  doc.setFillColor(20, 20, 20);
+  doc.rect(0, 0, 210, 40, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(24);
+  doc.setFont("helvetica", "bold");
+  doc.text("FASHION HUB", 70, 18);
+
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "normal");
+  doc.text("Premium Fashion Store", 77, 28);
+
+  // ===== INVOICE TITLE =====
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(22);
+  doc.setFont("helvetica", "bold");
+  doc.text("INVOICE", 20, 55);
+
+  // ===== ORDER INFO BOX =====
+  doc.setDrawColor(220);
+  doc.roundedRect(20, 65, 170, 50, 3, 3);
+
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+
+  doc.text(`Order ID`, 25, 80);
+  doc.text(`: ${orderId}`, 70, 80);
+
+  doc.text(`Date`, 25, 92);
+  doc.text(`: ${new Date().toLocaleDateString()}`, 70, 92);
+
+  doc.text(`Payment Method`, 25, 104);
+  doc.text(`: ${method.toUpperCase()}`, 70, 104);
+
+  // ===== PAYMENT STATUS =====
+  doc.setFillColor(230, 255, 230);
+  doc.roundedRect(20, 125, 170, 18, 3, 3, "F");
+
+  doc.setTextColor(0, 120, 0);
+  doc.setFont("helvetica", "bold");
+  doc.text(
+    `PAYMENT STATUS : ${paymentStatus.toUpperCase()}`,
+    25,
+    137
+  );
+
+  // ===== AMOUNT BOX =====
+  doc.setTextColor(0, 0, 0);
+
+  doc.setFillColor(245, 245, 245);
+  doc.roundedRect(20, 155, 170, 35, 3, 3, "F");
+
+  doc.setFontSize(14);
+  doc.text("Total Amount Paid", 25, 170);
+
+  doc.setFontSize(24);
+  doc.setFont("helvetica", "bold");
+  doc.text(
+    `₹ ${Number(total).toLocaleString()}`,
+    25,
+    184
+  );
+
+  // ===== THANK YOU =====
+  doc.setFontSize(16);
+  doc.text("Thank You For Your Purchase!", 45, 220);
+
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "normal");
+
+  doc.text(
+    "Your order has been successfully placed and processed.",
+    35,
+    232
+  );
+
+  doc.text(
+    "We appreciate your trust in Fashion Hub.",
+    52,
+    242
+  );
+
+  // ===== FOOTER =====
+  doc.setDrawColor(220);
+  doc.line(20, 270, 190, 270);
+
+  doc.setFontSize(10);
+  doc.setTextColor(120);
+
+  doc.text(
+    "Fashion Hub © 2026 | www.fashionhub.com",
+    60,
+    280
+  );
+
+  doc.save(`Invoice_${orderId}.pdf`);
+};
+
 
   return (
     <>

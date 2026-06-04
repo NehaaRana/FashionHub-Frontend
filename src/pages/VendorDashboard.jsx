@@ -213,14 +213,14 @@ console.log("EMAIL:", currentVendor?.email);
             titleAccent="Performance"
             description="Manage your catalogue, fulfil orders and track your earnings on FashionHub."
           />
-          <button
+          {/* <button
             disabled={!isApproved}
             title={!isApproved ? "Available once your store is approved" : undefined}
             className="inline-flex items-center gap-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-colors font-body text-xs uppercase tracking-[0.15em] font-semibold px-6 py-3 rounded-sm shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Plus className="h-4 w-4" />
             Add Product
-          </button>
+          </button> */}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
