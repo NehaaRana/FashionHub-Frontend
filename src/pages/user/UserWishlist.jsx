@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import DashboardLayout from "../../components/DashboardLayout";
 import DashHeader from "../../components/dashboard/DashHeader";
 import { userNav } from "./userNav";
-import { Heart, ShoppingBag, Trash2 } from "lucide-react";
-import { useEffect } from "react";
+import { Heart } from "lucide-react";
 import { getUserWishlist, getCurrentUser, deleteWishlist } from "../../services/api";
+import ProductCard from "../../components/ProductCard";
+import { useNavigate } from "react-router-dom";
 
 const UserWishlist = () => {
     //   const [items, setItems] = useState(initial);
     const [items, setItems] = useState([]);
     const [user, setUser] = useState(null);
-
+const navigate = useNavigate();
 
     useEffect(() => {
         const loadWishlist = async () => {
@@ -61,43 +62,66 @@ const UserWishlist = () => {
                         <p className="font-body text-sm text-muted-foreground">Tap the heart on any product to save it.</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                        {items.map((p) => {
-                            console.log(`https://localhost:7106/${p.photo}`);
+                    // <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                    //     {items.map((p) => {
+                    //         console.log(`https://localhost:7106/${p.photo}`);
 
-                            return (   // ✅ VERY IMPORTANT
-                                <div key={p.wid} className="bg-card border rounded-sm">
+                    //         return (   // ✅ VERY IMPORTANT
+                    //             <div key={p.wid} className="bg-card border rounded-sm">
 
-                                    <div className="relative aspect-[4/5] overflow-hidden">
-                                        <img
-                                            src={`https://localhost:7106${p.photo}`}
-                                            alt={p.productName}
-                                            className="w-full h-full object-cover"
-                                        />
+                    //                 <div className="relative aspect-[4/5] overflow-hidden">
+                    //                     <img
+                    //                         src={`https://localhost:7106${p.photo}`}
+                    //                         alt={p.productName}
+                    //                         className="w-full h-full object-cover"
+                    //                     />
 
-                                        <button onClick={() => remove(p.wid)}>
-                                            <Trash2 />
-                                        </button>
+                    //                     <button onClick={() => remove(p.wid)}>
+                    //                         <Trash2 />
+                    //                     </button>
 
-                                        {!p.stock && (
-                                            <div className="absolute inset-0 flex items-center justify-center">
-                                                Out of Stock
-                                            </div>
-                                        )}
-                                    </div>
+                    //                     {!p.stock && (
+                    //                         <div className="absolute inset-0 flex items-center justify-center">
+                    //                             Out of Stock
+                    //                         </div>
+                    //                     )}
+                    //                 </div>
 
-                                    <div className="p-5">
-                                        <h3>{p.productName}</h3>
-                                        <span>₹{p.price}</span>
+                    //                 <div className="p-5">
+                    //                     <h3>{p.productName}</h3>
+                    //                     <span>₹{p.price}</span>
 
-                                        <button disabled={!p.stock}>
-                                            <ShoppingBag /> Add to Cart
-                                        </button>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
+                    //                     <button disabled={!p.stock}>
+                    //                         <ShoppingBag /> Add to Cart
+                    //                     </button>
+                    //                 </div>
+                    //             </div>
+                    //         );
+                    //     })}
+                    // </div>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-8">
+    {items.map((p, i) => {
+        const formattedProduct = {
+            wid: p.wid,
+            pid: p.pid,
+            name: p.productName,
+            price: `₹${p.price}`,
+            image: `https://localhost:7106${p.photo}`,
+            stock: p.stock,
+        };
+
+        return (
+            <ProductCard
+                key={p.wid}
+                product={formattedProduct}
+                delay={0.05 * i}
+                isWishlisted={true}
+                onWishlist={() => remove(p.wid)}
+                onClick={() => navigate(`/product/${p.pid}`)}
+            />
+        );
+    })}
+</div>
                 )}
             </div>
         </DashboardLayout>

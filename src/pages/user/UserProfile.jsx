@@ -2,23 +2,54 @@ import { useState, useEffect } from "react";
 import DashboardLayout from "../../components/DashboardLayout";
 import DashHeader from "../../components/dashboard/DashHeader";
 import { userNav } from "./userNav";
-import { Camera, Mail, Phone, Calendar, Lock } from "lucide-react";
+import { Mail, Phone, Calendar } from "lucide-react";
 import { getCurrentUser, updateUser } from "../../services/api";
 import Swal from "sweetalert2";
-  const Field = ({ label, value, onChange, type = "text" }) => (
-    <div>
-      <label className="font-body text-[10px] uppercase tracking-[0.18em] text-muted-foreground block mb-1.5">
-        {label}
-      </label>
+// const Field = ({ label, value, onChange, type = "text" }) => (
+//   <div>
+//     <label className="font-body text-[10px] uppercase tracking-[0.18em] text-muted-foreground block mb-1.5">
+//       {label}
+//     </label>
 
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2.5 bg-background border border-border rounded-sm font-body text-sm focus:outline-none focus:border-accent"
-      />
-    </div>
-  );
+//     <input
+//       type={type}
+//       value={value}
+//       onChange={(e) => onChange(e.target.value)}
+//       className="w-full px-3 py-2.5 bg-background border border-border rounded-sm font-body text-sm focus:outline-none focus:border-accent"
+//     />
+//   </div>
+// );
+const Field = ({
+  label,
+  value,
+  onChange,
+  type = "text",
+  error,
+}) => (
+  <div>
+    <label className="font-body text-[10px] uppercase tracking-[0.18em] text-muted-foreground block mb-1.5">
+      {label}
+    </label>
+
+    <input
+      type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className={`w-full px-3 py-2.5 bg-background border rounded-sm font-body text-sm focus:outline-none
+      ${error
+          ? "border-red-500 focus:border-red-500"
+          : "border-border focus:border-accent"
+        }`}
+    />
+
+    {error && (
+      <p className="text-red-500 text-xs mt-1">
+        {error}
+      </p>
+    )}
+  </div>
+);
+
 const UserProfile = () => {
 
   const [profile, setProfile] = useState({
@@ -34,11 +65,13 @@ const UserProfile = () => {
   });
   const [user, setUser] = useState(null);
 
-  const [pwd, setPwd] = useState({
-    current: "",
-    next: "",
-    confirm: ""
-  });
+  // const [pwd, setPwd] = useState({
+  //   current: "",
+  //   next: "",
+  //   confirm: ""
+  // });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const Row = ({ icon: Icon, text }) => (
     <div className="flex items-center gap-3 font-body text-sm text-muted-foreground">
@@ -78,28 +111,109 @@ const UserProfile = () => {
     loadUser();
   }, []);
 
-  const handleSave = async () => {
-    try {
-      console.log("Profile Data:", profile);
-      await updateUser(user.uid, profile);
-        await Swal.fire({
-          icon: "success",
-          title: "Profile Updated",
-          text: "Your profile has been updated successfully",
-          confirmButtonColor: "#000",
-        });
-      // alert("Profile updated!");
-    } catch (err) {
-      console.log(err);
-        Swal.fire({
-          icon: "error",
-          title: "Update Failed",
-          text: "Failed to update profile",
-          confirmButtonColor: "#000",
-        });
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Username
+    if (!profile.username.trim()) {
+      newErrors.username = "Username is required";
     }
+
+    // Email
+    if (!profile.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(profile.email)
+    ) {
+      newErrors.email = "Invalid email address";
+    }
+
+    // Mobile
+    if (profile.mobileno && !/^[0-9]{10}$/.test(profile.mobileno)) {
+      newErrors.mobileno = "Mobile number must be 10 digits";
+    }
+
+    // DOB future validation
+    if (profile.dob) {
+      const selectedDate = new Date(profile.dob);
+      const today = new Date();
+
+      today.setHours(0, 0, 0, 0);
+      if (selectedDate > today) {
+        newErrors.dob = "Date of birth cannot be in future";
+      }
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   };
 
+  // const handleSave = async () => {
+  //   try {
+  //     console.log("Profile Data:", profile);
+  //     // await updateUser(user.uid, profile);
+  //     await updateUser(user.uid, {
+  //       ...profile,
+  //       dob: profile.dob === "" ? null : profile.dob,
+  //     });
+  //     await Swal.fire({
+  //       icon: "success",
+  //       title: "Profile Updated",
+  //       text: "Your profile has been updated successfully",
+  //       confirmButtonColor: "#000",
+  //     });
+  //     // alert("Profile updated!");
+  //   } catch (err) {
+  //     console.log(err);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Update Failed",
+  //       text: "Failed to update profile",
+  //       confirmButtonColor: "#000",
+  //     });
+  //   }
+  // };
+
+  const handleSave = async () => {
+
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+
+      setLoading(true);
+
+      const payload = {
+        ...profile,
+        dob: profile.dob === "" ? null : profile.dob,
+      };
+
+      await updateUser(user.uid, payload);
+
+      await Swal.fire({
+        icon: "success",
+        title: "Profile Updated",
+        text: "Your profile has been updated successfully",
+        confirmButtonColor: "#000",
+      });
+
+    } catch (err) {
+
+      console.log(err);
+
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: "Failed to update profile",
+        confirmButtonColor: "#000",
+      });
+
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <DashboardLayout role="User" userName={profile.username} items={userNav}>
       <div className="p-6 lg:p-12">
@@ -134,16 +248,42 @@ const UserProfile = () => {
             <div className="bg-card border rounded-sm p-6">
               <h3 className="mb-4 text-lg">Personal Info</h3>
 
-              <div className="grid grid-cols-2 gap-4">
+              {/* <div className="grid grid-cols-2 gap-4"> */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                <Field label="Username"
+                {/* <Field label="Username"
                   value={profile.username}
                   onChange={(v) => setProfile({ ...profile, username: v })}
+                /> */}
+                <Field
+                  label="Username"
+                  value={profile.username}
+                  error={errors.username}
+                  // onChange={(v) =>
+                  //   setProfile({ ...profile, username: v })
+                  // }
+                  onChange={(v) => {
+                    setProfile({ ...profile, username: v });
+
+                    setErrors((prev) => ({
+                      ...prev,
+                      username: "",
+                    }));
+                  }}
                 />
 
                 <Field label="Email"
                   value={profile.email}
-                  onChange={(v) => setProfile({ ...profile, email: v })}
+                  error={errors.email}
+                  // onChange={(v) => setProfile({ ...profile, email: v })}
+                  onChange={(v) => {
+                    setProfile({ ...profile, email: v });
+
+                    setErrors((prev) => ({
+                      ...prev,
+                      email: "",
+                    }));
+                  }}
                 />
 
                 <Field label="City"
@@ -158,19 +298,39 @@ const UserProfile = () => {
 
                 <Field
                   label="Mobile Number"
+                  type="tel"
                   value={profile.mobileno}
-                  onChange={(v) =>
-                    setProfile({ ...profile, mobileno: v })
-                  }
+                  error={errors.mobileno}
+                  // onChange={(v) =>
+                  //   setProfile({ ...profile, mobileno: v })
+                  // }
+                  onChange={(v) => {
+                    const onlyNumbers = v.replace(/\D/g, "").slice(0, 10);
+                    setProfile({ ...profile, mobileno: v });
+
+                    setErrors((prev) => ({
+                      ...prev,
+                      mobileno: "",
+                    }));
+                  }}
                 />
 
                 <Field
                   label="Date of Birth"
                   type="date"
                   value={profile.dob}
-                  onChange={(v) =>
-                    setProfile({ ...profile, dob: v })
-                  }
+                  error={errors.dob}
+                  // onChange={(v) =>
+                  //   setProfile({ ...profile, dob: v })
+                  // }
+                  onChange={(v) => {
+                    setProfile({ ...profile, dob: v });
+
+                    setErrors((prev) => ({
+                      ...prev,
+                      dob: "",
+                    }));
+                  }}
                 />
 
                 <div>
@@ -196,8 +356,15 @@ const UserProfile = () => {
                 </div>
               </div>
 
-              <button onClick={handleSave} className="mt-4 bg-primary text-white  px-4 py-2">
+              {/* <button onClick={handleSave} className="mt-4 bg-primary text-white  px-4 py-2">
                 Save Changes
+              </button> */}
+              <button
+                onClick={handleSave}
+                disabled={loading}
+                className="mt-4 bg-primary text-white px-4 py-2 disabled:opacity-50"
+              >
+                {loading ? "Saving..." : "Save Changes"}
               </button>
 
             </div>

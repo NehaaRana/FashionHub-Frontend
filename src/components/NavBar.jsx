@@ -12,9 +12,9 @@ const navLinks = [
   { label: "New Arrivals", to: "/new-arrivals" },
   { label: "Western ", to: "/western-wear" },
   { label: "Ethnic ", to: "/ethnic-wear" },
-  { label: "Dresses", to: "/dresses" },
+  // { label: "Dresses", to: "/dresses" },
   { label: "Tops", to: "/tops" },
-  { label: "Bottom ", to: "/bottom-wear" },
+  // { label: "Bottom ", to: "/bottom-wear" },
   { label: "Winter", to: "/winter-wear" },
   // { label: "Summer Sale", to: "/summer-sale" },
   // { label: "Winter Collection", to: "/winter-collection" },
@@ -181,8 +181,7 @@ const Navbar = () => {
 
   };
   return (
-    // <nav className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-gray-200">
-    <nav className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-gray-200 overflow-x-hidden">
+    <nav className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-gray-200">
       {/* <div className="w-full px-4 flex items-center justify-between h-16 lg:h-20"> */}
       <div className="container flex items-center justify-between h-16 lg:h-20">
         {/* Mobile menu button */}
