@@ -68,10 +68,47 @@ function App() {
           <Route path="/winter-collection" element={<WinterCollection />} />
           <Route path="/festival-combos" element={<FestivalCombos />} />
           <Route path="/coupons" element={<Coupons />} />
-          <Route path="/wishlist" element={<Wishlist />} />
+          {/* <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/payment" element={<Payment />} />
+          <Route path="/payment" element={<Payment />} /> */}
+          {/* Only Logged In User Can Access the Routes */}
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedRoute allowedRoles={["user"]}>
+                <Wishlist />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute allowedRoles={["user"]}>
+                <Cart />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute allowedRoles={["user"]}>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/payment"
+            element={
+              <ProtectedRoute allowedRoles={["user"]}>
+                <Payment />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/search" element={<Search />} />
 
@@ -83,17 +120,120 @@ function App() {
           <Route path="/admin/coupons" element={<CouponManagement />} /> */}
 
         </Route>
-        <Route path="/admin/customers" element={<UserManagement />} />
+        {/* <Route path="/admin/customers" element={<UserManagement />} />
         <Route path="/admin/vendors" element={<VendorManagement />} />
         <Route path="/admin/orders" element={<OrdersManagement />} />
-        <Route path="/admin/products" element={<AllProductManagement />} />
-
+        <Route path="/admin/products" element={<AllProductManagement />} /> */}
+{/* 
         <Route path="/admin/categories" element={<CategoryManagement />} />
-        <Route path="/admin/coupons" element={<CouponManagement />} />
-        <Route path="/vendor/products" element={<ProductManagement />} />
+        <Route path="/admin/coupons" element={<CouponManagement />} /> */}
+          {/* Admin Routes */}
+        <Route
+            path="/admin/customers"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <UserManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/vendors"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <VendorManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/orders"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <OrdersManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/products"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AllProductManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/categories"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <CategoryManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/coupons"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <CouponManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/vendor-applications"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminVendorApplications />
+              </ProtectedRoute>
+            }
+          />
+
+
+        {/* <Route path="/vendor/products" element={<ProductManagement />} />
         <Route path="/vendor/reviews" element={<ReviewManagement />} />
         <Route path="/vendor/orders" element={<VendorOrdersManagement />} />
-        <Route path="/vendor/settings" element={<VendorSettings />} />
+        <Route path="/vendor/settings" element={<VendorSettings />} /> */}
+
+          {/* Vendor Routes */}
+          <Route
+            path="/vendor/products"
+            element={
+              <ProtectedRoute allowedRoles={["vendor"]}>
+                <ProductManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/vendor/reviews"
+            element={
+              <ProtectedRoute allowedRoles={["vendor"]}>
+                <ReviewManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/vendor/orders"
+            element={
+              <ProtectedRoute allowedRoles={["vendor"]}>
+                <VendorOrdersManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/vendor/settings"
+            element={
+              <ProtectedRoute allowedRoles={["vendor"]}>
+                <VendorSettings />
+              </ProtectedRoute>
+            }
+          />
+
         {/* Role-Based Dashboard Route */}
         {/* <Route
           path="/dashboard"
@@ -172,7 +312,7 @@ function App() {
         /> */}
 
         <Route path="/vendor-pending" element={<VendorPending />} />
-        <Route path="/admin/vendor-applications" element={<AdminVendorApplications />} />
+        {/* <Route path="/admin/vendor-applications" element={<AdminVendorApplications />} /> */}
 
 
         {/* user dashboard */}
@@ -180,7 +320,7 @@ function App() {
         <Route path="/dashboard/wishlist" element={<UserWishlist />} />
         <Route path="/dashboard/coupons" element={<UserCoupons />} />
         <Route path="/dashboard/profile" element={<UserProfile />} /> */}
-        <Route
+        {/* <Route
             path="/dashboard/orders"
             element={
               <ProtectedRoute>
@@ -214,7 +354,43 @@ function App() {
                 <UserProfile />
               </ProtectedRoute>
             }
-          />
+          /> */}
+        {/* User Routes */}
+        <Route
+          path="/dashboard/orders"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserOrders />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/wishlist"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserWishlist />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/coupons"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserCoupons />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/profile"
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserProfile />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   )
