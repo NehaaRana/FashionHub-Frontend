@@ -142,7 +142,8 @@ import { getOrders,getCurrentUser  } from "../../services/api";
 const OrdersManagement = () => {
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
-  
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [tab, setTab] = useState("All");
 const [adminName, setAdminName] = useState("");
 
   useEffect(() => {
@@ -150,6 +151,7 @@ const [adminName, setAdminName] = useState("");
       fetchAdmin();
 
   }, []);
+  const tabs = ["All", "Pending", "Processing", "Delivered"];
 
 
   const fetchAdmin = async () => {
@@ -192,22 +194,69 @@ const [adminName, setAdminName] = useState("");
   };
 
   // Search
+  // const filtered = useMemo(() => {
+  //   return rows.filter((o) =>
+  //     o.address?.toLowerCase().includes(search.toLowerCase()) ||
+  //     o.orderStatus?.toLowerCase().includes(search.toLowerCase())
+  //   );
+  // }, [rows, search]);
+
+//   const filtered = useMemo(() => {
+//   return rows.filter((o) => {
+//     const matchesSearch =
+//       o.address?.toLowerCase().includes(search.toLowerCase()) ||
+//       o.orderStatus?.toLowerCase().includes(search.toLowerCase());
+
+//     const matchesStatus =
+//       statusFilter === "All" ||
+//       o.orderStatus?.toLowerCase() === statusFilter.toLowerCase();
+
+//     return matchesSearch && matchesStatus;
+//   });
+// }, [rows, search, statusFilter]);
+
   const filtered = useMemo(() => {
-    return rows.filter((o) =>
-      o.address?.toLowerCase().includes(search.toLowerCase()) ||
-      o.orderStatus?.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [rows, search]);
+      return rows.filter(
+        (o) =>
+          (tab === "All" || o.orderStatus === tab) &&
+          (
+            o.address?.toLowerCase().includes(search.toLowerCase()) ||
+            o.orderStatus?.toLowerCase().includes(search.toLowerCase())
+          )
+      );
+    }, [rows, search, tab]);
+
 
   //  Stats
+  // const stats = useMemo(() => {
+  //   const total = rows.length;
+  //   // const pending = rows.filter((o) => o.orderStatus === "pending").length;
+  //   // const completed = rows.filter((o) => o.orderStatus === "completed").length;
+  //    const pending = rows.filter(
+  //       (o) => o.orderStatus === "Pending"
+  //     ).length;
+      
+  //     const completed = rows.filter(
+  //       (o) => o.orderStatus === "Delivered"
+  //     ).length;
+
+  // // return { total, pending, completed };
+  //   return { total, pending, completed };
+  // }, [rows]);
   const stats = useMemo(() => {
-    const total = rows.length;
-    const pending = rows.filter((o) => o.orderStatus === "pending").length;
-    const completed = rows.filter((o) => o.orderStatus === "completed").length;
-
-    return { total, pending, completed };
+    return {
+      total: rows.length,
+      pending: rows.filter(
+        (o) => o.orderStatus?.toLowerCase() === "pending"
+      ).length,
+      processing: rows.filter(
+        (o) => o.orderStatus?.toLowerCase() === "processing"
+      ).length,
+      delivered: rows.filter(
+        (o) => o.orderStatus?.toLowerCase() === "delivered"
+      ).length,
+    };
   }, [rows]);
-
   return (
 
     <DashboardLayout
@@ -230,9 +279,51 @@ const [adminName, setAdminName] = useState("");
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
           <StatCard label="Total Orders" value={String(stats.total)} icon={ShoppingCart} />
           <StatCard label="Pending" value={String(stats.pending)} icon={Clock} />
-          <StatCard label="Completed" value={String(stats.completed)} icon={CheckCircle2} />
-        </div>
+          <StatCard
+              label="Processing"
+              value={String(stats.processing)}
+              icon={Clock}
+            />
 
+            <StatCard
+              label="Delivered"
+              value={String(stats.delivered)}
+              icon={CheckCircle2}
+            />
+          {/* <StatCard label="Completed" value={String(stats.completed)} icon={CheckCircle2} /> */}
+        </div>
+       <div className="bg-card border border-border rounded-sm overflow-hidden mb-6">
+  <div className="p-5 border-b border-border flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+
+    {/* Status Tabs */}
+    <div className="flex flex-wrap gap-2">
+      {tabs.map((t) => (
+        <button
+          key={t}
+          onClick={() => setTab(t)}
+          className={`font-body text-[11px] uppercase tracking-[0.18em] px-4 py-2 rounded-sm border transition-colors ${
+            tab === t
+              ? "bg-primary text-primary-foreground border-primary"
+              : "bg-background text-muted-foreground border-border hover:border-accent hover:text-foreground"
+          }`}
+        >
+          {t}
+        </button>
+      ))}
+    </div>
+
+    {/* Search */}
+    <div className="relative lg:w-72">
+      <input
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search address or status..."
+        className="w-full px-4 py-2.5 bg-background border border-border rounded-sm font-body text-sm focus:outline-none focus:border-accent"
+      />
+    </div>
+
+  </div>
+</div>
         {/* Toolbar */}
         <AdminToolbar
           search={search}

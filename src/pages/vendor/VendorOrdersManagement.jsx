@@ -12,11 +12,12 @@ import { getVendorOrders,getCurrentUser,  updateOrderStatus
 const VendorOrdersManagement = () => {
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
+  const [tab, setTab] = useState("All");
   const [vendorName, setVendorName] = useState("");
   useEffect(() => {
     fetchOrders();
   }, []);
-
+  const tabs = ["All", "Pending", "Processing", "Delivered"];
   const fetchOrders = async () => {
     try {
       // const user = JSON.parse(localStorage.getItem("user"));
@@ -72,29 +73,60 @@ const VendorOrdersManagement = () => {
     }
   };
 
-  const filtered = useMemo(() => {
-    return rows.filter((o) => {
-      if (!search) return true;
+  // const filtered = useMemo(() => {
+  //   return rows.filter((o) => {
+  //     if (!search) return true;
 
-      return (
-        o.product?.toLowerCase().includes(search.toLowerCase()) ||
-        o.orderStatus?.toLowerCase().includes(search.toLowerCase())
-      );
-    });
-  }, [rows, search]);
+  //     return (
+  //       o.product?.toLowerCase().includes(search.toLowerCase()) ||
+  //       o.orderStatus?.toLowerCase().includes(search.toLowerCase())
+  //     );
+  //   });
+  // }, [rows, search]);
+const filtered = useMemo(() => {
+  return rows.filter((o) => {
+    const matchesTab =
+      tab === "All" ||
+      o.orderStatus?.toLowerCase() === tab.toLowerCase();
 
+    const matchesSearch =
+      !search ||
+      o.product?.toLowerCase().includes(search.toLowerCase()) ||
+      o.orderStatus?.toLowerCase().includes(search.toLowerCase());
+
+    return matchesTab && matchesSearch;
+  });
+}, [rows, search, tab]);
+
+
+  // const stats = useMemo(() => {
+  //   return {
+  //     total: rows.length,
+  //     delivered: rows.filter(
+  //       (o) => o.orderStatus?.toLowerCase() === "delivered"
+  //     ).length,
+  //     pending: rows.filter(
+  //       (o) => o.orderStatus?.toLowerCase() === "pending"
+  //     ).length,
+  //   };
+  // }, [rows]);
   const stats = useMemo(() => {
-    return {
-      total: rows.length,
-      delivered: rows.filter(
-        (o) => o.orderStatus?.toLowerCase() === "delivered"
-      ).length,
-      pending: rows.filter(
-        (o) => o.orderStatus?.toLowerCase() === "pending"
-      ).length,
-    };
-  }, [rows]);
+  return {
+    total: rows.length,
 
+    pending: rows.filter(
+      (o) => o.orderStatus === "Pending"
+    ).length,
+
+    processing: rows.filter(
+      (o) => o.orderStatus === "Processing"
+    ).length,
+
+    delivered: rows.filter(
+      (o) => o.orderStatus === "Delivered"
+    ).length,
+  };
+}, [rows]);
   return (
     // <DashboardLayout role="Vendor" userName="Vendor" items={vendorItems}>
     <DashboardLayout
@@ -112,12 +144,21 @@ const VendorOrdersManagement = () => {
         />
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-5 mb-10">
+        <div className="grid grid-cols-4 gap-5 mb-10">
           <StatCard
             label="Total Orders"
             value={stats.total}
             icon={ShoppingBag}
           />
+            <StatCard
+            label="Pending"
+            value={stats.pending}
+            icon={Clock}
+          />
+          <StatCard label="Processing" 
+            value={stats.processing} 
+            icon={PackageCheck} />
+
 
           <StatCard
             label="Delivered"
@@ -125,20 +166,57 @@ const VendorOrdersManagement = () => {
             icon={PackageCheck}
           />
 
-          <StatCard
-            label="Pending"
-            value={stats.pending}
-            icon={Clock}
-          />
+        
         </div>
 
+        <div className="bg-card border border-border rounded-sm overflow-hidden mb-6">
+          <div className="p-5 border-b border-border flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+
+            {/* Tabs */}
+            <div className="flex flex-wrap gap-2">
+              {tabs.map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={`font-body text-[11px] uppercase tracking-[0.18em] px-4 py-2 rounded-sm border transition-colors ${
+                    tab === t
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background text-muted-foreground border-border hover:border-accent hover:text-foreground"
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+
+            {/* Search + Refresh */}
+            <div className="flex gap-3">
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search product or status..."
+                className="px-4 py-2.5 border border-border rounded-sm w-72 focus:outline-none focus:border-accent"
+              />
+
+              <button
+                onClick={fetchOrders}
+                className="px-4 py-2.5 bg-primary text-primary-foreground rounded-sm"
+              >
+                Refresh
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+
         {/* Search */}
-        <AdminToolbar
+        {/* <AdminToolbar
           search={search}
           onSearch={setSearch}
           addLabel="Refresh"
           onAdd={fetchOrders}
-        />
+        /> */}
 
         {/* Table */}
         <div className="bg-card border rounded-sm overflow-hidden mt-6 overflow-x-auto">
