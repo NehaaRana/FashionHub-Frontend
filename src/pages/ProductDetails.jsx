@@ -932,7 +932,7 @@ const ProductDetails = () => {
               <div className="flex items-center gap-5">
 
                 {/* SHOP LOGO */}
-                <img
+                {/* <img
                   src={
                     vendor?.shopLogo
                       ? `https://localhost:7106${vendor.shopLogo}`
@@ -940,7 +940,7 @@ const ProductDetails = () => {
                   }
                   alt={vendor?.shopName}
                   className="w-20 h-20 rounded-full object-cover border"
-                />
+                /> */}
 
                 <div className="space-y-1">
 

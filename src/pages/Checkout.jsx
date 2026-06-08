@@ -188,7 +188,7 @@ const Checkout = () => {
       {/* SUMMARY */}
       <div className="border rounded p-5 space-y-3">
 
-        <p>
+        {/* <p>
           Subtotal: ₹{subtotal}
         </p>
 
@@ -202,7 +202,22 @@ const Checkout = () => {
 
         <h2 className="text-2xl font-bold">
           Total: ₹{total}
-        </h2>
+        </h2> */}
+        <p>
+  Subtotal: ₹{Number(subtotal).toFixed(2)}
+</p>
+
+<p>
+  Shipping: ₹{Number(shipping).toFixed(2)}
+</p>
+
+<p>
+  Discount: ₹{Number(discount).toFixed(2)}
+</p>
+
+<h2 className="text-2xl font-bold">
+  Total: ₹{Number(total).toFixed(2)}
+</h2>
 
       </div>
 

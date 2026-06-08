@@ -113,17 +113,23 @@ const Payment = () => {
             // alert("Payment Successful");
             // alert("Payment Successful");
 
+            const successSound = new Audio("/sounds/payment-success.mp3");
+successSound.play();
+
             Swal.fire({
                 icon: "success",
                 title: "Payment Successful",
                 text: "Your payment has been processed successfully.",
                 confirmButtonColor: "#000",
+                timer: 1500,
+    showConfirmButton: false,
             });
             console.log("Navigating with Order ID:", {
                     oid: createdOrder?.oid,
                     orderId: createdOrder?.orderId
                 });
             // navigate("/dashboard/orders");
+            setTimeout(() => {
             navigate("/payment-success", {
                 state: {
                     total,
@@ -136,6 +142,7 @@ const Payment = () => {
                             : "Paid",
                 },
             });
+        }, 1500);
 
         } catch (error) {
 
