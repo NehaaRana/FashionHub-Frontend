@@ -59,11 +59,11 @@ const ProductDetails = () => {
     useState("");
 
   const [showAllReviews, setShowAllReviews] =
-  useState(false);
+    useState(false);
 
   const displayedReviews = showAllReviews
-  ? reviews
-  : reviews.slice(0, 2);
+    ? reviews
+    : reviews.slice(0, 2);
 
   const [rating, setRating] = useState(5);
   useEffect(() => {
@@ -201,37 +201,37 @@ const ProductDetails = () => {
 
   const checkUserAccess = () => {
 
-  const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user"));
 
-  // NOT LOGIN
-  if (!user) {
+    // NOT LOGIN
+    if (!user) {
 
-    Swal.fire({
-      icon: "warning",
-      title: "Login Required",
-      text: "Please login first!",
-    });
+      Swal.fire({
+        icon: "warning",
+        title: "Login Required",
+        text: "Please login first!",
+      });
 
-    return false;
-  }
+      return false;
+    }
 
-  // BLOCK ADMIN & VENDOR
-  if (Number(user.gid) !== 1) {
+    // BLOCK ADMIN & VENDOR
+    if (Number(user.gid) !== 1) {
 
-    Swal.fire({
-      icon: "warning",
-      title: "Access Denied",
-      text: "Only users can perform this action",
-    });
+      Swal.fire({
+        icon: "warning",
+        title: "Access Denied",
+        text: "Only users can perform this action",
+      });
 
-    return false;
-  }
+      return false;
+    }
 
-  return true;
-};
+    return true;
+  };
   // ADD TO CART
   const handleAddToCart = async () => {
-  if (!checkUserAccess()) return;
+    if (!checkUserAccess()) return;
 
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -450,17 +450,6 @@ const ProductDetails = () => {
       localStorage.getItem("user")
     );
 
-    // if (!user) {
-
-    //   Swal.fire({
-    //     icon: "warning",
-    //     title: "Login Required",
-    //     text: "Please login first!",
-    //   });
-
-    //   return;
-    // }
-
     try {
 
       const orderId = prompt(
@@ -533,53 +522,10 @@ const ProductDetails = () => {
           {/* IMAGE */}
           <div className="space-y-5">
 
-            {/* <div className="overflow-hidden rounded-3xl bg-secondary">
-              <img
-                src={`https://localhost:7106${product.productImage}`}
-                alt={product.productName}
-                className="w-full h-[700px] object-cover hover:scale-105 transition-transform duration-700"
-              />
-            </div> */}
             <div className="flex gap-4">
 
               {/* THUMBNAILS */}
               <div className="flex flex-col gap-3">
-
-                {/* MAIN IMAGE THUMB */}
-                {/* <img
-                  src={`https://localhost:7106${product.productImage}`}
-                  alt=""
-                  onClick={() =>
-                    setSelectedImage(
-                      `https://localhost:7106${product.productImage}`
-                    )
-                  }
-                  className={`w-20 h-20 object-cover rounded-xl cursor-pointer border-2 ${selectedImage ===
-                    `https://localhost:7106${product.productImage}`
-                    ? "border-black"
-                    : "border-gray-200"
-                    }`}
-                /> */}
-
-                {/* EXTRA IMAGES */}
-                {/* {product.extraImages?.map((img, index) => (
-                  <img
-                    key={index}
-                    src={`https://localhost:7106${img}`}
-                    alt=""
-                    onClick={() =>
-                      setSelectedImage(
-                        `https://localhost:7106${img}`
-                      )
-                    }
-                    className={`w-20 h-20 object-cover rounded-xl cursor-pointer border-2 ${selectedImage ===
-                      `https://localhost:7106${img}`
-                      ? "border-black"
-                      : "border-gray-200"
-                      }`}
-                  />
-                ))} */}
-
 
                 {/* THUMBNAILS */}
                 <div className="flex flex-col gap-3">
@@ -609,15 +555,6 @@ const ProductDetails = () => {
               </div>
 
               {/* MAIN BIG IMAGE */}
-              {/* <div className="flex-1 overflow-hidden rounded-3xl bg-secondary">
-
-                <img
-                  src={selectedImage}
-                  alt={product.productName}
-                  className="w-full h-[700px] object-cover hover:scale-105 transition-transform duration-700"
-                />
-
-              </div> */}
               <div
                 className="flex-1 overflow-hidden rounded-3xl bg-secondary relative cursor-zoom-in border"
                 onMouseMove={handleMouseMove}
@@ -678,6 +615,213 @@ const ProductDetails = () => {
               </div>
 
             </div>
+
+                  {/* REVIEWS */}
+      <div className="container mt-20">
+
+        <h2 className="text-xl font-bold mb-5">
+          Customer Reviews
+        </h2>
+
+        {/* REVIEW FORM */}
+        {/* <div className="border rounded-3xl p-6 mb-10">
+
+          <h3 className="text-xl font-semibold mb-4">
+            Write Review
+          </h3>
+
+          <select
+            value={rating}
+            onChange={(e) =>
+              setRating(Number(e.target.value))
+            }
+            className="w-full border rounded-xl p-3 mb-4"
+          >
+            <option value={5}>5 Star</option>
+            <option value={4}>4 Star</option>
+            <option value={3}>3 Star</option>
+            <option value={2}>2 Star</option>
+            <option value={1}>1 Star</option>
+          </select>
+
+          <textarea
+            rows="4"
+            placeholder="Write review..."
+            value={reviewText}
+            onChange={(e) =>
+              setReviewText(e.target.value)
+            }
+            className="w-full border rounded-xl p-4"
+          />
+
+          <button
+            onClick={handleReviewSubmit}
+            className="mt-5 bg-black text-white px-8 py-3 rounded-2xl"
+          >
+            Submit Review
+          </button>
+
+        </div> */}
+
+        {/* REVIEW LIST */}
+        {/* <div className="space-y-6">
+
+          {reviews.map((review) => (
+
+            <div
+              key={review.rid}
+              className="border rounded-3xl p-6"
+            >
+
+              <div className="flex justify-between">
+
+                <div className="flex items-center gap-4">
+
+                  <div className="w-14 h-14 rounded-full bg-black text-white flex items-center justify-center font-bold">
+                    {review.userName?.charAt(0)}
+                  </div>
+
+                  <div>
+
+                    <h4 className="font-semibold">
+                      {review.userName}
+                    </h4>
+
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(
+                        review.createdAt
+                      ).toLocaleDateString()}
+                    </p>
+
+                  </div>
+
+                </div>
+
+                <div className="flex">
+
+                  {[...Array(review.rating)].map(
+                    (_, i) => (
+                      <Star
+                        key={i}
+                        className="w-4 h-4 fill-yellow-400 text-yellow-400"
+                      />
+                    )
+                  )}
+
+                </div>
+
+              </div>
+
+              <p className="mt-5 text-muted-foreground leading-7">
+                {review.feedback}
+              </p>
+
+            </div>
+
+          ))}
+
+        </div> */}
+        {/* REVIEW LIST */}
+        <div className="space-y-5">
+
+          {displayedReviews.length > 0 ? (
+
+            displayedReviews.map((review) => (
+
+              <div
+                key={review.rid}
+                // className="border border-gray-200 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition-all"
+                className="border rounded-xl p-4 bg-white hover:shadow-md transition-all"
+              >
+
+                <div className="flex items-start justify-between gap-4">
+
+                  {/* LEFT */}
+                  <div className="flex items-center gap-4">
+
+                    {/* USER ICON */}
+                    <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center font-semibold text-lg uppercase">
+                      {review.userName?.charAt(0)}
+                    </div>
+
+                    {/* USER INFO */}
+                    <div>
+
+                      <h4 className="font-semibold text-[16px]">
+                        {review.userName}
+                      </h4>
+                      {/* STARS */}
+                      <div className="flex gap-1">
+
+                        {[...Array(5)].map((_, i) => (
+
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${i < review.rating
+                                ? "fill-yellow-400 text-yellow-400"
+                                : "text-gray-300"
+                              }`}
+                          />
+
+                        ))}
+
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        {new Date(
+                          review.createdAt
+                        ).toLocaleDateString()}
+                      </p>
+
+                    </div>
+
+                  </div>
+
+
+
+                </div>
+
+                {/* REVIEW TEXT */}
+                <p className="mt-4 text-gray-600 leading-7 text-[15px]">
+                  {review.feedback}
+                </p>
+
+              </div>
+
+            ))
+
+          ) : (
+
+            <div className="text-center py-10 border rounded-2xl bg-gray-50">
+              <p className="text-gray-500">
+                No reviews available
+              </p>
+            </div>
+
+          )}
+
+        </div>
+
+        {/* SEE MORE BUTTON */}
+        {reviews.length > 2 && (
+
+          <div className="flex justify-center mt-8">
+
+            <button
+              onClick={() =>
+                setShowAllReviews(!showAllReviews)
+              }
+              className="px-6 py-3 rounded-xl border border-black text-black font-medium hover:bg-black hover:text-white transition-all"
+            >
+              {showAllReviews
+                ? "Show Less Reviews"
+                : `See More Reviews (${reviews.length - 2})`}
+            </button>
+
+          </div>
+
+        )}
+      </div>
+
           </div>
 
           {/* DETAILS */}
@@ -689,15 +833,6 @@ const ProductDetails = () => {
 
             {/* RATING */}
             <div className="flex items-center gap-2 mt-4">
-
-              {/* <div className="flex items-center">
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              </div> */}
-
               <div className="flex items-center gap-1">
 
                 {[...Array(5)].map((_, index) => (
@@ -763,20 +898,6 @@ const ProductDetails = () => {
 
                       <div
                         key={index}
-                        // onClick={() => {
-
-                        //   setSelectedColor(color);
-
-                        //   const newImages =
-                        //     product.colorImages[color];
-
-                        //   setDisplayImages(newImages);
-
-                        //   setSelectedImage(
-                        //     `https://localhost:7106${newImages[0]}`
-                        //   );
-                        // }}
-
                         onClick={() => {
 
                           setSelectedColor(color);
@@ -966,211 +1087,6 @@ const ProductDetails = () => {
         </div>
       </div>
 
-      {/* REVIEWS */}
-      <div className="container mt-20">
-
-        <h2 className="text-3xl font-bold mb-10">
-          Customer Reviews
-        </h2>
-
-        {/* REVIEW FORM */}
-        {/* <div className="border rounded-3xl p-6 mb-10">
-
-          <h3 className="text-xl font-semibold mb-4">
-            Write Review
-          </h3>
-
-          <select
-            value={rating}
-            onChange={(e) =>
-              setRating(Number(e.target.value))
-            }
-            className="w-full border rounded-xl p-3 mb-4"
-          >
-            <option value={5}>5 Star</option>
-            <option value={4}>4 Star</option>
-            <option value={3}>3 Star</option>
-            <option value={2}>2 Star</option>
-            <option value={1}>1 Star</option>
-          </select>
-
-          <textarea
-            rows="4"
-            placeholder="Write review..."
-            value={reviewText}
-            onChange={(e) =>
-              setReviewText(e.target.value)
-            }
-            className="w-full border rounded-xl p-4"
-          />
-
-          <button
-            onClick={handleReviewSubmit}
-            className="mt-5 bg-black text-white px-8 py-3 rounded-2xl"
-          >
-            Submit Review
-          </button>
-
-        </div> */}
-
-        {/* REVIEW LIST */}
-        {/* <div className="space-y-6">
-
-          {reviews.map((review) => (
-
-            <div
-              key={review.rid}
-              className="border rounded-3xl p-6"
-            >
-
-              <div className="flex justify-between">
-
-                <div className="flex items-center gap-4">
-
-                  <div className="w-14 h-14 rounded-full bg-black text-white flex items-center justify-center font-bold">
-                    {review.userName?.charAt(0)}
-                  </div>
-
-                  <div>
-
-                    <h4 className="font-semibold">
-                      {review.userName}
-                    </h4>
-
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(
-                        review.createdAt
-                      ).toLocaleDateString()}
-                    </p>
-
-                  </div>
-
-                </div>
-
-                <div className="flex">
-
-                  {[...Array(review.rating)].map(
-                    (_, i) => (
-                      <Star
-                        key={i}
-                        className="w-4 h-4 fill-yellow-400 text-yellow-400"
-                      />
-                    )
-                  )}
-
-                </div>
-
-              </div>
-
-              <p className="mt-5 text-muted-foreground leading-7">
-                {review.feedback}
-              </p>
-
-            </div>
-
-          ))}
-
-        </div> */}
-        {/* REVIEW LIST */}
-        <div className="space-y-5">
-
-          {displayedReviews.length > 0 ? (
-
-            displayedReviews.map((review) => (
-
-              <div
-                key={review.rid}
-                className="border border-gray-200 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition-all"
-              >
-
-                <div className="flex items-start justify-between gap-4">
-
-                  {/* LEFT */}
-                  <div className="flex items-center gap-4">
-
-                    {/* USER ICON */}
-                    <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center font-semibold text-lg uppercase">
-                      {review.userName?.charAt(0)}
-                    </div>
-
-                    {/* USER INFO */}
-                    <div>
-
-                      <h4 className="font-semibold text-[16px]">
-                        {review.userName}
-                      </h4>
-
-                      <p className="text-sm text-gray-500">
-                        {new Date(
-                          review.createdAt
-                        ).toLocaleDateString()}
-                      </p>
-
-                    </div>
-
-                  </div>
-
-                  {/* STARS */}
-                  <div className="flex gap-1">
-
-                    {[...Array(5)].map((_, i) => (
-
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < review.rating
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "text-gray-300"
-                        }`}
-                      />
-
-                    ))}
-
-                  </div>
-
-                </div>
-
-                {/* REVIEW TEXT */}
-                <p className="mt-4 text-gray-600 leading-7 text-[15px]">
-                  {review.feedback}
-                </p>
-
-              </div>
-
-            ))
-
-          ) : (
-
-            <div className="text-center py-10 border rounded-2xl bg-gray-50">
-              <p className="text-gray-500">
-                No reviews available
-              </p>
-            </div>
-
-          )}
-
-        </div>
-
-        {/* SEE MORE BUTTON */}
-        {reviews.length > 2 && (
-
-          <div className="flex justify-center mt-8">
-
-            <button
-              onClick={() =>
-                setShowAllReviews(!showAllReviews)
-              }
-              className="px-6 py-3 rounded-xl border border-black text-black font-medium hover:bg-black hover:text-white transition-all"
-            >
-              {showAllReviews
-                ? "Show Less Reviews"
-                : `See More Reviews (${reviews.length - 2})`}
-            </button>
-
-          </div>
-
-        )}
-      </div>
 
       {/* FULLSCREEN IMAGE VIEWER */}
       {showViewer && (
