@@ -1,10 +1,10 @@
 // import { Instagram, Twitter } from "lucide-react";
 
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
-
+import { Link } from "react-router-dom";
 const Footer = () => (
   <footer className="bg-[hsl(var(--primary))] text-white">
-    <div className="w-full px-4 py-16">
+    <div className="w-full px-4 py-7">
       <div className="grid md:grid-cols-4 gap-10">
         <div>
           <h3 className="font-display text-2xl font-bold mb-4">
@@ -25,16 +25,43 @@ const Footer = () => (
             </a>
           </div>
         </div>
-        {[
+        {/* {[
           { title: "Shop", links: ["New Arrivals", "Summer Sale", "Winter Collection", "Festival Combos"] },
           { title: "Help", links: ["Contact Us", "Shipping & Returns", "FAQs", "Size Guide"] },
           { title: "Company", links: ["About Us", "Careers", "Privacy Policy", "Terms of Service"] },
-        ].map((col) => (
-          <div key={col.title}>
-            <h4 className="font-body text-xs uppercase tracking-[0.2em] font-semibold text-primary-foreground mb-4">
-              {col.title}
-            </h4>
-            <ul className="space-y-2.5">
+        ] */}
+{[
+  {
+    title: "Shop",
+    links: [
+      { name: "New Arrivals", path: "/new-arrivals" },
+      { name: "Summer Sale", path: "/summer-sale" },
+      { name: "Winter Collection", path: "/winter-collection" },
+      { name: "Festival Combos", path: "/festival-combos" },
+    ],
+  },
+  {
+    title: "Help",
+    links: [
+      { name: "Contact Us", path: "/contact" },
+      { name: "FAQs", path: "/faqs" },
+    ]
+  },
+  {
+    title: "Company",
+    links: [
+      { name: "About Us", path: "/about" },
+      { name: "Privacy Policy", path: "/privacy-policy" },
+      { name: "Terms of Service", path: "/terms-of-service" },
+    ],
+  },
+].map((col) => (       
+  //  .map((col) => (
+        <div key={col.title}>
+          <h4 className="font-body text-xs uppercase tracking-[0.2em] font-semibold text-primary-foreground mb-4">
+            {col.title}
+          </h4>
+          {/* <ul className="space-y-2.5">
               {col.links.map((link) => (
                 <li key={link}>
                   <a href="#" className="font-body text-sm text-primary-foreground/60 hover:text-accent transition-colors">
@@ -42,8 +69,21 @@ const Footer = () => (
                   </a>
                 </li>
               ))}
-            </ul>
-          </div>
+            </ul> */}
+          <ul className="space-y-2.5">
+            {col.links.map((link) => (
+              <li key={link.name}>
+                <Link
+                  to={link.path}
+                  className="font-body text-sm text-primary-foreground/60 hover:text-accent transition-colors"
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         ))}
       </div>
       <div className="border-t border-primary-foreground/10 mt-12 pt-8 text-center">

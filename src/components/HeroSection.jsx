@@ -1,7 +1,9 @@
 import { Button } from "../components/ui/Button";
 import heroImage from "../assets/hero-fashion.jpg";
-
-const HeroSection = () => (
+import { useNavigate } from "react-router-dom";
+const HeroSection = () => {
+  const navigate = useNavigate();
+  return (
   <section className="relative overflow-hidden">
     <div className="w-full px-4 grid lg:grid-cols-2 min-h-[85vh] items-center gap-8 py-12 lg:py-0">
       {/* Text Side */}
@@ -20,9 +22,16 @@ const HeroSection = () => (
           essentials to festive celebrations. Made for the modern woman.
         </p>
         <div className="flex flex-wrap gap-4 items-center">
-          <Button variant="hero" size="lg">
+          {/* <Button variant="hero" size="lg">
             Shop Now
-          </Button> 
+          </Button>  */}
+          <Button
+  variant="hero"
+  size="lg"
+  onClick={() => navigate("/new-arrivals")}
+>
+  Shop Now
+</Button>
           <Button variant="outline" size="lg" className="font-body uppercase tracking-[0.15em] text-xs px-8">
             View Lookbook
           </Button>
@@ -55,6 +64,7 @@ const HeroSection = () => (
       </div>
     </div>
   </section>
-);
+  )
+};
 
 export default HeroSection;

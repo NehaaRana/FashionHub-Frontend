@@ -135,7 +135,7 @@ const AdminCategories = () => {
       if (editing) {
         // await updateCategory(editing.id, form);
         await updateCategory(editing.id, {
-          cid: editing.id,   // 👈 VERY IMPORTANT
+          cid: editing.id,  
           ...form,
         });
 

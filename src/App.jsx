@@ -43,6 +43,9 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import ProductDetails from "./pages/ProductDetails";
 import Search from "./pages/Search";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AboutUs from "./pages/About";
+import ContactUs from "./pages/ContactUs";
+import FAQs from "./pages/FAQs";
 
 function App() {
 
@@ -56,6 +59,9 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/vendor-register" element={<VendorRegister />} />
           <Route path="/new-arrivals" element={<NewArrivals />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/contact" element={<ContactUs />} />
+          <Route path="/faqs" element={<FAQs />} />
             {/* NEW CATEGORY PAGES */}
 
           <Route path="/western-wear" element={<WesternWear />} />
