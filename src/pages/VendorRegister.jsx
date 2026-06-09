@@ -139,8 +139,6 @@ const VendorRegister = () => {
         timer: 2000,
         showConfirmButton: false,
       });
-      // alert("Application submitted successfully!");
-      // navigate("/vendor-pending");
       navigate("/vendor-pending", { state: { email: form.email } });
 
     } catch (err) {

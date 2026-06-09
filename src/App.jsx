@@ -240,19 +240,7 @@ function App() {
             }
           />
 
-        {/* Role-Based Dashboard Route */}
-        {/* <Route
-          path="/dashboard"
-          element={
-            role === "admin" ? (
-              <AdminDashboard />
-            ) : role === "vendor" ? (
-              <VendorDashboard />
-            ) : (
-              <UserDashboard />
-            )
-          }
-        /> */}
+      
         <Route
           path="/dashboard"
           element={
@@ -281,86 +269,8 @@ function App() {
           element={<Navigate to="/dashboard" replace />}
         />
 
-        {/* User */}
-        {/* <Route
-          path="/dashboard"
-          element={
-            role === "user" ? (
-              <UserDashboard />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        /> */}
-
-        {/* Vendor */}
-        {/* <Route
-          path="/vendor/dashboard"
-          element={
-            role === "vendor" ? (
-              <VendorDashboard />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        /> */}
-
-        {/* Admin */}
-        {/* <Route
-          path="/admin"
-          element={
-            role === "admin" ? (
-              <AdminDashboard />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        /> */}
-
         <Route path="/vendor-pending" element={<VendorPending />} />
-        {/* <Route path="/admin/vendor-applications" element={<AdminVendorApplications />} /> */}
-
-
-        {/* user dashboard */}
-        {/* <Route path="/dashboard/orders" element={<UserOrders />} />
-        <Route path="/dashboard/wishlist" element={<UserWishlist />} />
-        <Route path="/dashboard/coupons" element={<UserCoupons />} />
-        <Route path="/dashboard/profile" element={<UserProfile />} /> */}
-        {/* <Route
-            path="/dashboard/orders"
-            element={
-              <ProtectedRoute>
-                <UserOrders />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/dashboard/wishlist"
-            element={
-              <ProtectedRoute>
-                <UserWishlist />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/dashboard/coupons"
-            element={
-              <ProtectedRoute>
-                <UserCoupons />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/dashboard/profile"
-            element={
-              <ProtectedRoute>
-                <UserProfile />
-              </ProtectedRoute>
-            }
-          /> */}
+       
         {/* User Routes */}
         <Route
           path="/dashboard/orders"

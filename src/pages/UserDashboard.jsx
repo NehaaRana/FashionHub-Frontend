@@ -40,40 +40,6 @@ const [wishlist, setWishlist] = useState([]);
   const [user, setUser] = useState(null);
 
 
-//   useEffect(() => {
-//   const loadUserAndData = async () => {
-//     try {
-//       const userRes = await getCurrentUser();
-//       const currentUser = userRes.data;
-//       setUser(currentUser);
-
-//       // fetch all data in parallel
-//       const [ordersRes, couponsRes, wishlistRes] = await Promise.all([
-//         getOrders(),
-//         getCoupons(),
-//         getWishlist()
-//       ]);
-
-//       // FILTER BY USER (VERY IMPORTANT)
-//       const userOrders = ordersRes.data.filter(
-//         (o) => o.userId === currentUser.uid
-//       );
-
-//       const userWishlist = wishlistRes.data.filter(
-//         (w) => w.userId === currentUser.uid
-//       );
-
-//       setOrders(userOrders);
-//       setCoupons(couponsRes.data);
-//       setWishlist(userWishlist);
-
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
-
-//   loadUserAndData();
-// }, []);
   useEffect(() => {
 
   const loadUserAndData = async () => {
@@ -115,7 +81,6 @@ const [wishlist, setWishlist] = useState([]);
   }
 
   return (
-    // <DashboardLayout role="User" userName="Priya Iyer" items={items}>
     <DashboardLayout
       role={user?.role || "User"}
       userName={user?.username || user?.name || "User"}

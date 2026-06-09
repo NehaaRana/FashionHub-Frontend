@@ -84,19 +84,7 @@ const navigate = useNavigate();
     }
   };
 
-  // UPDATE QTY
-  // const updateQty = (id, delta) => {
-  //   setItems(
-  //     items.map((i) =>
-  //       i.id === id
-  //         ? {
-  //             ...i,
-  //             qty: Math.max(1, i.qty + delta),
-  //           }
-  //         : i
-  //     )
-  //   );
-  // };
+
 
 
   const updateQty = async (id, delta) => {
@@ -134,51 +122,7 @@ const navigate = useNavigate();
   };
 
 
-  //Apply Coupon
-//   const applyCoupon = async () => {
-//   try {
-//     const res = await getCoupons();
-
-//     const foundCoupon = res.data.find(
-//       (c) =>
-//         c.couponCode.toLowerCase() ===
-//         couponCode.toLowerCase()
-//     );
-
-//     if (!foundCoupon) {
-//       alert("Invalid Coupon");
-//       return;
-//     }
-
-//     // minimum order check
-//     if (subtotal < foundCoupon.minimumOrderAmount) {
-//       alert(
-//         `Minimum order should be ₹${foundCoupon.minimumOrderAmount}`
-//       );
-//       return;
-//     }
-
-//     let discountAmount = 0;
-
-//     // percentage discount
-//     if (foundCoupon.discountType === "Percentage") {
-//       discountAmount =
-//         (subtotal * foundCoupon.discountValue) / 100;
-//     }
-
-//     // fixed discount
-//     else if (foundCoupon.discountType === "Flat") {
-//       discountAmount = foundCoupon.discountValue;
-//     }
-
-//     setDiscount(discountAmount);
-//     setAppliedCoupon(foundCoupon);
-
-//     alert("Coupon Applied Successfully");
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+  
     const applyCoupon = async () => {
   try {
     const res = await getCoupons();
@@ -202,9 +146,7 @@ const navigate = useNavigate();
 
     // minimum order check
     if (subtotal < foundCoupon.minimumOrderAmount) {
-      // alert(
-      //   `Minimum order should be ₹${foundCoupon.minimumOrderAmount}`
-      // );
+     
 
       Swal.fire({
         icon: "warning",
@@ -470,12 +412,7 @@ const handleCheckout = () => {
                   </div>
                 </div>
 
-                {/* <Button
-                  variant="hero"
-                  className="w-full mt-6"
-                >
-                  Proceed to Checkout
-                </Button> */}
+               
                 <Button
                   variant="hero"
                   className="w-full mt-6"

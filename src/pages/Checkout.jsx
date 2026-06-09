@@ -83,15 +83,10 @@ const Checkout = () => {
 
       // ONLY ONE API CALL
       const orderRes = await placeOrder(orderData);
-    
-
-        // Clear user's cart
-        // await clearCart(user.uid);
 
         // Update navbar count
         window.dispatchEvent(new Event("cartUpdated"));
 
-      // alert("Order Placed Successfully");
       Swal.fire({
         icon: "success",
         title: "Order Placed",
@@ -105,7 +100,6 @@ const Checkout = () => {
 
       // created order from backend
       const createdOrder = orderRes.data;
-      // navigate("/dashboard/orders");
       navigate("/payment", {
         state: {
           createdOrder,
@@ -129,7 +123,6 @@ const Checkout = () => {
         text: "Failed to place order",
         confirmButtonColor: "#c08a5b",
       });
-      // alert("Failed to place order");
     }
   };
 
@@ -157,67 +150,25 @@ const Checkout = () => {
           rows={4}
         />
       </div>
-
-      {/* PAYMENT */}
-      {/* <div className="mb-6">
-        <label className="block mb-2 font-semibold">
-          Payment Method
-        </label>
-
-        <select
-          value={paymentMethod}
-          onChange={(e) =>
-            setPaymentMethod(e.target.value)
-          }
-          className="w-full border p-3 rounded"
-        >
-          <option value="COD">
-            Cash on Delivery
-          </option>
-
-          <option value="UPI">
-            UPI
-          </option>
-
-          <option value="Card">
-            Card
-          </option>
-        </select>
-      </div> */}
-
       {/* SUMMARY */}
       <div className="border rounded p-5 space-y-3">
 
-        {/* <p>
-          Subtotal: ₹{subtotal}
+
+        <p>
+          Subtotal: ₹{Number(subtotal).toFixed(2)}
         </p>
 
         <p>
-          Shipping: ₹{shipping}
+          Shipping: ₹{Number(shipping).toFixed(2)}
         </p>
 
         <p>
-          Discount: ₹{discount}
+          Discount: ₹{Number(discount).toFixed(2)}
         </p>
 
         <h2 className="text-2xl font-bold">
-          Total: ₹{total}
-        </h2> */}
-        <p>
-  Subtotal: ₹{Number(subtotal).toFixed(2)}
-</p>
-
-<p>
-  Shipping: ₹{Number(shipping).toFixed(2)}
-</p>
-
-<p>
-  Discount: ₹{Number(discount).toFixed(2)}
-</p>
-
-<h2 className="text-2xl font-bold">
-  Total: ₹{Number(total).toFixed(2)}
-</h2>
+          Total: ₹{Number(total).toFixed(2)}
+        </h2>
 
       </div>
 

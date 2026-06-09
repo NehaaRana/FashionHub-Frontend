@@ -96,45 +96,7 @@ const Search = () => {
 
         const searchText = query.toLowerCase();
 
-        // const productColors = product.colors
-        //   ?.split(",")
-        //   .map((c) => c.trim());
-
-        // const colorMatch =
-        //   selectedColors.length === 0 ||
-        //   productColors.some((c) =>
-        //     selectedColors.includes(c)
-        //   );
-
-        // const productSizes = product.sizes
-        //   ?.split(",")
-        //   .map((s) => s.trim());
-
-        // const sizeMatch =
-        //   selectedSizes.length === 0 ||
-        //   productSizes.some((s) =>
-        //     selectedSizes.includes(s)
-        //   );
-
-          // const productColors = p.color
-          //   ? p.color.split(",").map((c) => c.trim())
-          //   : [];
-
-          // const colorMatch =
-          //   selectedColors.length === 0 ||
-          //   productColors.some((c) =>
-          //     selectedColors.includes(c)
-          //   );
-
-          // const productSizes = p.size
-          //   ? p.size.split(",").map((s) => s.trim())
-          //   : [];
-
-          // const sizeMatch =
-          //   selectedSizes.length === 0 ||
-          //   productSizes.some((s) =>
-          //     selectedSizes.includes(s)
-          //   );
+        
         return (
 
           p.productName?.toLowerCase().includes(searchText) ||

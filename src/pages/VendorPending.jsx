@@ -221,7 +221,6 @@ const Meta = ({ app }) => (
   value={app.specialization}
 />
     <MetaRow label="Email" value={app.email} />
-    {/* <MetaRow label="Category" value={app.category} /> */}
 
   </div>
 );
