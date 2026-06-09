@@ -20,6 +20,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { vendorStore, subscribeVendors } from "../lib/vendorStore";
+import { FaIndianRupeeSign } from "react-icons/fa6";
 
 const items = [
   { label: "Overview", to: "/vendor/dashboard", icon: LayoutDashboard },
@@ -216,7 +217,7 @@ console.log("EMAIL:", currentVendor?.email);
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
 
-          <StatCard label="Total Earnings" value={`₹${stats.earnings}`} icon={DollarSign} />
+          <StatCard label="Total Earnings" value={`₹${stats.earnings}`} icon={FaIndianRupeeSign} />
           <StatCard label="Orders" value={stats.orders} icon={ShoppingCart} />
           <StatCard label="Active Products" value={stats.products} icon={Package} />
           <StatCard label="Avg. Rating" value={stats.rating} icon={Star} />

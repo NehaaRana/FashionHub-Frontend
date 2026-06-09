@@ -8,7 +8,8 @@ import { Button } from "../../components/ui/button";
 import { Star, MessageSquare, Trash2 } from "lucide-react";
 import { vendorItems } from "../../components/vendor/vendorNav";
 
-import { getVendorReviews, deleteReview ,  getCurrentUser
+import {
+  getVendorReviews, deleteReview, getCurrentUser
 } from "../../services/api";
 
 const ReviewManagement = () => {
@@ -41,7 +42,7 @@ const ReviewManagement = () => {
 
     const formatted = res.data.map((r) => ({
       id: r.rid,
-      product:  r.productName,
+      product: r.productName,
       rating: r.rating,
       feedback: r.feedback,
     }));
@@ -50,11 +51,11 @@ const ReviewManagement = () => {
   };
 
   const filtered = useMemo(() => {
-    return rows.filter((r) =>{
-       if (!search) return true;
-        return r.product?.toLowerCase().includes(search.toLowerCase());
+    return rows.filter((r) => {
+      if (!search) return true;
+      return r.product?.toLowerCase().includes(search.toLowerCase());
       // r.product?.toLowerCase().includes(search.toLowerCase())
-  });
+    });
   }, [rows, search]);
 
   const stats = useMemo(() => {
@@ -72,13 +73,20 @@ const ReviewManagement = () => {
     setConfirmDelete(null);
   };
 
+  const ratingCounts = {
+    5: rows.filter(r => r.rating === 5).length,
+    4: rows.filter(r => r.rating === 4).length,
+    3: rows.filter(r => r.rating === 3).length,
+    2: rows.filter(r => r.rating === 2).length,
+    1: rows.filter(r => r.rating === 1).length,
+  };
   return (
     // <DashboardLayout role="Vendor" userName="Vendor" items={vendorItems}>
     <DashboardLayout
-        role="Vendor"
-        userName={vendorName}
-        items={vendorItems}
-      >
+      role="Vendor"
+      userName={vendorName}
+      items={vendorItems}
+    >
       <div className="p-6 lg:p-12">
 
         <DashHeader
@@ -89,11 +97,39 @@ const ReviewManagement = () => {
         />
 
         {/* Stats */}
-        <div className="grid grid-cols-2 gap-5 mb-10">
+        {/* <div className="grid grid-cols-2 gap-5 mb-10"> */}
+        {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
           <StatCard label="Total Reviews" value={stats.total} icon={MessageSquare} />
           <StatCard label="Avg Rating" value={stats.avg} icon={Star} />
-        </div>
+        </div> */}
 
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+
+          <StatCard
+            label="Total Reviews"
+            value={stats.total}
+            icon={MessageSquare}
+          />
+
+          <StatCard
+            label="Average Rating"
+            value={stats.avg}
+            icon={Star}
+          />
+
+          <StatCard
+            label="Positive Reviews"
+            value={rows.filter(r => r.rating >= 4).length}
+            icon={Star}
+          />
+
+          <StatCard
+            label="Low Ratings"
+            value={rows.filter(r => r.rating <= 2).length}
+            icon={Star}
+          />
+
+        </div>
         {/* Search */}
         <AdminToolbar
           search={search}
@@ -101,9 +137,49 @@ const ReviewManagement = () => {
           addLabel="Refresh"
           onAdd={fetchReviews}
         />
+        <div className="bg-white border rounded-xl p-6 mt-6">
+
+          <h3 className="font-semibold text-lg mb-5">
+            Rating Distribution
+          </h3>
+
+          {[5, 4, 3, 2, 1].map((star) => (
+
+            <div
+              key={star}
+              className="flex items-center gap-4 mb-4"
+            >
+
+              <span className="w-10 font-medium">
+                {star}★
+              </span>
+
+              <div className="flex-1 h-3 bg-gray-200 rounded-full">
+
+                <div
+                  className="h-3 bg-yellow-400 rounded-full"
+                  style={{
+                    width: `${rows.length
+                        ? (ratingCounts[star] / rows.length) * 100
+                        : 0
+                      }%`,
+                  }}
+                />
+
+              </div>
+
+              <span className="w-8 text-right">
+                {ratingCounts[star]}
+              </span>
+
+            </div>
+
+          ))}
+
+        </div>
 
         {/* Table */}
-        <div className="bg-card border rounded-sm overflow-hidden mt-6">
+        {/* <div className="bg-card border rounded-sm overflow-hidden mt-6">
           <table className="w-full">
             <thead>
               <tr>
@@ -121,32 +197,96 @@ const ReviewManagement = () => {
                   <td className="px-6 py-4">{r.product}</td>
                   <td className="px-6 py-4"> {r.rating} Star</td>
                   <td className="px-6 py-4">{r.feedback}</td>
-                  {/* <td className="px-6 py-4">
-                    <button onClick={() => setConfirmDelete(r)}>
-                      <Trash2 size={16} />
-                    </button>
-                  </td> */}
                 </tr>
               ))}
             </tbody>
           </table>
+        </div> */}
+        {/* Reviews Cards */}
+        <div className="grid gap-5 mt-6">
+
+          {filtered.length > 0 ? (
+
+            filtered.map((r) => (
+
+              <div
+                key={r.id}
+                className="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg transition-all"
+              >
+
+                <div className="flex justify-between items-start">
+
+                  <div>
+
+                    <h3 className="text-lg font-semibold">
+                      {r.product}
+                    </h3>
+
+                    {/* Rating Stars */}
+                    <div className="flex items-center gap-1 mt-2">
+
+                      {[...Array(5)].map((_, i) => (
+
+                        <Star
+                          key={i}
+                          size={18}
+                          className={
+                            i < r.rating
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-gray-300"
+                          }
+                        />
+
+                      ))}
+
+                    </div>
+
+                  </div>
+
+                  {/* Rating Badge */}
+                  <div
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${r.rating >= 4
+                        ? "bg-green-100 text-green-700"
+                        : r.rating === 3
+                          ? "bg-yellow-100 text-yellow-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                  >
+                    {r.rating}.0 ★
+                  </div>
+
+                </div>
+
+                {/* Review Text */}
+                <p className="mt-4 text-gray-600 leading-7">
+                  {r.feedback}
+                </p>
+
+              </div>
+
+            ))
+
+          ) : (
+
+            <div className="bg-white border rounded-xl p-10 text-center">
+
+              <MessageSquare
+                className="mx-auto mb-3 text-gray-400"
+                size={40}
+              />
+
+              <p className="text-gray-500">
+                No reviews found
+              </p>
+
+            </div>
+
+          )}
+
         </div>
 
       </div>
 
-      {/* Delete Modal */}
-      {/* <Modal
-        open={!!confirmDelete}
-        onClose={() => setConfirmDelete(null)}
-        title="Delete Review?"
-        footer={
-          <Button variant="destructive" onClick={handleDelete}>
-            Delete
-          </Button>
-        }
-      >
-        Are you sure you want to delete this review?
-      </Modal> */}
     </DashboardLayout>
   );
 };
