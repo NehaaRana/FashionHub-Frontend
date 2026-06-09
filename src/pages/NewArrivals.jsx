@@ -6,7 +6,6 @@ import { Button } from "../components/ui/button";
 import { getAllProducts, addToCart, addToWishlist, deleteWishlist, getUserWishlist } from "../services/api";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-// const filters = ["All", "Dresses", "Tops", "Bags", "Shoes", "Accessories"];
 
 const NewArrivals = () => {
   const [products, setProducts] = useState([]);
@@ -153,89 +152,7 @@ const NewArrivals = () => {
       });
     }
   };
-  // const handleWishlist = async (product) => {
-
-  //   const user = JSON.parse(localStorage.getItem("user"));
-
-  //   if (!user) {
-  //     Swal.fire({
-  //       icon: "warning",
-  //       title: "Login Required",
-  //       text: "Please login first!",
-  //     });
-
-  //     return;
-  //   }
-
-  //   try {
-
-  //     const existingItem = wishlist.find(
-  //       (item) => item.pid === product.pid
-  //     );
-
-  //     // REMOVE
-  //     if (existingItem) {
-
-  //       await deleteWishlist(existingItem.wid);
-
-  //       setWishlist((prev) =>
-  //         prev.filter((item) => item.wid !== existingItem.wid)
-  //       );
-
-  //       // UPDATE NAVBAR
-  //       window.dispatchEvent(
-  //         new CustomEvent("wishlistUpdated")
-  //       );
-
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Removed",
-  //         text: "Removed from wishlist",
-  //         timer: 1200,
-  //         showConfirmButton: false,
-  //       });
-
-  //     }
-
-  //     // ADD
-  //     else {
-
-  //       const wishlistData = {
-  //         wid: 0,
-  //         uid: Number(user.uid),
-  //         pid: Number(product.pid),
-  //       };
-
-  //       await addToWishlist(wishlistData);
-
-  //       fetchWishlist();
-
-  //       // UPDATE NAVBAR
-  //       window.dispatchEvent(
-  //         new CustomEvent("wishlistUpdated")
-  //       );
-
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Added",
-  //         text: "Added to wishlist",
-  //         timer: 1200,
-  //         showConfirmButton: false,
-  //       });
-  //     }
-
-  //   } catch (error) {
-
-  //     console.log(error);
-
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "Wishlist action failed",
-  //     });
-  //   }
-  // };
-
+  
 
   const handleWishlist = async (product) => {
 

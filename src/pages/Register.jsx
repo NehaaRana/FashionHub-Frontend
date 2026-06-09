@@ -59,10 +59,6 @@ const Register = () => {
             "Something went wrong!",
           confirmButtonColor: "#000",
         });
-      // console.log("FULL ERROR:", error);
-      // console.log("BACKEND ERROR:", error.response?.data);
-      // alert(JSON.stringify(error.response?.data));
-      // alert("Registration Failed");
     }
   };
 

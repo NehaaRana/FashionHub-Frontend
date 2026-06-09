@@ -19,7 +19,6 @@ const products = [
 ];
 
 const WinterCollection = () => (
-//   <Layout>
 <>
 
     <PageHeader
@@ -43,7 +42,6 @@ const WinterCollection = () => (
         </div>
       </div>
     </section>
-  {/* </Layout> */}
   </>
 );
 

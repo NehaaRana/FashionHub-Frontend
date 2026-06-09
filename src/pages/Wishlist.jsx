@@ -109,7 +109,6 @@ const Wishlist = () => {
         </div>
       </section>
 
-      {/* </Layout> */}
     </>
   );
 };

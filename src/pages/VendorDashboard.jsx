@@ -22,7 +22,7 @@ import {
 import { vendorStore, subscribeVendors } from "../lib/vendorStore";
 
 const items = [
-  { label: "Overview", to: "/vendor", icon: LayoutDashboard },
+  { label: "Overview", to: "/vendor/dashboard", icon: LayoutDashboard },
   { label: "My Products", to: "/vendor/products", icon: Package },
   { label: "Orders", to: "/vendor/orders", icon: ShoppingCart },
   // { label: "Earnings", to: "/vendor/earnings", icon: DollarSign },
@@ -45,13 +45,26 @@ const VendorDashboard = () => {
     products: 0,
     rating: 4.8,
   });
-  const incoming = orders.map((o) => ({
-    id: o.orderNo,
-    product: o.productName,
-    qty: o.quantity,
-    customer: o.customerName,
-    total: `₹${o.totalAmount}`,
-  }));
+  // const incoming = orders.map((o) => ({
+  //   id: o.orderNo,
+  //   product: o.productName,
+  //   qty: o.quantity,
+  //   customer: o.customerName,
+  //   total: `₹${o.totalAmount}`,
+  // }));
+
+
+  const incoming = [...orders]
+    .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate))
+    .slice(0, 5)
+    .map((o) => ({
+      id: o.oid,
+      product: o.productName,
+      qty: o.quantity,
+      customer: o.customerName,
+      total: `₹${o.amount}`,
+    }));
+
   const statusColor = {
     Active: "bg-emerald-100 text-emerald-700",
     "Low Stock": "bg-accent/15 text-accent",
@@ -115,18 +128,6 @@ console.log("EMAIL:", currentVendor?.email);
 
         setUser(currentVendor);
 
-        // FETCH PRODUCTS + ORDERS
-        // const [productsRes, ordersRes] = await Promise.all([
-        //   getVendorProducts(currentVendor.vid || currentVendor.Vid),
-        //   getOrders(),
-        // ]);
-
-        // // FILTER VENDOR ORDERS
-        // const vendorOrders = ordersRes.data.filter(
-        //   (o) =>
-        //     o.vendorId === currentVendor.vid ||
-        //     o.vendorId === currentVendor.Vid
-        // );
 
         const vendorId = currentVendor.vid || currentVendor.Vid;
 
@@ -139,7 +140,8 @@ console.log("EMAIL:", currentVendor?.email);
           ]);
 
           const vendorOrders = ordersRes.data;
-
+          console.log("Vendor Orders:", vendorOrders);
+          console.log("First Order:", vendorOrders[0]);
         setProducts(productsRes.data);
         setOrders(vendorOrders);
         // ONLY PAID ORDERS
@@ -165,15 +167,11 @@ console.log("EMAIL:", currentVendor?.email);
         setStats({
           products: productsRes.data.length,
           orders: vendorOrders.length,
-          // earnings: vendorOrders.reduce(
-          //   (sum, o) => sum + o.totalAmount,
-          //   0
-          // ),
+         
            earnings: paidOrders.reduce(
               (sum, o) => sum + Number(o.amount || 0),
               0
             ),
-          // rating: 4.8,
             rating: averageRating,
 
         });
@@ -213,14 +211,7 @@ console.log("EMAIL:", currentVendor?.email);
             titleAccent="Performance"
             description="Manage your catalogue, fulfil orders and track your earnings on FashionHub."
           />
-          {/* <button
-            disabled={!isApproved}
-            title={!isApproved ? "Available once your store is approved" : undefined}
-            className="inline-flex items-center gap-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-colors font-body text-xs uppercase tracking-[0.15em] font-semibold px-6 py-3 rounded-sm shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <Plus className="h-4 w-4" />
-            Add Product
-          </button> */}
+         
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
@@ -244,43 +235,7 @@ console.log("EMAIL:", currentVendor?.email);
               </button>
             </div>
             <div className="overflow-x-auto">
-              {/* <table className="w-full">
-                <thead className="bg-secondary/40">
-                  <tr>
-                    {["Product", "Price", "Stock", "Sold", "Status"].map((h) => (
-                      <th
-                        key={h}
-                        className="text-left font-body text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-semibold px-6 py-3"
-                      >
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.map((p) => (
-                    <tr key={p.sku} className="border-t border-border hover:bg-secondary/30 transition-colors">
-                      <td className="px-6 py-4">
-                        <p className="font-body text-sm font-semibold text-foreground">{p.name}</p>
-                        <p className="font-body text-[10px] uppercase tracking-[0.15em] text-muted-foreground mt-0.5">
-                          {p.sku}
-                        </p>
-                      </td>
-                      <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">{p.price}</td>
-                      <td className="px-6 py-4 font-body text-sm text-foreground">{p.stock}</td>
-                      <td className="px-6 py-4 font-body text-sm text-muted-foreground">{p.sold}</td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-block font-body text-[10px] uppercase tracking-[0.15em] font-semibold px-3 py-1 rounded-sm ${statusColor[p.status]}`}
-                        >
-                          {p.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table> */}
-              <table className="w-full">
+            <table className="w-full">
                 <thead className="bg-secondary/40">
                   <tr>
                     {["Product", "Price", "Stock", "Image", "Status"].map((h) => (

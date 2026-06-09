@@ -78,9 +78,7 @@ const ProductDetails = () => {
 
       const res = await getAllProducts();
 
-      // const foundProduct = res.data.find(
-      //   (p) => p.pid === Number(id)
-      // );
+      
 
       const foundProduct = res.data.find(
         (p) => p.pid === Number(id)
@@ -105,18 +103,7 @@ const ProductDetails = () => {
 
       }
 
-      // setProduct({
-      //   ...foundProduct,
-
-      //   // gallery images array
-      //   extraImages: parsedImages?.gallery || [],
-
-      //   // color wise images object
-      //   colorImages: parsedImages?.colors || {},
-      // });
-
-      // default selected image
-
+      
 
       setProduct({
         ...foundProduct,
@@ -172,10 +159,7 @@ const ProductDetails = () => {
         );
       }
 
-      // setSelectedImage(
-      //   `https://localhost:7106${foundProduct.productImage}`
-      // );
-
+    
     } catch (error) {
       console.log(error);
     }
@@ -235,17 +219,6 @@ const ProductDetails = () => {
 
     const user = JSON.parse(localStorage.getItem("user"));
 
-    // if (!user) {
-
-    //   Swal.fire({
-    //     icon: "warning",
-    //     title: "Login Required",
-    //     text: "Please login first!",
-    //   });
-
-    //   return;
-    // }
-
     try {
 
       const cartData = {
@@ -302,16 +275,6 @@ const ProductDetails = () => {
     if (!checkUserAccess()) return;
     const user = JSON.parse(localStorage.getItem("user"));
 
-    // if (!user) {
-
-    //   Swal.fire({
-    //     icon: "warning",
-    //     title: "Login Required",
-    //     text: "Please login first!",
-    //   });
-
-    //   return;
-    // }
 
     try {
 
@@ -401,11 +364,6 @@ const ProductDetails = () => {
     (item) => item.pid === product.pid
   );
 
-  // const allImages = [
-  //   product.productImage,
-  //   ...(product.extraImages || []),
-  // ];
-
 
   const allImages = displayImages;
   const handleMouseMove = (e) => {
@@ -413,9 +371,7 @@ const ProductDetails = () => {
     const { left, top, width, height } =
       e.currentTarget.getBoundingClientRect();
 
-    // const x = ((e.pageX - left) / width) * 100;
-    // const y = ((e.pageY - top) / height) * 100;
-    const x = ((e.clientX - left) / width) * 100;
+       const x = ((e.clientX - left) / width) * 100;
     const y = ((e.clientY - top) / height) * 100;
 
     setZoomStyle({
@@ -511,7 +467,7 @@ const ProductDetails = () => {
 
         {/* BREADCRUMB */}
         <div className="mb-10 text-sm text-muted-foreground">
-          Home / New Arrivals /{" "}
+          {/* Home / New Arrivals /{" "} */}
           <span className="text-foreground font-medium">
             {product.productName}
           </span>
@@ -623,104 +579,7 @@ const ProductDetails = () => {
           Customer Reviews
         </h2>
 
-        {/* REVIEW FORM */}
-        {/* <div className="border rounded-3xl p-6 mb-10">
-
-          <h3 className="text-xl font-semibold mb-4">
-            Write Review
-          </h3>
-
-          <select
-            value={rating}
-            onChange={(e) =>
-              setRating(Number(e.target.value))
-            }
-            className="w-full border rounded-xl p-3 mb-4"
-          >
-            <option value={5}>5 Star</option>
-            <option value={4}>4 Star</option>
-            <option value={3}>3 Star</option>
-            <option value={2}>2 Star</option>
-            <option value={1}>1 Star</option>
-          </select>
-
-          <textarea
-            rows="4"
-            placeholder="Write review..."
-            value={reviewText}
-            onChange={(e) =>
-              setReviewText(e.target.value)
-            }
-            className="w-full border rounded-xl p-4"
-          />
-
-          <button
-            onClick={handleReviewSubmit}
-            className="mt-5 bg-black text-white px-8 py-3 rounded-2xl"
-          >
-            Submit Review
-          </button>
-
-        </div> */}
-
-        {/* REVIEW LIST */}
-        {/* <div className="space-y-6">
-
-          {reviews.map((review) => (
-
-            <div
-              key={review.rid}
-              className="border rounded-3xl p-6"
-            >
-
-              <div className="flex justify-between">
-
-                <div className="flex items-center gap-4">
-
-                  <div className="w-14 h-14 rounded-full bg-black text-white flex items-center justify-center font-bold">
-                    {review.userName?.charAt(0)}
-                  </div>
-
-                  <div>
-
-                    <h4 className="font-semibold">
-                      {review.userName}
-                    </h4>
-
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(
-                        review.createdAt
-                      ).toLocaleDateString()}
-                    </p>
-
-                  </div>
-
-                </div>
-
-                <div className="flex">
-
-                  {[...Array(review.rating)].map(
-                    (_, i) => (
-                      <Star
-                        key={i}
-                        className="w-4 h-4 fill-yellow-400 text-yellow-400"
-                      />
-                    )
-                  )}
-
-                </div>
-
-              </div>
-
-              <p className="mt-5 text-muted-foreground leading-7">
-                {review.feedback}
-              </p>
-
-            </div>
-
-          ))}
-
-        </div> */}
+       
         {/* REVIEW LIST */}
         <div className="space-y-5">
 

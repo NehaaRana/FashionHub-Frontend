@@ -43,23 +43,6 @@ const items = [
   // { label: "Settings", to: "/admin/settings", icon: Settings },
 ];
 
-// const recentOrders = [
-//   { id: "#FH-10248", customer: "Aanya Sharma", date: "May 01, 2026", total: "₹4,890", status: "Delivered" },
-//   { id: "#FH-10247", customer: "Priya Iyer", date: "Apr 30, 2026", total: "₹2,150", status: "Shipped" },
-//   { id: "#FH-10246", customer: "Mehak Kapoor", date: "Apr 30, 2026", total: "₹7,320", status: "Processing" },
-//   { id: "#FH-10245", customer: "Riya Verma", date: "Apr 29, 2026", total: "₹1,490", status: "Delivered" },
-//   { id: "#FH-10244", customer: "Sana Khan", date: "Apr 29, 2026", total: "₹3,675", status: "Cancelled" },
-// ];
-
-
-// const topVendors = [
-//   { name: "Saanjh Couture", products: 124, sales: "₹3,42,800" },
-//   { name: "Mira & Co.", products: 86, sales: "₹2,18,450" },
-//   { name: "Indo Threads", products: 71, sales: "₹1,96,220" },
-//   { name: "Velvet Atelier", products: 53, sales: "₹1,42,910" },
-// ];
-
-
 const statusColor = {
   Delivered: "bg-emerald-100 text-emerald-700",
   Shipped: "bg-blue-100 text-blue-700",
@@ -197,23 +180,7 @@ const AdminDashboard = () => {
                     ))}
                   </tr>
                 </thead>
-                {/* <tbody>
-                  {recentOrders.map((o) => (
-                    <tr key={o.id} className="border-t border-border hover:bg-secondary/30 transition-colors">
-                      <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">{o.id}</td>
-                      <td className="px-6 py-4 font-body text-sm text-foreground">{o.customer}</td>
-                      <td className="px-6 py-4 font-body text-xs text-muted-foreground">{o.date}</td>
-                      <td className="px-6 py-4 font-body text-sm font-semibold text-foreground">{o.total}</td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-block font-body text-[10px] uppercase tracking-[0.15em] font-semibold px-3 py-1 rounded-sm ${statusColor[o.status]}`}
-                        >
-                          {o.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody> */}
+                
                 <tbody>
                   {recentOrders.map((o) => (
                     <tr
@@ -260,19 +227,7 @@ const AdminDashboard = () => {
               <h2 className="font-display text-xl font-semibold text-foreground">Top Vendors</h2>
             </div>
             <ul className="p-2">
-              {/* {topVendors.map((v, i) => (
-                <li
-                  key={v.name}
-                  className="flex items-center gap-4 p-4 hover:bg-secondary/40 rounded-sm transition-colors"
-                >
-                  <span className="font-display text-2xl font-bold text-accent w-6">{i + 1}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-body text-sm font-semibold text-foreground truncate">{v.name}</p>
-                    <p className="font-body text-xs text-muted-foreground">{v.products} products</p>
-                  </div>
-                  <p className="font-body text-sm font-semibold text-foreground">{v.sales}</p>
-                </li>
-              ))} */}
+              
               {topVendors.map((v, i) => (
                 <li
                   key={v.vid}

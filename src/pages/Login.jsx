@@ -91,34 +91,30 @@ const Login = () => {
         showConfirmButton: false,
       });
 
-      // setTimeout(() => {
-      //   navigate("/dashboard");
-      //   window.location.reload();
-      // }, 1500);
       setTimeout(() => {
 
-  // Admin
-  if (role === "Admin") {
-    navigate("/dashboard");
-  }
+        // Admin
+        if (role === "Admin") {
+          navigate("/dashboard");
+        }
 
-  // Vendor
-  else if (role === "Vendor") {
+        // Vendor
+        else if (role === "Vendor") {
 
-    navigate("/vendor-pending", {
-      state: { email: form.email }
-    });
+          navigate("/vendor-pending", {
+            state: { email: form.email }
+          });
 
-  }
+        }
 
-  // Normal User
-  else {
-    navigate("/dashboard");
-  }
+        // Normal User
+        else {
+          navigate("/dashboard");
+        }
 
-  window.location.reload();
+        window.location.reload();
 
-}, 1500);
+      }, 1500);
 
     } catch (error) {
       console.error(error.response?.data);
