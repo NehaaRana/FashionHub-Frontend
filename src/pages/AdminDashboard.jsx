@@ -114,6 +114,19 @@ const AdminDashboard = () => {
 
   }, []);
 
+  const formatRevenue = (amount) => {
+    if (amount >= 10000000) {
+      return `₹${(amount / 10000000).toFixed(2)} Cr`;
+    }
+    if (amount >= 100000) {
+      return `₹${(amount / 100000).toFixed(2)} L`;
+    }
+    return `₹${amount.toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  };
+
   return (
     <DashboardLayout role="Admin" userName={user?.name || "Admin"} items={items}>
       <div className="p-6 lg:p-12">
@@ -128,10 +141,11 @@ const AdminDashboard = () => {
           <StatCard
             label="Total Revenue"
             // value={`₹${stats.revenue.toFixed(2)}`}
-             value={`₹${stats.revenue.toLocaleString("en-IN", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}`}
+            //  value={`₹${stats.revenue.toLocaleString("en-IN", {
+            //         minimumFractionDigits: 2,
+            //         maximumFractionDigits: 2,
+            //       })}`}
+            value={formatRevenue(stats.revenue)}
             icon={FaIndianRupeeSign}
           />
 

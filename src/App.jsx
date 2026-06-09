@@ -258,17 +258,33 @@ function App() {
           }
         />
         {/* Redirect Vendor URL */}
-        <Route
+        {/* <Route
           path="/vendor/dashboard"
           element={<Navigate to="/dashboard" replace />}
+        /> */}
+        <Route
+          path="/vendor/dashboard"
+          element={
+            <ProtectedRoute>
+              <VendorDashboard />
+            </ProtectedRoute>
+          }
         />
 
         {/* Redirect Admin URL */}
-        <Route
+        {/* <Route
           path="/admin"
           element={<Navigate to="/dashboard" replace />}
-        />
+        /> */}
 
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/vendor-pending" element={<VendorPending />} />
        
         {/* User Routes */}

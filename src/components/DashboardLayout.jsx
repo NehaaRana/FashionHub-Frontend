@@ -4,6 +4,8 @@ import { LogOut, ShoppingBag } from "lucide-react";
 // import { subscribeVendors } from "../lib/vendorStore";
 import { useNavigate } from "react-router-dom";
 import AdminNotificationBell from "../components/admin/AdminNotificationBell";
+import { useLocation } from "react-router-dom";
+
 
 const DashboardLayout = ({ role, userName, items, children }) => {
   const navigate = useNavigate();
@@ -14,6 +16,11 @@ const DashboardLayout = ({ role, userName, items, children }) => {
 
     navigate("/login");
   };
+
+  const location = useLocation();
+  console.log("Current Path:", location.pathname);
+ 
+ 
   return (
     <div className="min-h-screen bg-background flex flex-col lg:flex-row">
       {/* Sidebar */}
