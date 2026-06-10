@@ -192,10 +192,6 @@ const AdminCategories = () => {
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
           <StatCard label="Total Categories" value={String(stats.total)} icon={FolderTree} delay={0} />
           <StatCard label="Active" value={String(stats.active)} icon={CheckCircle2} delay={0.05} />
-          {/* <StatCard label="Featured" value={String(stats.featured)} icon={Layers} delay={0.1} /> */}
-          {/* <StatCard label="Linked Products" value={stats.products.toLocaleString()} icon={ImageIcon} delay={0.15} /> */}
-          {/* <StatCard label="Total Categories" value={stats.total} />
-            <StatCard label="Active" value={stats.active} /> */}
         </div>
 
         <AdminToolbar
@@ -334,21 +330,6 @@ const AdminCategories = () => {
           </div>
         }
       >
-        {/* <div className="space-y-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="font-body text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-semibold block mb-2">
-                Name *
-              </label>
-              <input
-                value={form.categoryName}
-                onChange={(e) => setForm({ ...form, categoryName: e.target.value, slug: form.slug || slugify(e.target.value) })}
-                className="w-full bg-background border border-border rounded-sm px-4 py-2.5 font-body text-sm focus:outline-none focus:border-accent"
-                placeholder="e.g. Anarkali Suits"
-              />
-            </div>
-          </div>
-        </div> */}
         <div className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
