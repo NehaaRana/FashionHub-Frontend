@@ -1,6 +1,3 @@
-// UI-only shared store for the vendor approval demo flow.
-// In production this would be replaced by API calls / a real DB.
-
 const KEY = "fh_vendor_applications";
 const CURRENT_KEY = "fh_current_vendor_email";
 

@@ -193,28 +193,6 @@ const [adminName, setAdminName] = useState("");
     }
   };
 
-  // Search
-  // const filtered = useMemo(() => {
-  //   return rows.filter((o) =>
-  //     o.address?.toLowerCase().includes(search.toLowerCase()) ||
-  //     o.orderStatus?.toLowerCase().includes(search.toLowerCase())
-  //   );
-  // }, [rows, search]);
-
-//   const filtered = useMemo(() => {
-//   return rows.filter((o) => {
-//     const matchesSearch =
-//       o.address?.toLowerCase().includes(search.toLowerCase()) ||
-//       o.orderStatus?.toLowerCase().includes(search.toLowerCase());
-
-//     const matchesStatus =
-//       statusFilter === "All" ||
-//       o.orderStatus?.toLowerCase() === statusFilter.toLowerCase();
-
-//     return matchesSearch && matchesStatus;
-//   });
-// }, [rows, search, statusFilter]);
-
   const filtered = useMemo(() => {
       return rows.filter(
         (o) =>
@@ -226,23 +204,6 @@ const [adminName, setAdminName] = useState("");
       );
     }, [rows, search, tab]);
 
-
-  //  Stats
-  // const stats = useMemo(() => {
-  //   const total = rows.length;
-  //   // const pending = rows.filter((o) => o.orderStatus === "pending").length;
-  //   // const completed = rows.filter((o) => o.orderStatus === "completed").length;
-  //    const pending = rows.filter(
-  //       (o) => o.orderStatus === "Pending"
-  //     ).length;
-      
-  //     const completed = rows.filter(
-  //       (o) => o.orderStatus === "Delivered"
-  //     ).length;
-
-  // // return { total, pending, completed };
-  //   return { total, pending, completed };
-  // }, [rows]);
   const stats = useMemo(() => {
     return {
       total: rows.length,

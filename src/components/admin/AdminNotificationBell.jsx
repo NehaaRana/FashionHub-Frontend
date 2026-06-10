@@ -4,18 +4,14 @@ import { Bell } from "lucide-react";
 
 import { getPendingVendors } from "../../services/api";
 
-// import { vendorStore, subscribeVendors } from "../../lib/vendorStore";
 
 const AdminNotificationBell = () => {
   const [open, setOpen] = useState(false);
-//   const [pending, setPending] = useState(() => vendorStore.pending());
-const [pending, setPending] = useState([]);
+  const [pending, setPending] = useState([]);
 
-//   useEffect(() => subscribeVendors(() => setPending(vendorStore.pending())), []);
 const fetchPending = async () => {
     try {
       const res = await getPendingVendors();
-    //   setPending(res.data);
     setPending(res || []);
     } catch (err) {
       console.error(err);
@@ -25,7 +21,6 @@ const fetchPending = async () => {
   useEffect(() => {
     fetchPending();
 
-    // optional: auto refresh every 5 sec
     const interval = setInterval(fetchPending, 5000);
     return () => clearInterval(interval);
   }, []);

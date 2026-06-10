@@ -70,18 +70,6 @@ const ProductCard = ({
           {product.badge}
         </span>
       )}
-
-      {/* ADD TO CART BUTTON */}
-      {/* <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onAddToCart();
-        }}
-        className="absolute bottom-3 left-3 right-3 bg-primary text-primary-foreground font-body text-xs uppercase tracking-[0.15em] font-semibold py-3 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 flex items-center justify-center gap-2 hover:bg-primary/90"
-      >
-        <ShoppingBag className="h-3.5 w-3.5" />
-        Add to Cart
-      </button> */}
     </div>
 
     <h3 className="font-body text-sm font-medium text-foreground">

@@ -8,7 +8,6 @@ import ProductCard from "../../components/ProductCard";
 import { useNavigate } from "react-router-dom";
 
 const UserWishlist = () => {
-    //   const [items, setItems] = useState(initial);
     const [items, setItems] = useState([]);
     const [user, setUser] = useState(null);
 const navigate = useNavigate();

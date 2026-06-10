@@ -127,44 +127,7 @@ colorCounts = {},
 
       </div>
 
-      {/* COLORS */}
-      {/* <div>
-
-        <h3 className="font-semibold mb-3 uppercase text-sm">
-          Colors
-        </h3>
-
-        <div className="space-y-2">
-
-          {colors.map((color) => (
-
-            <label
-              key={color}
-              className="flex items-center gap-2 text-sm"
-            >
-
-              <input
-                type="checkbox"
-                checked={selectedColors.includes(color)}
-                onChange={() =>
-                  toggleFilter(
-                    color,
-                    selectedColors,
-                    setSelectedColors
-                  )
-                }
-              />
-
-              {color}
-
-            </label>
-
-          ))}
-
-        </div>
-
-      </div> */}
-
+      
 {/* COLORS */}
 <div>
 
@@ -258,30 +221,6 @@ colorCounts = {},
 
       </div>
 
-      {/* PRICE */}
-      {/* <div>
-
-        <h3 className="font-semibold mb-3 uppercase text-sm">
-          Price
-        </h3>
-
-        <input
-          type="range"
-          min="100"
-          max="10000"
-          value={priceRange}
-          onChange={(e) =>
-            setPriceRange(e.target.value)
-          }
-          className="w-full"
-        />
-
-        <p className="text-sm mt-2">
-          Up to ₹{priceRange}
-        </p>
-
-      </div> */}
-
 {/* PRICE */}
 <div>
 
@@ -302,9 +241,7 @@ colorCounts = {},
         min="100"
         max="10000"
         value={minPrice}
-        // onChange={(e) =>
-        //   setMinPrice(Number(e.target.value))
-        // }
+
         onChange={(e) => {
 
   const value = Number(e.target.value);
@@ -334,9 +271,6 @@ colorCounts = {},
         min="100"
         max="10000"
         value={maxPrice}
-        // onChange={(e) =>
-        //   setMaxPrice(Number(e.target.value))
-        // }
         onChange={(e) => {
 
   const value = Number(e.target.value);

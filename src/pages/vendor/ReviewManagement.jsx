@@ -178,30 +178,7 @@ const ReviewManagement = () => {
 
         </div>
 
-        {/* Table */}
-        {/* <div className="bg-card border rounded-sm overflow-hidden mt-6">
-          <table className="w-full">
-            <thead>
-              <tr>
-                {["Product", "Rating", "Feedback"].map((h) => (
-                  <th key={h} className="px-6 py-3 text-left text-xs">
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-
-            <tbody>
-              {filtered.map((r) => (
-                <tr key={r.id}>
-                  <td className="px-6 py-4">{r.product}</td>
-                  <td className="px-6 py-4"> {r.rating} Star</td>
-                  <td className="px-6 py-4">{r.feedback}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div> */}
+        
         {/* Reviews Cards */}
         <div className="grid gap-5 mt-6">
 

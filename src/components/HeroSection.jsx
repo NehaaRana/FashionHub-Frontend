@@ -22,16 +22,14 @@ const HeroSection = () => {
           essentials to festive celebrations. Made for the modern woman.
         </p>
         <div className="flex flex-wrap gap-4 items-center">
-          {/* <Button variant="hero" size="lg">
-            Shop Now
-          </Button>  */}
+          
           <Button
-  variant="hero"
-  size="lg"
-  onClick={() => navigate("/new-arrivals")}
->
-  Shop Now
-</Button>
+            variant="hero"
+            size="lg"
+            onClick={() => navigate("/new-arrivals")}
+          >
+            Shop Now
+          </Button>
           <Button variant="outline" size="lg" className="font-body uppercase tracking-[0.15em] text-xs px-8">
             View Lookbook
           </Button>

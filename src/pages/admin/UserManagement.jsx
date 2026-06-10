@@ -94,7 +94,6 @@ const UserManagement = () => {
   };
 
   return (
-    // <DashboardLayout role="Admin" userName="Admin" items={adminItems}>
     <DashboardLayout
         role="Admin"
         userName={adminName}

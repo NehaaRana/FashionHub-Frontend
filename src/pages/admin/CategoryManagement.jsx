@@ -6,7 +6,6 @@ import AdminToolbar from "../../components/admin/AdminToolBar";
 import Modal from "../../components/admin/Modal";
 import { adminItems } from "../../components/admin/adminNav";
 import { Button } from "../../components/ui/button";
-// import { toast } from "../hooks/use-toast";
 import {
   FolderTree,
   Layers,

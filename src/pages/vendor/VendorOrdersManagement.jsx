@@ -73,16 +73,7 @@ const VendorOrdersManagement = () => {
     }
   };
 
-  // const filtered = useMemo(() => {
-  //   return rows.filter((o) => {
-  //     if (!search) return true;
-
-  //     return (
-  //       o.product?.toLowerCase().includes(search.toLowerCase()) ||
-  //       o.orderStatus?.toLowerCase().includes(search.toLowerCase())
-  //     );
-  //   });
-  // }, [rows, search]);
+  
 const filtered = useMemo(() => {
   return rows.filter((o) => {
     const matchesTab =
@@ -99,18 +90,7 @@ const filtered = useMemo(() => {
 }, [rows, search, tab]);
 
 
-  // const stats = useMemo(() => {
-  //   return {
-  //     total: rows.length,
-  //     delivered: rows.filter(
-  //       (o) => o.orderStatus?.toLowerCase() === "delivered"
-  //     ).length,
-  //     pending: rows.filter(
-  //       (o) => o.orderStatus?.toLowerCase() === "pending"
-  //     ).length,
-  //   };
-  // }, [rows]);
-  const stats = useMemo(() => {
+    const stats = useMemo(() => {
   return {
     total: rows.length,
 
@@ -210,14 +190,7 @@ const filtered = useMemo(() => {
         </div>
 
 
-        {/* Search */}
-        {/* <AdminToolbar
-          search={search}
-          onSearch={setSearch}
-          addLabel="Refresh"
-          onAdd={fetchOrders}
-        /> */}
-
+       
         {/* Table */}
         <div className="bg-card border rounded-sm overflow-hidden mt-6 overflow-x-auto">
           <table className="w-full">

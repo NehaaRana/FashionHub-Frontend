@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { LogOut, ShoppingBag } from "lucide-react";
-// import { subscribeVendors } from "../lib/vendorStore";
 import { useNavigate } from "react-router-dom";
 import AdminNotificationBell from "../components/admin/AdminNotificationBell";
 import { useLocation } from "react-router-dom";
