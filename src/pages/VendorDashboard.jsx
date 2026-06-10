@@ -44,7 +44,7 @@ const VendorDashboard = () => {
     earnings: 0,
     orders: 0,
     products: 0,
-    rating: 4.8,
+    rating:0,
   });
   // const incoming = orders.map((o) => ({
   //   id: o.orderNo,

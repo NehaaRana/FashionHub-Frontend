@@ -56,6 +56,7 @@ const Navbar = () => {
     try {
 
       const storedUser = JSON.parse(localStorage.getItem("user"));
+      // const storedUser = JSON.parse(localStorage.getItem("role"));
 
       if (!storedUser) return;
 
@@ -406,7 +407,7 @@ const Navbar = () => {
                       to={
                         user?.role === "vendor"
                           ? "/vendor/profile"
-                          : "/dashboard/profile"
+                          : "/dashboard"
                       }
                       onClick={() => setProfileOpen(false)}
                       className="block px-4 py-3 text-sm hover:bg-gray-100 transition-colors"

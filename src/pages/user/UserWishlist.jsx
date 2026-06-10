@@ -28,7 +28,6 @@ const navigate = useNavigate();
 
         loadWishlist();
     }, []);
-    //   const remove = (id) => setItems((s) => s.filter((i) => i.id !== id));
 
     const remove = async (id) => {
         try {
