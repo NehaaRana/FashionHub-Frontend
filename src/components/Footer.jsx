@@ -1,5 +1,3 @@
-// import { Instagram, Twitter } from "lucide-react";
-
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import { Link } from "react-router-dom";
 const Footer = () => (
@@ -61,15 +59,7 @@ const Footer = () => (
           <h4 className="font-body text-xs uppercase tracking-[0.2em] font-semibold text-primary-foreground mb-4">
             {col.title}
           </h4>
-          {/* <ul className="space-y-2.5">
-              {col.links.map((link) => (
-                <li key={link}>
-                  <a href="#" className="font-body text-sm text-primary-foreground/60 hover:text-accent transition-colors">
-                    {link}
-                  </a>
-                </li>
-              ))}
-            </ul> */}
+          
           <ul className="space-y-2.5">
             {col.links.map((link) => (
               <li key={link.name}>

@@ -470,6 +470,7 @@ const ProductManagement = () => {
     "Black",
     "White",
     "Blue",
+    "Navy Blue",
     "Beige",
     "Green",
     "Pink",
@@ -1165,86 +1166,6 @@ const ProductManagement = () => {
 
                                 <button
                                   type="button"
-                                  // onClick={() => {
-
-                                  //   // REMOVE PREVIEW
-                                  //   const updatedPreviews =
-                                  //     [...colorPreviews[color]];
-
-                                  //   updatedPreviews.splice(index, 1);
-
-                                  //   setColorPreviews((prev) => ({
-                                  //     ...prev,
-                                  //     [color]: updatedPreviews,
-                                  //   }));
-
-                                  //   // REMOVE FILE
-                                  //   // const updatedFiles =
-                                  //   //   [...(form.colorImages[color] || [])];
-
-                                  //   // updatedFiles.splice(index, 1);
-
-                                  //   // setForm((prev) => ({
-                                  //   //   ...prev,
-                                  //   //   colorImages: {
-                                  //   //     ...prev.colorImages,
-                                  //   //     [color]: updatedFiles,
-                                  //   //   },
-                                  //   // }));
-                                  //   const removedImage =
-                                  //     form.colorImages[color][index];
-
-                                  //   // REMOVE FROM COLOR
-                                  //   const updatedFiles =
-                                  //     [...(form.colorImages[color] || [])];
-
-                                  //   updatedFiles.splice(index, 1);
-
-                                  //   // REMOVE FROM GALLERY
-                                  //   // const updatedGallery =
-                                  //   //   (form.images || []).filter(
-                                  //   //     (img) => img !== removedImage
-                                  //   //   );
-
-                                  //   // CHECK IF IMAGE EXISTS IN OTHER COLORS
-                                  //   let stillUsed = false;
-
-                                  //   for (const clr in form.colorImages) {
-
-                                  //     if (clr === color) continue;
-
-                                  //     if (
-                                  //       (form.colorImages[clr] || []).includes(removedImage)
-                                  //     ) {
-                                  //       stillUsed = true;
-                                  //       break;
-                                  //     }
-                                  //   }
-
-                                  //   // REMOVE FROM GALLERY ONLY IF UNUSED
-                                  //   let updatedGallery = [...(form.images || [])];
-
-                                  //   if (!stillUsed) {
-
-                                  //     const removeIndex =
-                                  //       updatedGallery.indexOf(removedImage);
-
-                                  //     if (removeIndex > -1) {
-                                  //       updatedGallery.splice(removeIndex, 1);
-                                  //     }
-                                  //   }
-
-                                  //   setForm((prev) => ({
-                                  //     ...prev,
-
-                                  //     images: updatedGallery,
-
-                                  //     colorImages: {
-                                  //       ...prev.colorImages,
-                                  //       [color]: updatedFiles,
-                                  //     },
-                                  //   }));
-                                  // }}
                                   onClick={() => {
 
                                     const removedImage =

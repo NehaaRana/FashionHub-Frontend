@@ -5,19 +5,6 @@ import Modal from "../../components/admin/Modal";
 import { userNav } from "./userNav";
 import { Plus, Pencil, Trash2, Home, Briefcase, MapPin } from "lucide-react";
 
-// interface Address {
-//   id: string;
-//   label: string;
-//   type: "Home" | "Work" | "Other";
-//   name: string;
-//   phone: string;
-//   line1: string;
-//   line2?: string;
-//   city: string;
-//   state: string;
-//   pincode: string;
-//   isDefault?: boolean;
-// }
 
 const initial = [
   {

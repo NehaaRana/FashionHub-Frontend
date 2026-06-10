@@ -21,33 +21,14 @@ const UserCoupons = () => {
     loadCoupons();
   }, []);
 
-  //   const loadCoupons = async () => {
-  //   try {
-
-  //     const userRes = await getCurrentUser();
-
-  //     const uid = userRes.data.uid;
-
-  //     // const res = await getUserCoupons(uid);
-  //     const res = await getCoupons();
-
-  //     setCoupons(res.data);
-
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-
+  
   const loadCoupons = async () => {
     try {
 
 
       const userRes = await getCurrentUser();
 
-      //user data
-      // const userRes = await getCurrentUser();
-
+    
       const currentUser = userRes.data;
 
       setUser(currentUser);

@@ -149,32 +149,7 @@ const UserProfile = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // const handleSave = async () => {
-  //   try {
-  //     console.log("Profile Data:", profile);
-  //     // await updateUser(user.uid, profile);
-  //     await updateUser(user.uid, {
-  //       ...profile,
-  //       dob: profile.dob === "" ? null : profile.dob,
-  //     });
-  //     await Swal.fire({
-  //       icon: "success",
-  //       title: "Profile Updated",
-  //       text: "Your profile has been updated successfully",
-  //       confirmButtonColor: "#000",
-  //     });
-  //     // alert("Profile updated!");
-  //   } catch (err) {
-  //     console.log(err);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Update Failed",
-  //       text: "Failed to update profile",
-  //       confirmButtonColor: "#000",
-  //     });
-  //   }
-  // };
-
+  
   const handleSave = async () => {
 
     if (!validateForm()) {
