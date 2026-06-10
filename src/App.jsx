@@ -285,6 +285,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+          <Route
+            path="/vendor/profile"
+                  element={
+                    <ProtectedRoute allowedRoles={["vendor"]}>
+                      <VendorSettings />
+                    </ProtectedRoute>
+                  }
+                />
+        
         <Route path="/vendor-pending" element={<VendorPending />} />
        
         {/* User Routes */}

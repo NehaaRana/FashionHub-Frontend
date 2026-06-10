@@ -126,7 +126,7 @@ const VendorRegister = () => {
         password: form.password,
         mobileno: form.phone,
         city: form.city,
-        state: "Gujarat",
+        state: "",
         specialization: form.category,
         approvedByAdmin: "Pending",
       });
