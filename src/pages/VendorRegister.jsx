@@ -71,46 +71,165 @@ const VendorRegister = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
+  // const [form, setForm] = useState({
+  //   storeName: "",
+  //   ownerName: "",
+  //   email: "",
+  //   phone: "",
+  //   password: "",
+  //   city: "",
+  //   category: "",
+  //   gstin: "",
+  //   productsCount: counts[1],
+  //   description: "",
+  //   agree: false,
+  // });
+
   const [form, setForm] = useState({
-    storeName: "",
+    vendorName: "",
+    brandName: "",
     ownerName: "",
     email: "",
     phone: "",
     password: "",
     city: "",
+    state: "",
     category: "",
     gstin: "",
     productsCount: counts[1],
     description: "",
     agree: false,
   });
+  const states = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal"
+  ];
+  const [errors, setErrors] = useState({});
+  const set = (k, v) => {
+    setForm((prev) => ({
+      ...prev,
+      [k]: v,
+    }));
 
-  const set = (k, v) =>
-    setForm((p) => ({ ...p, [k]: v }));
-
+    setErrors((prev) => ({
+      ...prev,
+      [k]: "",
+    }));
+  };
   const canNext = useMemo(() => {
     if (step === 1)
-      return form.storeName && form.ownerName && form.email && form.phone && form.password;
-    if (step === 2) return form.city && form.category && form.gstin && form.productsCount;
+      return form.vendorName && form.brandName && form.ownerName && form.email && form.phone && form.password;
+    if (step === 2) return form.city && form.state && form.category && form.gstin && form.productsCount;
     return form.agree && form.description.length >= 20;
   }, [step, form]);
 
+  const validateStep = () => {
+    const newErrors = {};
+
+    if (step === 1) {
+      if (!form.vendorName.trim())
+        newErrors.vendorName = "Vendor Name is required";
+
+      if (!form.brandName.trim())
+        newErrors.brandName = "Brand Name is required";
+
+      if (!form.ownerName.trim())
+        newErrors.ownerName = "Owner Name is required";
+
+      if (!form.email.trim()) {
+        newErrors.email = "Email is required";
+      } else if (
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(form.email)
+      ) {
+        newErrors.email = "Enter a valid email address";
+      }
+
+      if (!form.phone.trim()) {
+        newErrors.phone = "Phone number is required";
+      } else if (!/^[0-9]{10}$/.test(form.phone)) {
+        newErrors.phone = "Phone number must be 10 digits";
+      }
+
+      if (!form.password) {
+        newErrors.password = "Password is required";
+      } else if (form.password.length < 6) {
+        newErrors.password = "Password must be at least 6 characters";
+      }
+    }
+
+    if (step === 2) {
+      if (!form.city.trim())
+        newErrors.city = "City is required";
+
+      if (!form.state)
+        newErrors.state = "State is required";
+
+      if (!form.category)
+        newErrors.category = "Category is required";
+
+      if (!form.gstin.trim())
+        newErrors.gstin = "GSTIN is required";
+    }
+
+    if (step === 3) {
+      if (form.description.length < 20)
+        newErrors.description =
+          "Description must be at least 20 characters";
+
+      if (!form.agree)
+        newErrors.agree =
+          "Please accept Vendor Agreement";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     console.log("Submitting...", form, "canNext:", canNext, "step:", step);
 
-    if (!canNext) {
-      // alert("Please fill all required fields!");
-      Swal.fire({
-        icon: "warning",
-        title: "Incomplete Form",
-        text: "Please fill all required fields!",
-        confirmButtonColor: "#000",
-      });
+    // if (!canNext) {
+    //   // alert("Please fill all required fields!");
+    //   Swal.fire({
+    //     icon: "warning",
+    //     title: "Incomplete Form",
+    //     text: "Please fill all required fields!",
+    //     confirmButtonColor: "#000",
+    //   });
+    //   return;
+    // }
+
+    if (!validateStep()) {
       return;
     }
-
     if (step < 3) {
       setStep(step + 1);
       return;
@@ -118,19 +237,31 @@ const VendorRegister = () => {
 
     try {
       console.log("Calling API...");
+      // await registerVendor({
+      //   vendorname: form.storeName,
+      //   brandname: form.storeName,
+      //   ownername: form.ownerName,
+      //   email: form.email,
+      //   password: form.password,
+      //   mobileno: form.phone,
+      //   city: form.city,
+      //   state: "",
+      //   specialization: form.category,
+      //   approvedByAdmin: "Pending",
+      // });
+
       await registerVendor({
-        vendorname: form.storeName,
-        brandname: form.storeName,
+        vendorname: form.vendorName,
+        brandname: form.brandName,
         ownername: form.ownerName,
         email: form.email,
         password: form.password,
         mobileno: form.phone,
         city: form.city,
-        state: "",
+        state: form.state,
         specialization: form.category,
         approvedByAdmin: "Pending",
       });
-
       Swal.fire({
         icon: "success",
         title: "Application Submitted",
@@ -202,53 +333,92 @@ const VendorRegister = () => {
           >
             {step === 1 && (
               <>
-                <Field label="Store Name" icon={Store}>
+
+                <Field label="Vendor Name" icon={Store}>
                   <input
-                    required
-                    value={form.storeName}
-                    onChange={(e) => set("storeName", e.target.value)}
-                    placeholder="e.g. Saanjh Couture"
-                    className={inputCls}
+                    value={form.vendorName}
+                    onChange={(e) => set("vendorName", e.target.value)}
+                    placeholder="Fashion Hub Vendor"
+                    className={`${inputCls} ${errors.vendorName
+                      ? "border-red-500"
+                      : ""
+                      }`}
                   />
+                  {errors.vendorName && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.vendorName}
+                    </p>
+                  )}
+                </Field>
+                <Field label="Brand Name" icon={Tag}>
+                  <input
+
+                    value={form.brandName}
+                    onChange={(e) => set("brandName", e.target.value)}
+                    placeholder="Nike, Zara, H&M..."
+                    className={`${inputCls} ${errors.brandName
+                      ? "border-red-500"
+                      : ""
+                      }`}
+                  />
+                  {errors.brandName && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.brandName}
+                    </p>
+                  )}
                 </Field>
                 <Field label="Owner Full Name" icon={User}>
                   <input
-                    required
+
                     value={form.ownerName}
                     onChange={(e) => set("ownerName", e.target.value)}
                     placeholder="Jane Doe"
-                    className={inputCls}
+                    className={`${inputCls} ${errors.ownerName
+                      ? "border-red-500"
+                      : ""
+                      }`}
                   />
+                  {errors.ownerName && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.ownerName}
+                    </p>
+                  )}
                 </Field>
                 <div className="grid sm:grid-cols-2 gap-5">
                   <Field label="Business Email" icon={Mail}>
                     <input
-                      required
+
                       type="email"
                       value={form.email}
                       onChange={(e) => set("email", e.target.value)}
                       placeholder="hello@yourstore.com"
-                      className={inputCls}
+                      className={`${inputCls} ${errors.email
+                        ? "border-red-500"
+                        : ""
+                        }`}
                     />
+                    {errors.email && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.email}
+                      </p>
+                    )}
                   </Field>
-                  {/* <Field label="Password" icon={Lock}>
-                    <input
-                      type="password"
-                      required
-                      value={form.password}
-                      onChange={(e) => set("password", e.target.value)}
-                      className={inputCls}
-                    />
-                  </Field> */}
                   <Field label="Password" icon={Lock}>
                     <div className="relative">
                       <input
                         type={showPassword ? "text" : "password"}
-                        required
+
                         value={form.password}
                         onChange={(e) => set("password", e.target.value)}
-                        className={`${inputCls} pr-10`}
+                        // className={`${inputCls} pr-10`}
+                        className={`${inputCls} pr-10 ${errors.password ? "border-red-500" : ""
+                          }`}
                       />
+                      {errors.password && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.password}
+                        </p>
+                      )}
 
                       <button
                         type="button"
@@ -265,12 +435,25 @@ const VendorRegister = () => {
                   </Field>
                   <Field label="Phone" icon={Phone}>
                     <input
-                      required
+                      maxLength={10}
                       value={form.phone}
-                      onChange={(e) => set("phone", e.target.value)}
+                      onChange={(e) =>
+                        set(
+                          "phone",
+                          e.target.value.replace(/\D/g, "")
+                        )
+                      }
                       placeholder="+91 98xxx xxxxx"
-                      className={inputCls}
+                      className={`${inputCls} ${errors.phone
+                        ? "border-red-500"
+                        : ""
+                        }`}
                     />
+                    {errors.phone && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.phone}
+                      </p>
+                    )}
                   </Field>
                 </div>
               </>
@@ -281,50 +464,106 @@ const VendorRegister = () => {
                 <div className="grid sm:grid-cols-2 gap-5">
                   <Field label="City" icon={MapPin}>
                     <input
-                      required
+
                       value={form.city}
                       onChange={(e) => set("city", e.target.value)}
                       placeholder="Mumbai"
-                      className={inputCls}
+                      className={`${inputCls} ${errors.city
+                        ? "border-red-500"
+                        : ""
+                        }`}
                     />
+                    {errors.city && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.city}
+                      </p>
+                    )}
                   </Field>
-                  <Field label="Primary Category" icon={Tag}>
+                  <Field label="State" icon={MapPin}>
                     <select
-                      value={form.category}
-                      onChange={(e) => set("category", e.target.value)}
-                      className={inputCls}
+                      value={form.state}
+                      onChange={(e) => set("state", e.target.value)}
+                      className={`${inputCls} ${errors.state
+                        ? "border-red-500"
+                        : ""
+                        }`}
                     >
-                      {categories
-                        .filter((c) => c.isActive) // optional but recommended
-                        .map((c) => (
-                          <option key={c.cid} value={c.categoryName}>
-                            {c.categoryName}
-                          </option>
-                        ))}
+                      <option value="">Select State</option>
+
+                      {states.map((state) => (
+                        <option key={state} value={state}>
+                          {state}
+                        </option>
+                      ))}
                     </select>
+                    {errors.state && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.state}
+                      </p>
+                    )}
                   </Field>
                 </div>
+                <Field label="Primary Category" icon={Tag}>
+                  <select
+                    value={form.category}
+                    onChange={(e) => set("category", e.target.value)}
+                    className={`${inputCls} ${errors.category
+                      ? "border-red-500"
+                      : ""
+                      }`}
+                  >
+                    {categories
+                      .filter((c) => c.isActive) // optional but recommended
+                      .map((c) => (
+                        <option key={c.cid} value={c.categoryName}>
+                          {c.categoryName}
+                        </option>
+                      ))}
+                  </select>
+                  {errors.category && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.category}
+                    </p>
+                  )}
+                </Field>
+
                 <div className="grid sm:grid-cols-2 gap-5">
                   <Field label="GSTIN" icon={ShieldCheck}>
                     <input
-                      required
+
                       value={form.gstin}
                       onChange={(e) => set("gstin", e.target.value.toUpperCase())}
                       placeholder="22AAAAA0000A1Z5"
-                      className={inputCls}
+                      className={`${inputCls} ${errors.gstin
+                        ? "border-red-500"
+                        : ""
+                        }`}
                     />
+                    {errors.gstin && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.gstin}
+                      </p>
+                    )}
                   </Field>
                   <Field label="Catalogue Size" icon={Package}>
                     <select
                       value={form.productsCount}
                       onChange={(e) => set("productsCount", e.target.value)}
-                      className={inputCls}
+                      className={`${inputCls} ${errors.productsCount
+                        ? "border-red-500"
+                        : ""
+                        }`}
                     >
                       {counts.map((c) => (
                         <option key={c}>{c} products</option>
                       ))}
                     </select>
                   </Field>
+                  {errors.productsCount && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.productsCount}
+                    </p>
+                  )}
                 </div>
               </>
             )}
@@ -333,25 +572,36 @@ const VendorRegister = () => {
               <>
                 <Field label="About your brand" icon={FileText}>
                   <textarea
-                    required
+
                     rows={5}
                     minLength={20}
                     value={form.description}
                     onChange={(e) => set("description", e.target.value)}
                     placeholder="Tell us your story, USP, what makes your label different..."
-                    className={`${inputCls} resize-none`}
+                    // className={`${inputCls} resize-none`}
+                    className={`${inputCls} ${errors.productsCount
+                      ? "border-red-500"
+                      : ""
+                      }`}
                   />
                   <p className="font-body text-[11px] text-muted-foreground mt-2">
                     {form.description.length}/20 characters minimum
                   </p>
                 </Field>
+                {errors.description && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.description}
+                  </p>
+                )}
 
                 <div className="bg-secondary/40 border border-border rounded-sm p-5 space-y-2">
                   <h3 className="font-display text-sm font-semibold text-foreground">
                     Application Summary
                   </h3>
-                  <SummaryRow label="Store" value={form.storeName} />
                   <SummaryRow label="Owner" value={form.ownerName} />
+                  <SummaryRow label="Vendor Name" value={form.vendorName} />
+                  <SummaryRow label="Brand Name" value={form.brandName} />
+                  <SummaryRow label="State" value={form.state} />
                   <SummaryRow label="Email" value={form.email} />
                   <SummaryRow label="City" value={form.city} />
                   <SummaryRow label="Category" value={form.category} />
@@ -368,8 +618,16 @@ const VendorRegister = () => {
                   />
                   <span className="font-body text-xs text-muted-foreground leading-relaxed">
                     I confirm the information is accurate and agree to the{" "}
-                    <a href="#" className="text-accent hover:underline">Vendor Agreement</a> and{" "}
-                    <a href="#" className="text-accent hover:underline">Commission Policy</a>.
+                    {/* <a href="#" className="text-accent hover:underline">Vendor Agreement</a> and{" "} */}
+                    <Link
+                      to="/vendor-agreement"
+                      target="_blank"
+                      className="text-accent hover:underline"
+                    >
+                      Vendor Agreement
+                    </Link>
+
+                    {/* <a href="#" className="text-accent hover:underline">Commission Policy</a>. */}
                   </span>
                 </label>
               </>
@@ -385,7 +643,9 @@ const VendorRegister = () => {
               >
                 <ChevronLeft className="h-4 w-4" /> Back
               </button>
-              <Button type="submit" variant="hero" disabled={!canNext}>
+              <Button type="submit" variant="hero"
+              //  disabled={!canNext}
+              >
                 {step === 3 ? "Submit Application" : "Continue"}
                 {step !== 3 && <ChevronRight className="h-4 w-4" />}
               </Button>

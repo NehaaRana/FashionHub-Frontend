@@ -26,16 +26,34 @@ const VendorPending = () => {
   const [emailLookup, setEmailLookup] = useState("");
 
   const [app, setApp] = useState(null);
+  const [error, setError] = useState("");
+
+  // useEffect(() => {
+  //   const fetchVendor = async () => {
+  //     try {
+  //       const email = emailFromNav || emailLookup;
+
+  //       if (!email) return;
+
+  //       const res = await getVendorByEmail(email);
+  //       setApp(res.data);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+
+  //   fetchVendor();
+  // }, [emailFromNav]);
 
   useEffect(() => {
     const fetchVendor = async () => {
       try {
-        const email = emailFromNav || emailLookup;
+        if (!emailFromNav) return;
 
-        if (!email) return;
+        const res = await getVendorByEmail(emailFromNav);
 
-        const res = await getVendorByEmail(email);
         setApp(res.data);
+        setError("");
       } catch (err) {
         console.error(err);
       }
@@ -43,17 +61,24 @@ const VendorPending = () => {
 
     fetchVendor();
   }, [emailFromNav]);
-
   // useEffect(() => subscribeVendors(() => setApp(vendorStore.current())), []);
 
-  const lookup = () => {
-    const found = vendorStore.byEmail(emailLookup.trim());
-    if (found) {
-      vendorStore.setCurrentEmail(found.email);
-      setApp(found);
+  const lookup = async () => {
+    try {
+      if (!emailLookup.trim()) return;
+
+      const res = await getVendorByEmail(emailLookup.trim());
+
+      if (res.data) {
+        setApp(res.data);
+        setError("");
+      }
+    } catch (err) {
+      console.error(err);
+      setApp(null);
+      setError("No application found for this email.");
     }
   };
-
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <PromoBar />
@@ -75,14 +100,24 @@ const VendorPending = () => {
                 <input
                   value={emailLookup}
                   onChange={(e) => setEmailLookup(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      lookup();
+                    }
+                  }}
                   placeholder="hello@yourstore.com"
                   className="flex-1 bg-background border border-input rounded-sm px-4 py-3 font-body text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent"
                 />
                 <Button onClick={lookup} variant="gold">Look up</Button>
               </div>
+              {error && (
+                <p className="text-red-500 text-sm mt-3">
+                  {error}
+                </p>
+              )}
               <p className="font-body text-xs text-muted-foreground mt-6">
                 Haven't applied yet?{" "}
-                <Link to="/vendor/register" className="text-accent font-semibold hover:underline">
+                <Link to="/vendor-register" className="text-accent font-semibold hover:underline">
                   Apply here
                 </Link>
               </p>
@@ -98,7 +133,7 @@ const VendorPending = () => {
 };
 
 const StatusCard = ({ app }) => {
-  if (app.approvedByAdmin  === "Approved") {
+  if (app.approvedByAdmin === "Approved") {
     return (
       <div className="bg-card border border-border rounded-sm overflow-hidden">
         <div className="bg-gradient-to-br from-accent/20 via-accent/5 to-transparent p-10 text-center border-b border-border">
@@ -129,7 +164,7 @@ const StatusCard = ({ app }) => {
     );
   }
 
-  if (app.approvedByAdmin  === "Rejected") {
+  if (app.approvedByAdmin === "Rejected") {
     return (
       <div className="bg-card border border-border rounded-sm overflow-hidden">
         <div className="bg-destructive/5 p-10 text-center border-b border-border">
@@ -153,7 +188,8 @@ const StatusCard = ({ app }) => {
             </p>
           </div>
           <Meta app={app} />
-          <Link to="/vendor/register">
+          {/* <Link to="/vendor/register"> */}
+          <Link to="/vendor-register">
             <Button variant="gold" className="w-full">
               <RefreshCcw className="h-4 w-4" /> Re-submit Application
             </Button>
@@ -212,14 +248,14 @@ const Meta = ({ app }) => (
     <MetaRow label="Application ID" value={app.vid} />
     {/* <MetaRow label="Submitted" value={new Date(app.submittedAt).toLocaleDateString()} /> */}
     <MetaRow
-  label="Submitted"
-  value={new Date(app.createdAt).toLocaleDateString()}
-/>
+      label="Submitted"
+      value={new Date(app.createdAt).toLocaleDateString()}
+    />
 
-<MetaRow
-  label="Category"
-  value={app.specialization}
-/>
+    <MetaRow
+      label="Category"
+      value={app.specialization}
+    />
     <MetaRow label="Email" value={app.email} />
 
   </div>

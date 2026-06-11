@@ -46,6 +46,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AboutUs from "./pages/About";
 import ContactUs from "./pages/ContactUs";
 import FAQs from "./pages/FAQs";
+import VendorAgreement from "./pages/VendorAgreement";
 
 function App() {
 
@@ -62,6 +63,7 @@ function App() {
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/faqs" element={<FAQs />} />
+          <Route path="/vendor-agreement" element={<VendorAgreement />} />
             {/* NEW CATEGORY PAGES */}
 
           <Route path="/western-wear" element={<WesternWear />} />
