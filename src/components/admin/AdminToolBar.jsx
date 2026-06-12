@@ -21,7 +21,7 @@ const AdminToolbar = ({
         className="w-full bg-card border border-border rounded-sm pl-10 pr-4 py-2.5 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent transition-colors"
       />
     </div>
-    {showFilter && (
+    {/* {showFilter && (
       <Button variant="outline" size="sm" className="font-body text-xs uppercase tracking-[0.15em]">
         <Filter className="h-3.5 w-3.5" /> Filter
       </Button>
@@ -30,7 +30,7 @@ const AdminToolbar = ({
       <Button variant="outline" size="sm" className="font-body text-xs uppercase tracking-[0.15em]">
         <Download className="h-3.5 w-3.5" /> Export
       </Button>
-    )}
+    )} */}
     {onAdd && (
       <Button onClick={onAdd} variant="gold" size="sm">
         <Plus className="h-3.5 w-3.5" /> {addLabel}

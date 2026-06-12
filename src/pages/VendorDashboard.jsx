@@ -200,6 +200,21 @@ console.log("EMAIL:", currentVendor?.email);
     setProducts(res.data);
   };
 
+  const formatRevenue = (amount) => {
+    if (amount >= 10000000) {
+      return `₹${(amount / 10000000).toFixed(2)} Cr`;
+    }
+
+    if (amount >= 100000) {
+      return `₹${(amount / 100000).toFixed(2)} L`;
+    }
+
+    return `₹${amount.toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  };
+
   return (
     <DashboardLayout role="Vendor" userName={vendorName} items={items}>
       <div className="p-6 lg:p-12">
@@ -217,7 +232,7 @@ console.log("EMAIL:", currentVendor?.email);
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
 
-          <StatCard label="Total Earnings" value={`₹${stats.earnings}`} icon={FaIndianRupeeSign} />
+          <StatCard label="Total Earnings" value={formatRevenue(stats.earnings)} icon={FaIndianRupeeSign} />
           <StatCard label="Orders" value={stats.orders} icon={ShoppingCart} />
           <StatCard label="Active Products" value={stats.products} icon={Package} />
           <StatCard label="Avg. Rating" value={stats.rating} icon={Star} />

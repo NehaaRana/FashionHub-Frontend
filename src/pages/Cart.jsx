@@ -115,6 +115,8 @@ const navigate = useNavigate();
       setItems((prev)=>
         prev.filter((i)=>i.id != id)
       )
+          window.dispatchEvent(new Event("cartUpdated"));
+
       // setItems(items.filter((i) => i.id !== id));
     } catch (error) {
       console.log(error);

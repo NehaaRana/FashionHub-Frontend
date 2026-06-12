@@ -53,6 +53,11 @@ const Wishlist = () => {
         prev.filter((item) => item.wid !== wid)
       );
 
+       // Update Navbar wishlist count
+        window.dispatchEvent(
+          new Event("wishlistUpdated")
+        );
+
        Swal.fire({
         icon: "success",
         title: "Removed!",
@@ -63,10 +68,10 @@ const Wishlist = () => {
     } catch (error) {
       console.log("Remove Wishlist Error:", error);
          Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: "Failed to remove item",
-    });
+          icon: "error",
+          title: "Oops...",
+          text: "Failed to remove item",
+        });
     }
   };
 

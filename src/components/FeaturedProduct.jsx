@@ -38,9 +38,9 @@ const FeaturedProducts = () => (
               />
 
               {/* Wishlist */}
-              <button className="absolute top-3 right-3 bg-white/80 rounded-full p-2 opacity-0 group-hover:opacity-100">
+              {/* <button className="absolute top-3 right-3 bg-white/80 rounded-full p-2 opacity-0 group-hover:opacity-100">
                 <Heart className="h-4 w-4" />
-              </button>
+              </button> */}
 
               {/* Sale */}
               {product.sale && (
@@ -50,10 +50,10 @@ const FeaturedProducts = () => (
               )}
 
               {/* Add to cart */}
-              <button className="absolute bottom-3 left-3 right-3 bg-black text-white text-xs py-2 opacity-0 group-hover:opacity-100">
+              {/* <button className="absolute bottom-3 left-3 right-3 bg-black text-white text-xs py-2 opacity-0 group-hover:opacity-100">
                 <ShoppingBag className="h-3 w-3 inline mr-1" />
                 Add to Cart
-              </button>
+              </button> */}
             </div>
 
             {/* Info */}

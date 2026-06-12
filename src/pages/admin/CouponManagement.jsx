@@ -581,7 +581,7 @@ const handleSave = async () => {
           />
 
           <input
-            placeholder="Discount Type"
+            placeholder="Discount Percentage"
             value={form.discountType}
             onChange={(e) => setForm({ ...form, discountType: e.target.value })}
             className="w-full border px-3 py-2"
