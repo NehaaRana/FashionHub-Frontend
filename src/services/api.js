@@ -227,5 +227,9 @@ export const useCoupon = (couponId, data) =>
 export const markCouponUsed = (couponId, data) =>
   API.put(`/Coupons/use/${couponId}`, data);
 
+//chnage password-vendor
+export const changeVendorPassword = (id, data) =>
+  API.put(`/Vendors/change-password/${id}`, data);
+
 export default API;
 
