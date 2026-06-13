@@ -47,6 +47,7 @@ const VendorManagement = () => {
   const fetchVendors = async () => {
     try {
       const res = await getVendors();
+      console.log("Vendor Data:", res.data);
 
       const formatted = res.data.map((v) => ({
         id: v.vid,
@@ -84,13 +85,23 @@ const VendorManagement = () => {
     // const approved = rows.filter((v) => v.approved).length;
     // const pending = rows.filter((v) => !v.approved).length;
 
-    const approved = rows.filter(
-      (v) => v.approvedStatus === "Approved"
-    ).length;
+    // const approved = rows.filter(
+    //   (v) => v.approvedStatus === "Approved"
+    // ).length;
 
-    const pending = rows.filter(
-      (v) => v.approvedStatus === "Pending"
-    ).length;
+    // const pending = rows.filter(
+    //   (v) => v.approvedStatus === "Pending"
+    // ).length;
+
+     const approved = rows.filter(
+        (v) => v.approvedStatus === true || v.approvedStatus === "true"
+      ).length;
+
+      const pending = rows.filter(
+        (v) => v.approvedStatus === null
+      ).length;
+
+
     return { total, approved, pending };
   }, [rows]);
 
@@ -179,7 +190,7 @@ const VendorManagement = () => {
 
                       {/* Status */}
                       <td className="px-6 py-4">
-                        <span
+                        {/* <span
                           className={`px-3 py-1 text-[10px] uppercase font-semibold rounded-sm ${
                             // v.approved
                             //   ? "bg-emerald-100 text-emerald-700"
@@ -191,8 +202,24 @@ const VendorManagement = () => {
                                 : "bg-yellow-100 text-yellow-700"
                             }`}
                         >
-                          {/* {v.approved ? "Approved" : "Pending"} */}
+                        
                           {v.approvedStatus}
+                        </span> */}
+
+                        <span
+                          className={`px-3 py-1 text-[10px] uppercase font-semibold rounded-sm ${
+                            v.approvedStatus === true || v.approvedStatus === "true"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : v.approvedStatus === "Rejected"
+                              ? "bg-red-100 text-red-700"
+                              : "bg-yellow-100 text-yellow-700"
+                          }`}
+                        >
+                          {v.approvedStatus === true || v.approvedStatus === "true"
+                            ? "Approved"
+                            : v.approvedStatus === "Rejected"
+                            ? "Rejected"
+                            : "Pending"}
                         </span>
                       </td>
 
