@@ -45,6 +45,7 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     try {
       const res = await getUsers();
+      console.log("Users Data:", res.data);
 
       const formatted = res.data.map((u) => ({
         id: u.uid,
@@ -72,11 +73,11 @@ const UserManagement = () => {
     );
   }, [rows, search]);
 
-  // 📊 Stats
+  //  Stats
   const stats = useMemo(() => {
     const total = rows.length;
     const admins = rows.filter((u) => u.role === "Admin").length;
-    const customers = rows.filter((u) => u.role === "Customer").length;
+    const customers = rows.filter((u) => u.role === "User").length;
 
     return { total, admins, customers };
   }, [rows]);

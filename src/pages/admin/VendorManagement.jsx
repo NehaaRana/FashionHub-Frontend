@@ -98,7 +98,7 @@ const VendorManagement = () => {
       ).length;
 
       const pending = rows.filter(
-        (v) => v.approvedStatus === null
+        (v) => v.approvedStatus === null || v.approvedStatus === "Pending"
       ).length;
 
 
