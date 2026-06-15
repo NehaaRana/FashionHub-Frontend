@@ -7,7 +7,7 @@ import {
   Phone,
   MapPin,
   Tag,
-  FileText,
+  // FileText,
   Package,
   ShieldCheck,
   ChevronRight,
@@ -97,7 +97,7 @@ const VendorRegister = () => {
     category: "",
     gstin: "",
     productsCount: counts[1],
-    description: "",
+    // description: "",
     agree: false,
   });
   const states = [
@@ -146,7 +146,8 @@ const VendorRegister = () => {
     if (step === 1)
       return form.vendorName && form.brandName && form.ownerName && form.email && form.phone && form.password;
     if (step === 2) return form.city && form.state && form.category && form.gstin && form.productsCount;
-    return form.agree && form.description.length >= 20;
+    // return form.agree && form.description.length >= 20;
+    return form.agree;
   }, [step, form]);
 
   const validateStep = () => {
@@ -197,14 +198,19 @@ const VendorRegister = () => {
         newErrors.gstin = "GSTIN is required";
     }
 
-    if (step === 3) {
-      if (form.description.length < 20)
-        newErrors.description =
-          "Description must be at least 20 characters";
+    // if (step === 3) {
+    //   if (form.description.length < 20)
+    //     newErrors.description =
+    //       "Description must be at least 20 characters";
 
+    //   if (!form.agree)
+    //     newErrors.agree =
+    //       "Please accept Vendor Agreement";
+    // }
+
+    if (step === 3) {
       if (!form.agree)
-        newErrors.agree =
-          "Please accept Vendor Agreement";
+        newErrors.agree = "Please accept Vendor Agreement";
     }
 
     setErrors(newErrors);
@@ -570,7 +576,7 @@ const VendorRegister = () => {
 
             {step === 3 && (
               <>
-                <Field label="About your brand" icon={FileText}>
+                {/* <Field label="About your brand" icon={FileText}>
                   <textarea
 
                     rows={5}
@@ -592,7 +598,7 @@ const VendorRegister = () => {
                   <p className="text-red-500 text-xs mt-1">
                     {errors.description}
                   </p>
-                )}
+                )} */}
 
                 <div className="bg-secondary/40 border border-border rounded-sm p-5 space-y-2">
                   <h3 className="font-display text-sm font-semibold text-foreground">

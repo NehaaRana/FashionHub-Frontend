@@ -23,7 +23,7 @@ const Row = ({ icon: Icon, text }) => (
   </div>
 );
 
-const Field = ({ label, value, onChange, type = "text" }) => (
+const Field = ({ label, value, onChange, type = "text",readOnly = false, }) => (
   <div>
     <label className="font-body text-[10px] uppercase tracking-[0.18em] text-muted-foreground block mb-1.5">
       {label}
@@ -32,6 +32,7 @@ const Field = ({ label, value, onChange, type = "text" }) => (
     <input
       type={type}
       value={value}
+      readOnly={readOnly}
       onChange={(e) => onChange(e.target.value)}
       className="w-full px-3 py-2.5 bg-background border border-border rounded-sm font-body text-sm focus:outline-none focus:border-accent"
     />
@@ -324,12 +325,7 @@ const VendorSettings = () => {
                 <Field
                   label="Email"
                   value={profile.email}
-                  onChange={(v) =>
-                    setProfile({
-                      ...profile,
-                      email: v,
-                    })
-                  }
+                  readOnly
                 />
 
                 <Field
