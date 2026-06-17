@@ -25,6 +25,7 @@ const Field = ({
   onChange,
   type = "text",
   error,
+  readOnly = false,
 }) => (
   <div>
     <label className="font-body text-[10px] uppercase tracking-[0.18em] text-muted-foreground block mb-1.5">
@@ -34,6 +35,7 @@ const Field = ({
     <input
       type={type}
       value={value}
+      readOnly={readOnly}
       onChange={(e) => onChange(e.target.value)}
       className={`w-full px-3 py-2.5 bg-background border rounded-sm font-body text-sm focus:outline-none
       ${error
@@ -249,6 +251,7 @@ const UserProfile = () => {
 
                 <Field label="Email"
                   value={profile.email}
+                  readOnly
                   error={errors.email}
                   // onChange={(v) => setProfile({ ...profile, email: v })}
                   onChange={(v) => {
