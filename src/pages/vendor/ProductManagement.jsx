@@ -224,16 +224,208 @@ const ProductManagement = () => {
   };
   const handleSave = async () => {
     try {
+      // if (!form.productName.trim()) {
+      //   // alert("Product name required");
+      //   Swal.fire({
+      //     icon: "warning",
+      //     title: "Product Name Required",
+      //     text: "Please enter product name",
+      //     confirmButtonColor: "#c08a5b",
+      //   });
+
+      //   if (!form.description.trim()) {
+      //       Swal.fire({
+      //         icon: "warning",
+      //         title: "Required Field",
+      //         text: "Description is required.",
+      //         confirmButtonColor: "#c08a5b",
+      //       });
+      //       return;
+      //     }
+
+      //     if (!form.price || Number(form.price) <= 0) {
+      //       Swal.fire({
+      //         icon: "warning",
+      //         title: "Required Field",
+      //         text: "Please enter a valid price.",
+      //         confirmButtonColor: "#c08a5b",
+      //       });
+      //       return;
+      //     }
+
+      //     if (!form.discount) {
+      //       Swal.fire({
+      //         icon: "warning",
+      //         title: "Required Field",
+      //         text: "Discount is required.",
+      //         confirmButtonColor: "#c08a5b",
+      //       });
+      //       return;
+      //     }
+
+      //     if (!form.fabric.trim()) {
+      //       Swal.fire({
+      //         icon: "warning",
+      //         title: "Required Field",
+      //         text: "Fabric is required.",
+      //         confirmButtonColor: "#c08a5b",
+      //       });
+      //       return;
+      //     }
+
+      //     if (!form.stock || Number(form.stock) <= 0) {
+      //       Swal.fire({
+      //         icon: "warning",
+      //         title: "Required Field",
+      //         text: "Please enter stock quantity.",
+      //         confirmButtonColor: "#c08a5b",
+      //       });
+      //       return;
+      //     }
+
+      //     if (!form.cid) {
+      //       Swal.fire({
+      //         icon: "warning",
+      //         title: "Required Field",
+      //         text: "Please select a category.",
+      //         confirmButtonColor: "#c08a5b",
+      //       });
+      //       return;
+      //     }
+
+      //     if (!form.color) {
+      //       Swal.fire({
+      //         icon: "warning",
+      //         title: "Required Field",
+      //         text: "Please select at least one color.",
+      //         confirmButtonColor: "#c08a5b",
+      //       });
+      //       return;
+      //     }
+
+      //     if (!form.size) {
+      //       Swal.fire({
+      //         icon: "warning",
+      //         title: "Required Field",
+      //         text: "Please select at least one size.",
+      //         confirmButtonColor: "#c08a5b",
+      //       });
+      //       return;
+      //     }
+
+      //   // For Add Product only
+      //   if (!editing && !form.image) {
+      //     Swal.fire({
+      //       icon: "warning",
+      //       title: "Required Field",
+      //       text: "Main product image is required.",
+      //       confirmButtonColor: "#c08a5b",
+      //     });
+      //     return;
+      //   }
+
+      //   return;
+      // }
+
       if (!form.productName.trim()) {
-        // alert("Product name required");
-        Swal.fire({
-          icon: "warning",
-          title: "Product Name Required",
-          text: "Please enter product name",
-          confirmButtonColor: "#c08a5b",
-        });
-        return;
-      }
+      Swal.fire({
+        icon: "warning",
+        title: "Required Field",
+        text: "Product Name is required.",
+        confirmButtonColor: "#c08a5b",
+      });
+      return;
+    }
+
+    if (!form.description.trim()) {
+      Swal.fire({
+        icon: "warning",
+        title: "Required Field",
+        text: "Description is required.",
+        confirmButtonColor: "#c08a5b",
+      });
+      return;
+    }
+
+    if (!form.price || Number(form.price) <= 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Required Field",
+        text: "Please enter a valid price.",
+        confirmButtonColor: "#c08a5b",
+      });
+      return;
+    }
+
+    if (!form.discount) {
+      Swal.fire({
+        icon: "warning",
+        title: "Required Field",
+        text: "Discount is required.",
+        confirmButtonColor: "#c08a5b",
+      });
+      return;
+    }
+
+    if (!form.fabric.trim()) {
+      Swal.fire({
+        icon: "warning",
+        title: "Required Field",
+        text: "Fabric is required.",
+        confirmButtonColor: "#c08a5b",
+      });
+      return;
+    }
+
+    if (!form.stock || Number(form.stock) <= 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Required Field",
+        text: "Please enter stock quantity.",
+        confirmButtonColor: "#c08a5b",
+      });
+      return;
+    }
+
+    if (!form.cid) {
+      Swal.fire({
+        icon: "warning",
+        title: "Required Field",
+        text: "Please select a category.",
+        confirmButtonColor: "#c08a5b",
+      });
+      return;
+    }
+
+    if (!form.color) {
+      Swal.fire({
+        icon: "warning",
+        title: "Required Field",
+        text: "Please select at least one color.",
+        confirmButtonColor: "#c08a5b",
+      });
+      return;
+    }
+
+    if (!form.size) {
+      Swal.fire({
+        icon: "warning",
+        title: "Required Field",
+        text: "Please select at least one size.",
+        confirmButtonColor: "#c08a5b",
+      });
+      return;
+    }
+
+    if (!editing && !form.image) {
+      Swal.fire({
+        icon: "warning",
+        title: "Required Field",
+        text: "Main product image is required.",
+        confirmButtonColor: "#c08a5b",
+      });
+      return;
+    }
 
       const userRes = await getCurrentUser();
 
@@ -412,7 +604,12 @@ const ProductManagement = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Error while saving product",
+        // text: "Error while saving product",
+          text:
+      err?.response?.data?.message ||
+      err?.message ||
+      "Error while saving product",
+
         confirmButtonColor: "#c08a5b",
       });
       // alert("Error while saving product ");

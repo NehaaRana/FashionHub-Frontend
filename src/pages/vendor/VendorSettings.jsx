@@ -196,6 +196,7 @@ const VendorSettings = () => {
       try {
 
         const res = await getCurrentUser();
+        console.log("Current User API:", res.data);
 
         const vendor = res.data;
 

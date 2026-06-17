@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 import Layout from "../components/Layout";
 import { Button } from "../components/ui/Button";
+import Swal from "sweetalert2";
 
 const ContactUs = () => {
     const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
@@ -13,10 +14,33 @@ const ContactUs = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+         if (
+            !form.name ||
+            !form.email ||
+            !form.subject ||
+            !form.message
+        ) {
+            Swal.fire({
+            icon: "warning",
+            title: "Required Fields",
+            text: "Please fill in all fields.",
+            confirmButtonColor: "#000",
+            });
+
+            return;
+        }
         setLoading(true);
         setTimeout(() => {
             setLoading(false);
-            alert({ title: "Message Sent", description: "We will get back to you within 24 hours." });
+            Swal.fire({
+                icon: "success",
+                title: "Message Sent!",
+                text: "We will get back to you within 24 hours.",
+                confirmButtonColor: "#000", // black  color
+                confirmButtonText: "OK",
+                });
+            // alert({ title: "Message Sent", description: "We will get back to you within 24 hours." });
             setForm({ name: "", email: "", subject: "", message: "" });
         }, 1200);
     };
@@ -77,21 +101,21 @@ const ContactUs = () => {
                             <div className="grid sm:grid-cols-2 gap-5">
                                 <div className="space-y-2">
                                     <label htmlFor="name" className="font-body text-sm">Full Name</label>
-                                    <input id="name" name="name" required value={form.name} onChange={handleChange} placeholder="Your name"   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                                    <input id="name" name="name" required value={form.name} onChange={handleChange} placeholder="Your name"   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-black-500 focus:border-transparent"
 />
                                 </div>
                                 <div className="space-y-2">
                                     <label htmlFor="email" className="font-body text-sm">Email</label>
-                                    <input id="email" name="email" type="email" required value={form.email} onChange={handleChange} placeholder="you@example.com" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent" />
+                                    <input id="email" name="email" type="email" required value={form.email} onChange={handleChange} placeholder="you@example.com" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-black-500 focus:border-transparent" />
                                 </div>
                             </div>
                             <div className="space-y-2">
                                 <label htmlFor="subject" className="font-body text-sm">Subject</label>
-                                <input id="subject" name="subject" required value={form.subject} onChange={handleChange} placeholder="How can we help?" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"     />
+                                <input id="subject" name="subject" required value={form.subject} onChange={handleChange} placeholder="How can we help?" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-black-500 focus:border-transparent"     />
                             </div>
                             <div className="space-y-2">
                                 <label htmlFor="message" className="font-body text-sm">Message</label>
-                                <textarea id="message" name="message" required value={form.message} onChange={handleChange} rows={5} placeholder="Tell us more..."   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
+                                <textarea id="message" name="message" required value={form.message} onChange={handleChange} rows={5} placeholder="Tell us more..."   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-black-500 focus:border-transparent resize-none"
  />
                             </div>
                             <Button type="submit" disabled={loading} className="gap-2">
