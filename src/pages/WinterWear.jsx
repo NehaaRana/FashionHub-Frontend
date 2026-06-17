@@ -104,17 +104,30 @@ const WinterWear = () => {
     const user = JSON.parse(localStorage.getItem("user"));
 
     // NOT LOGIN
+    // if (!user) {
+
+    //   Swal.fire({
+    //     icon: "warning",
+    //     title: "Login Required",
+    //     text: "Please login first!",
+    //   });
+
+    //   return false;
+    // }
+
     if (!user) {
+  Swal.fire({
+    icon: "warning",
+    title: "Login Required",
+    text: "Please login first!",
+    timer: 2000, // 2 seconds
+    showConfirmButton: false,
+  }).then(() => {
+    navigate("/login");
+  });
 
-      Swal.fire({
-        icon: "warning",
-        title: "Login Required",
-        text: "Please login first!",
-      });
-
-      return false;
-    }
-
+  return false;
+}
     // ONLY NORMAL USER
     if (Number(user.gid) !== 1) {
 

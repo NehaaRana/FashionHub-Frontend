@@ -3,7 +3,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 
-// ✅ ADD THIS BACK
+// ADD THIS BACK
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors",
   {
@@ -35,7 +35,7 @@ const Button = React.forwardRef(
     return (
       <Comp
         ref={ref}
-        className={cn(buttonVariants({ variant, size, className }))} // ✅ THIS LINE IS KEY
+        className={cn(buttonVariants({ variant, size, className }))} // THIS LINE IS KEY
         {...props}
       />
     );

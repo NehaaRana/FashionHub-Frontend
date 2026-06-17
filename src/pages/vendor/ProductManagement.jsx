@@ -364,7 +364,7 @@ const ProductManagement = () => {
         JSON.stringify(colorMap)
       );
 
-      // ✅ MOVE API CALL HERE
+      //MOVE API CALL HERE
 
       if (editing) {
         console.log("FINAL GALLERY:", galleryImages);

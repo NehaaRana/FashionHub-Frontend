@@ -13,7 +13,7 @@ const CategoryGrid = () => {
     // <section className="py-24 lg:py-32">
     // <section className="py-24 lg:py-32 px-4 sm:px-6 lg:px-8">
     <section className="py-24 lg:py-32">
-      {/* ✅ FIXED CONTAINER */}
+      {/* FIXED CONTAINER */}
       {/* <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"> */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 

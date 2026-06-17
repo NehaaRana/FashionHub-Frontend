@@ -46,7 +46,7 @@ const Login = () => {
   //     localStorage.setItem("role", role);
   //     localStorage.setItem("token", token); 
 
-     
+
   //     alert("Login Successful");
 
   //     navigate("/dashboard");
@@ -57,7 +57,7 @@ const Login = () => {
   //     alert("Invalid Email or Password");
   //   }
   // };
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -126,45 +126,45 @@ const Login = () => {
       //   confirmButtonColor: "#000",
       // });
       const status = error.response?.data?.status;
-const message = error.response?.data?.message;
+      const message = error.response?.data?.message;
 
-if (status === "Pending") {
+      if (status === "Pending") {
 
-  Swal.fire({
-    icon: "info",
-    title: "Application Under Review",
-    text: message,
-    confirmButtonColor: "#000",
-  });
+        Swal.fire({
+          icon: "info",
+          title: "Application Under Review",
+          text: message,
+          confirmButtonColor: "#000",
+        });
 
-  navigate("/vendor-pending", {
-    state: { email: form.email }
-  });
+        navigate("/vendor-pending", {
+          state: { email: form.email }
+        });
 
-}
-else if (status === "Rejected") {
+      }
+      else if (status === "Rejected") {
 
-  Swal.fire({
-    icon: "error",
-    title: "Application Rejected",
-    text: message,
-    confirmButtonColor: "#000",
-  });
+        Swal.fire({
+          icon: "error",
+          title: "Application Rejected",
+          text: message,
+          confirmButtonColor: "#000",
+        });
 
-}
-else {
+      }
+      else {
 
-  Swal.fire({
-    icon: "error",
-    title: "Login Failed",
-    text: "Invalid Email or Password",
-    confirmButtonColor: "#000",
-  });
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: "Invalid Email or Password",
+          confirmButtonColor: "#000",
+        });
 
-}
+      }
     }
   };
- 
+
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
 

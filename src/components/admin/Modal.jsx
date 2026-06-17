@@ -40,7 +40,7 @@ const Modal = ({ open, onClose, title, subtitle, children, footer, size = "md" }
         {footer && <div className="p-5 border-t">{footer}</div>}
       </div>
     </div>,
-    document.body   // 👈 THIS IS THE KEY FIX
+    document.body   // THIS IS THE KEY FIX
   );
 };
 

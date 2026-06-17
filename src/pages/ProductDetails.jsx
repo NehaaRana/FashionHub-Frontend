@@ -78,7 +78,7 @@ const ProductDetails = () => {
 
       const res = await getAllProducts();
 
-      
+
 
       const foundProduct = res.data.find(
         (p) => p.pid === Number(id)
@@ -87,23 +87,14 @@ const ProductDetails = () => {
       if (!foundProduct) {
         return;
       }
-
-
       let parsedImages = null;
-
       try {
-
         parsedImages = foundProduct.productImages
           ? JSON.parse(foundProduct.productImages)
           : null;
-
       } catch (error) {
-
         console.log("Image parse error", error);
-
       }
-
-      
 
       setProduct({
         ...foundProduct,
@@ -159,7 +150,6 @@ const ProductDetails = () => {
         );
       }
 
-    
     } catch (error) {
       console.log(error);
     }
@@ -188,12 +178,25 @@ const ProductDetails = () => {
     const user = JSON.parse(localStorage.getItem("user"));
 
     // NOT LOGIN
-    if (!user) {
+    // if (!user) {
 
+    //   Swal.fire({
+    //     icon: "warning",
+    //     title: "Login Required",
+    //     text: "Please login first!",
+    //   });
+
+    //   return false;
+    // }
+    if (!user) {
       Swal.fire({
         icon: "warning",
         title: "Login Required",
         text: "Please login first!",
+        timer: 2000, // 2 seconds
+        showConfirmButton: false,
+      }).then(() => {
+        navigate("/login");
       });
 
       return false;
@@ -371,7 +374,7 @@ const ProductDetails = () => {
     const { left, top, width, height } =
       e.currentTarget.getBoundingClientRect();
 
-       const x = ((e.clientX - left) / width) * 100;
+    const x = ((e.clientX - left) / width) * 100;
     const y = ((e.clientY - top) / height) * 100;
 
     setZoomStyle({
@@ -572,114 +575,114 @@ const ProductDetails = () => {
 
             </div>
 
-                  {/* REVIEWS */}
-      <div className="container mt-20">
+            {/* REVIEWS */}
+            <div className="container mt-20">
 
-        <h2 className="text-xl font-bold mb-5">
-          Customer Reviews
-        </h2>
+              <h2 className="text-xl font-bold mb-5">
+                Customer Reviews
+              </h2>
 
-       
-        {/* REVIEW LIST */}
-        <div className="space-y-5">
 
-          {displayedReviews.length > 0 ? (
+              {/* REVIEW LIST */}
+              <div className="space-y-5">
 
-            displayedReviews.map((review) => (
+                {displayedReviews.length > 0 ? (
 
-              <div
-                key={review.rid}
-                // className="border border-gray-200 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition-all"
-                className="border rounded-xl p-4 bg-white hover:shadow-md transition-all"
-              >
+                  displayedReviews.map((review) => (
 
-                <div className="flex items-start justify-between gap-4">
+                    <div
+                      key={review.rid}
+                      // className="border border-gray-200 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition-all"
+                      className="border rounded-xl p-4 bg-white hover:shadow-md transition-all"
+                    >
 
-                  {/* LEFT */}
-                  <div className="flex items-center gap-4">
+                      <div className="flex items-start justify-between gap-4">
 
-                    {/* USER ICON */}
-                    <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center font-semibold text-lg uppercase">
-                      {review.userName?.charAt(0)}
-                    </div>
+                        {/* LEFT */}
+                        <div className="flex items-center gap-4">
 
-                    {/* USER INFO */}
-                    <div>
+                          {/* USER ICON */}
+                          <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center font-semibold text-lg uppercase">
+                            {review.userName?.charAt(0)}
+                          </div>
 
-                      <h4 className="font-semibold text-[16px]">
-                        {review.userName}
-                      </h4>
-                      {/* STARS */}
-                      <div className="flex gap-1">
+                          {/* USER INFO */}
+                          <div>
 
-                        {[...Array(5)].map((_, i) => (
+                            <h4 className="font-semibold text-[16px]">
+                              {review.userName}
+                            </h4>
+                            {/* STARS */}
+                            <div className="flex gap-1">
 
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${i < review.rating
-                                ? "fill-yellow-400 text-yellow-400"
-                                : "text-gray-300"
-                              }`}
-                          />
+                              {[...Array(5)].map((_, i) => (
 
-                        ))}
+                                <Star
+                                  key={i}
+                                  className={`w-4 h-4 ${i < review.rating
+                                    ? "fill-yellow-400 text-yellow-400"
+                                    : "text-gray-300"
+                                    }`}
+                                />
+
+                              ))}
+
+                            </div>
+                            <p className="text-sm text-gray-500">
+                              {new Date(
+                                review.createdAt
+                              ).toLocaleDateString()}
+                            </p>
+
+                          </div>
+
+                        </div>
+
+
 
                       </div>
-                      <p className="text-sm text-gray-500">
-                        {new Date(
-                          review.createdAt
-                        ).toLocaleDateString()}
+
+                      {/* REVIEW TEXT */}
+                      <p className="mt-4 text-gray-600 leading-7 text-[15px]">
+                        {review.feedback}
                       </p>
 
                     </div>
 
+                  ))
+
+                ) : (
+
+                  <div className="text-center py-10 border rounded-2xl bg-gray-50">
+                    <p className="text-gray-500">
+                      No reviews available
+                    </p>
                   </div>
 
-
-
-                </div>
-
-                {/* REVIEW TEXT */}
-                <p className="mt-4 text-gray-600 leading-7 text-[15px]">
-                  {review.feedback}
-                </p>
+                )}
 
               </div>
 
-            ))
+              {/* SEE MORE BUTTON */}
+              {reviews.length > 2 && (
 
-          ) : (
+                <div className="flex justify-center mt-8">
 
-            <div className="text-center py-10 border rounded-2xl bg-gray-50">
-              <p className="text-gray-500">
-                No reviews available
-              </p>
+                  <button
+                    onClick={() =>
+                      setShowAllReviews(!showAllReviews)
+                    }
+                    className="px-6 py-3 rounded-xl border border-black text-black font-medium hover:bg-black hover:text-white transition-all"
+                  >
+                    {showAllReviews
+                      ? "Show Less Reviews"
+                      : `See More Reviews (${reviews.length - 2})`}
+                  </button>
+
+                </div>
+
+              )}
             </div>
-
-          )}
-
-        </div>
-
-        {/* SEE MORE BUTTON */}
-        {reviews.length > 2 && (
-
-          <div className="flex justify-center mt-8">
-
-            <button
-              onClick={() =>
-                setShowAllReviews(!showAllReviews)
-              }
-              className="px-6 py-3 rounded-xl border border-black text-black font-medium hover:bg-black hover:text-white transition-all"
-            >
-              {showAllReviews
-                ? "Show Less Reviews"
-                : `See More Reviews (${reviews.length - 2})`}
-            </button>
-
-          </div>
-
-        )}
-      </div>
 
           </div>
 

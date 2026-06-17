@@ -34,8 +34,8 @@ const Footer = () => (
     links: [
       { name: "New Arrivals", path: "/new-arrivals" },
       { name: "Summer Sale", path: "/summer-sale" },
-      { name: "Winter Collection", path: "/winter-collection" },
-      { name: "Festival Combos", path: "/festival-combos" },
+      { name: "Winter Collection", path: "/winter-wear" },
+      // { name: "Festival Combos", path: "/festival-combos" },
     ],
   },
   {

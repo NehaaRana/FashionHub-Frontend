@@ -123,6 +123,7 @@ const VendorPending = () => {
               </p>
             </div>
           ) : (
+            
             <StatusCard app={app} />
           )}
         </div>
@@ -132,8 +133,13 @@ const VendorPending = () => {
   );
 };
 
+
 const StatusCard = ({ app }) => {
-  if (app.approvedByAdmin === "Approved") {
+   console.log("APP DATA:", app);
+  console.log("approvedByAdmin:", app.approvedByAdmin);
+  console.log("TYPE:", typeof app.approvedByAdmin);
+  console.log("Status:", app.approvedByAdmin, typeof app.approvedByAdmin);
+  if (app.approvedByAdmin === "true") {
     return (
       <div className="bg-card border border-border rounded-sm overflow-hidden">
         <div className="bg-gradient-to-br from-accent/20 via-accent/5 to-transparent p-10 text-center border-b border-border">
@@ -154,11 +160,17 @@ const StatusCard = ({ app }) => {
         <div className="p-8 space-y-5">
           <NextStep icon={Sparkles} title="Set up your store" desc="Add a banner, bio and shipping zones." />
           <NextStep icon={ShieldCheck} title="List your first product" desc="Upload images, pricing and stock." />
-          <Link to="/vendor">
+          {/* <Link to="/vendor">
             <Button variant="hero" className="w-full mt-2">
               Go to Vendor Dashboard <ArrowRight className="h-4 w-4" />
             </Button>
-          </Link>
+          </Link> */}
+          <Link to="/vendor/dashboard">
+  <Button variant="hero" className="w-full mt-2">
+    Go to Vendor Dashboard
+    <ArrowRight className="h-4 w-4" />
+  </Button>
+</Link>
         </div>
       </div>
     );

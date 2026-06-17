@@ -64,7 +64,7 @@ const navigate = useNavigate();
                     //     {items.map((p) => {
                     //         console.log(`https://localhost:7106/${p.photo}`);
 
-                    //         return (   // ✅ VERY IMPORTANT
+                    //         return (   //  VERY IMPORTANT
                     //             <div key={p.wid} className="bg-card border rounded-sm">
 
                     //                 <div className="relative aspect-[4/5] overflow-hidden">
